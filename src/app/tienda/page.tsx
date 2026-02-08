@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import TiendaHero from "@/components/TiendaHero";
-import TiendaProducts from "@/components/TiendaProducts";
 import TiendaTestimonials from "@/components/TiendaTestimonials";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -18,7 +17,6 @@ export default function TiendaPage() {
       <Header />
       <main>
         <TiendaHero />
-        <TiendaProducts />
         <TiendaTestimonials />
       </main>
       <Footer />

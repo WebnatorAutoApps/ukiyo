@@ -14,7 +14,7 @@ const testimonials = [
   {
     id: 2,
     name: "Carlos G.",
-    text: "Me encantaron los sabores, especialmente el de maracuyá. El café complementó perfectamente la experiencia.",
+    text: "Me encantaron los sabores, especialmente el de maracuyá. El café complementó perfectamente esta deliciosa elección.",
     avatar: "/images/testimonial-carlos.jpg",
     rating: 5,
   },

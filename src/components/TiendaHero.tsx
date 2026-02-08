@@ -17,7 +17,7 @@ export default function TiendaHero() {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 px-4 text-center">
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-4">
-            Pide con Glovo desde aquí
+            ¡Disfruta de nuestros packs de mochis!
           </h1>
           <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 drop-shadow">
             Disfruta de tus comidas favoritas al instante, ¡haz tu pedido ahora
