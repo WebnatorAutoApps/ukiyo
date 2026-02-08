@@ -9,7 +9,7 @@ export default function About() {
           <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: "612/464" }}>
             <Image
               src="/images/about-photo.jpg"
-              alt="Mochis artesanales de Ukiyo"
+              alt="Elaboración de mochis artesanales en Ukiyo Mochis & Coffee Madrid Norte"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -17,17 +17,13 @@ export default function About() {
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">
-              Descubre nuestra pasión dulce
+              Repostería japonesa artesanal en Madrid Norte
             </h2>
             <p className="mt-4 text-base text-text-body leading-relaxed">
-              En Ukiyo Mochis &amp; Coffee, elaboramos mochis artesanales que
-              combinan tradición japonesa y sabores únicos, acompañados de
-              nuestro café de especialidad.
+              En Ukiyo Mochis &amp; Coffee, somos la tienda de referencia de mochis artesanales en Madrid Norte. Desde nuestro local en Fuencarral-El Pardo, elaboramos a mano dulces japoneses que combinan tradición y creatividad, acompañados de café de especialidad y bubble tea.
             </p>
             <p className="mt-3 text-base text-text-body leading-relaxed">
-              Cada mochi es preparado con ingredientes de primera calidad,
-              cuidando cada detalle para ofrecerte una experiencia única que
-              fusiona lo mejor de la repostería japonesa con un toque moderno.
+              Cada mochi es preparado uno a uno con ingredientes de primera calidad, cuidando su textura, sabor y estética. Ofrecemos sabores como anko, matcha, maracuyá, fresa y chocolate, fusionando lo mejor de la repostería japonesa con un toque moderno y madrileño.
             </p>
             <Link
               href="/tienda"

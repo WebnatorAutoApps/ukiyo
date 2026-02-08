@@ -14,7 +14,7 @@ export default function Header() {
         <Link href="/">
           <Image
             src="/images/logo-ukiyo.png"
-            alt="Ukiyo mochis and coffee logo"
+            alt="Ukiyo Mochis & Coffee - Mochis artesanales y café en Madrid Norte"
             width={200}
             height={210}
             className="h-11 w-auto"

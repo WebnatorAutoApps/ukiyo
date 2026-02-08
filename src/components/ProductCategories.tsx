@@ -6,9 +6,9 @@ const categories = [
     title: "Momentos de dulzura,",
     subtitle: "sabores únicos",
     description:
-      "Descubre nuestros mochis artesanales elaborados con ingredientes de primera calidad.",
+      "Descubre nuestros mochis artesanales elaborados a mano en Madrid Norte con ingredientes de primera calidad e inspiración japonesa.",
     image: "/images/mochi-product-1.jpg",
-    imageAlt: "Mochis artesanales de Ukiyo",
+    imageAlt: "Mochis artesanales japoneses en Madrid Norte - Ukiyo Mochis & Coffee Fuencarral",
     link: "/tienda",
     buttonText: "Explorar",
     aspectRatio: "628/558",
@@ -16,9 +16,9 @@ const categories = [
   {
     title: "Bubble Tea",
     description:
-      "Refrescantes bubble teas con sabores auténticos y toppings únicos.",
+      "Refrescantes bubble teas con sabores auténticos y toppings únicos. Boba tea artesanal en Madrid Norte.",
     image: "/images/bubble-tea.jpg",
-    imageAlt: "Bubble Tea de Ukiyo",
+    imageAlt: "Bubble tea artesanal en Madrid Norte - Boba tea y té de burbujas en Ukiyo",
     link: "/tienda",
     buttonText: "Explorar",
     aspectRatio: "543/254",
@@ -26,9 +26,9 @@ const categories = [
   {
     title: "Sabores únicos disponibles",
     description:
-      "Variedad de sabores que combinan tradición japonesa con toques creativos.",
+      "Variedad de sabores que combinan tradición japonesa con toques creativos. Anko, matcha, maracuyá y más en Madrid Norte.",
     image: "/images/mochi-lifestyle.jpg",
-    imageAlt: "Variedad de mochis y sabores",
+    imageAlt: "Variedad de mochis y sabores japoneses en Madrid Norte - anko, matcha y más",
     link: "/tienda",
     buttonText: "Explorar",
     aspectRatio: "541/267",

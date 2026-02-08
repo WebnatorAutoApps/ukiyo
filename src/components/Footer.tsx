@@ -15,13 +15,13 @@ export default function Footer() {
           <div>
             <Image
               src="/images/logo-ukiyo.png"
-              alt="Ukiyo mochis and coffee logo"
+              alt="Ukiyo Mochis & Coffee - Mochis artesanales y bubble tea en Madrid Norte"
               width={120}
               height={40}
               className="h-10 w-auto brightness-0 invert mb-4"
             />
             <p className="text-sm text-text-secondary leading-relaxed mb-4">
-              Mochis artesanales y café de especialidad
+              Mochis artesanales, bubble tea y café de especialidad en Madrid Norte
             </p>
             <div className="flex gap-4">
               <a

@@ -4,9 +4,12 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 export const metadata: Metadata = {
-  title: "Términos y condiciones | Ukiyo Mochis & Coffee",
+  title: "Términos y Condiciones",
   description:
-    "Términos y condiciones de uso del sitio web de Ukiyo Mochis & Coffee.",
+    "Términos y condiciones de uso del sitio web de Ukiyo Mochis & Coffee. Tienda de mochis artesanales en Madrid Norte.",
+  alternates: {
+    canonical: "/terms-and-conditions",
+  },
 };
 
 export default function TermsAndConditions() {

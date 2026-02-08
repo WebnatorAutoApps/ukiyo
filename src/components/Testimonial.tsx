@@ -19,7 +19,7 @@ export default function Testimonial() {
           </div>
           <blockquote className="text-lg md:text-xl text-text-body leading-relaxed italic">
             &ldquo;Los mochis de Ukiyo son una delicia, suaves y cremosos,
-            perfectos para disfrutar con café.&rdquo;
+            perfectos para disfrutar con café. La mejor tienda de mochis de Madrid Norte.&rdquo;
           </blockquote>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Image
