@@ -9,9 +9,10 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Ukiyo Mochis & Coffee",
+  title:
+    "Mochis artesanales y café de especialidad en Ukiyo | Ukiyo mochis and coffe",
   description:
-    "Mochis artesanales y café de especialidad. Elaboramos mochis artesanales que combinan tradición japonesa y sabores únicos.",
+    "En Ukiyo Mochis & Coffee creemos que cada pequeño detalle cuenta. Por eso, elaboramos mochis artesanales inspirados en la tradición japonesa, con un enfoque creativo y contemporáneo. Cada mochi es preparado a mano, uno a uno, con ingredientes de alta calidad, cuidando su textura, sabor y estética.",
 };
 
 export default function RootLayout({
