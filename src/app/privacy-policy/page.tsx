@@ -4,9 +4,12 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 export const metadata: Metadata = {
-  title: "Política de privacidad | Ukiyo Mochis & Coffee",
+  title: "Política de Privacidad",
   description:
-    "Política de privacidad del sitio web de Ukiyo Mochis & Coffee.",
+    "Política de privacidad del sitio web de Ukiyo Mochis & Coffee. Tienda de mochis artesanales en Madrid Norte.",
+  alternates: {
+    canonical: "/privacy-policy",
+  },
 };
 
 export default function PrivacyPolicy() {

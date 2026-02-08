@@ -8,7 +8,7 @@ export default function Location() {
           <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: "503/384" }}>
             <Image
               src="/images/location.jpg"
-              alt="Ubicación de Ukiyo Mochis & Coffee"
+              alt="Tienda Ukiyo Mochis & Coffee en Madrid Norte - Santiago de Compostela 36, Fuencarral-El Pardo"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -16,10 +16,14 @@ export default function Location() {
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Nuestra ubicación
+              Visítanos en Madrid Norte
             </h2>
-            <p className="mt-4 text-base text-text-body leading-relaxed">
-              Santiago de compostela 36, Fuencarral-El Pardo, 28034 Madrid
+            <address className="mt-4 text-base text-text-body leading-relaxed not-italic">
+              <strong>Ukiyo Mochis &amp; Coffee</strong><br />
+              Santiago de Compostela 36, Fuencarral-El Pardo, 28034 Madrid
+            </address>
+            <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+              Horario: Lun-Vie 10:00-20:00 · Sáb 10:00-21:00 · Dom 11:00-19:00
             </p>
             <div className="mt-6 flex gap-4">
               <a

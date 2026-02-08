@@ -9,7 +9,7 @@ export default function TiendaHero() {
       >
         <Image
           src="/images/tienda-hero.png"
-          alt="Pide con Glovo - Ukiyo Mochis"
+          alt="Tienda de mochis artesanales y bubble tea en Madrid Norte - Pide con Glovo desde Fuencarral-El Pardo"
           fill
           className="object-cover"
           priority
@@ -17,11 +17,10 @@ export default function TiendaHero() {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 px-4 text-center">
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-4">
-            ¡Disfruta de nuestros packs de mochis!
+            Pide Mochis Artesanales a Domicilio en Madrid Norte
           </h1>
           <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 drop-shadow">
-            Disfruta de tus comidas favoritas al instante, ¡haz tu pedido ahora
-            mismo!
+            Disfruta de nuestros packs de mochis japoneses, bubble tea y café de especialidad. ¡Haz tu pedido ahora con Glovo!
           </p>
           <a
             href="https://ufv9.adj.st/?adjust_deeplink=glovoapp%3A%2F%2Fopen%3Flink_type%3Dstore%26store_id%3D496002&adjust_t=s321jkn"
