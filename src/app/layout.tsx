@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Ukiyo",
-  description: "A modern, minimal landing page built with Next.js",
+  title: "Ukiyo Mochis & Coffee",
+  description:
+    "Mochis artesanales y café de especialidad. Elaboramos mochis artesanales que combinan tradición japonesa y sabores únicos.",
 };
 
 export default function RootLayout({
@@ -25,15 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          {children}
-          <Footer />
-        </div>
+    <html lang="es">
+      <body className={`${geistSans.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );
