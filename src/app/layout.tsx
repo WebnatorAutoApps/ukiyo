@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import CopyPageInfo from "@/components/CopyPageInfo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${geistSans.variable} antialiased`}>
         {children}
+        <CopyPageInfo />
       </body>
     </html>
   );
