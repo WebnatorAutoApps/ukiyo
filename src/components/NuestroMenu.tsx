@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 function CherryBlossom({ index }: { index: number }) {
@@ -137,6 +137,7 @@ function CategoryTab({
 function MenuItemRow({
   item,
   t,
+  isMochiCategory,
 }: {
   item: {
     name: string;
@@ -144,15 +145,24 @@ function MenuItemRow({
     description?: string;
     tag?: string;
     priceModifier?: string;
+    hot?: boolean;
   };
   t: ReturnType<typeof useLanguage>["t"];
+  isMochiCategory: boolean;
 }) {
+  const extraClass = item.hot
+    ? "menu-item-hot"
+    : isMochiCategory
+      ? "menu-item-mochi"
+      : "";
+
   return (
-    <div className="rounded-xl bg-wood-light/60 border border-soft-wood/30 p-4 shadow-cozy hover:shadow-cozy-lg transition-all duration-300">
+    <div className={`rounded-xl bg-wood-light/60 border border-soft-wood/30 p-4 shadow-cozy hover:shadow-cozy-lg transition-all duration-300 ${extraClass}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h4 className="text-sm md:text-base font-bold text-foreground font-heading">
+              {item.hot && <span className="mr-1" aria-hidden="true">☕</span>}
               {item.name}
             </h4>
             {item.tag && <TagBadge tag={item.tag} t={t} />}
@@ -176,11 +186,73 @@ function MenuItemRow({
   );
 }
 
+function SeasonalToggle({
+  isHot,
+  onToggle,
+  t,
+}: {
+  isHot: boolean;
+  onToggle: (hot: boolean) => void;
+  t: ReturnType<typeof useLanguage>["t"];
+}) {
+  return (
+    <div className="seasonal-toggle" role="radiogroup" aria-label="Seasonal mode">
+      <button
+        className={`seasonal-toggle-btn ${isHot ? "active" : ""}`}
+        onClick={() => onToggle(true)}
+        role="radio"
+        aria-checked={isHot}
+      >
+        {t.menu.seasonalHot}
+      </button>
+      <button
+        className={`seasonal-toggle-btn ${!isHot ? "active" : ""}`}
+        onClick={() => onToggle(false)}
+        role="radio"
+        aria-checked={!isHot}
+      >
+        {t.menu.seasonalCold}
+      </button>
+    </div>
+  );
+}
+
 export default function NuestroMenu() {
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState(0);
+  const [isHotMode, setIsHotMode] = useState(true);
 
-  const currentCategory = t.menu.categories[activeCategory];
+  // In cold mode: hide coffees (hot items in drinks), show bubble teas first
+  // Reorder categories: put drinks first in cold mode
+  const filteredCategories = useMemo(() => {
+    if (isHotMode) return t.menu.categories;
+
+    return t.menu.categories
+      .map((category) => {
+        if (category.id === "drinks") {
+          // In cold mode, filter out hot items (coffees)
+          return {
+            ...category,
+            items: category.items.filter((item) => !item.hot),
+          };
+        }
+        return category;
+      })
+      // In cold mode, move drinks to the front
+      .sort((a, b) => {
+        if (a.id === "drinks") return -1;
+        if (b.id === "drinks") return 1;
+        return 0;
+      });
+  }, [t.menu.categories, isHotMode]);
+
+  // Reset active category when toggling seasonal mode
+  const handleSeasonalToggle = (hot: boolean) => {
+    setIsHotMode(hot);
+    setActiveCategory(0);
+  };
+
+  const currentCategory = filteredCategories[activeCategory];
 
   return (
     <section
@@ -219,10 +291,11 @@ export default function NuestroMenu() {
           </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="mb-6">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-            {t.menu.categories.map((category, index) => (
+        {/* Seasonal Toggle + Category Tabs */}
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <SeasonalToggle isHot={isHotMode} onToggle={handleSeasonalToggle} t={t} />
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide flex-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            {filteredCategories.map((category, index) => (
               <CategoryTab
                 key={category.id}
                 category={category}
@@ -236,7 +309,7 @@ export default function NuestroMenu() {
         {/* Menu Items Grid */}
         <div
           className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-          key={currentCategory.id}
+          key={`${currentCategory.id}-${isHotMode}`}
         >
           {currentCategory.items.map((item, index) => (
             <div
@@ -244,7 +317,11 @@ export default function NuestroMenu() {
               className="animate-fadeInUp"
               style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}
             >
-              <MenuItemRow item={item} t={t} />
+              <MenuItemRow
+                item={item}
+                t={t}
+                isMochiCategory={currentCategory.id === "mochis"}
+              />
             </div>
           ))}
         </div>
