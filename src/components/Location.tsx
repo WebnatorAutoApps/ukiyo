@@ -2,10 +2,10 @@ import Image from "next/image";
 
 export default function Location() {
   return (
-    <section className="w-full py-16 px-5 bg-white">
+    <section className="w-full py-16 px-5 bg-warm-cream">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <div className="relative rounded-xl overflow-hidden" style={{ aspectRatio: "503/384" }}>
+          <div className="relative rounded-2xl overflow-hidden shadow-cozy" style={{ aspectRatio: "503/384" }}>
             <Image
               src="/images/location.jpg"
               alt="Tienda Ukiyo Mochis & Coffee en Madrid Norte - Santiago de Compostela 36, Fuencarral-El Pardo"
@@ -15,7 +15,7 @@ export default function Location() {
             />
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground font-heading">
               Visítanos en Madrid Norte
             </h2>
             <address className="mt-4 text-base text-text-body leading-relaxed not-italic">
@@ -30,7 +30,7 @@ export default function Location() {
                 href="https://www.instagram.com/ukiyomochis/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors"
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-ukiyo-navy transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@ export default function Location() {
                 href="https://www.tiktok.com/@ukiyomochisandcoffee"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors"
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-ukiyo-navy transition-colors"
                 aria-label="TikTok"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -55,7 +55,7 @@ export default function Location() {
               href="https://www.waze.com/ul?ll=40.4893,-3.7086&navigate=yes"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-ukiyo-navy hover:text-primary-hover transition-colors font-heading"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

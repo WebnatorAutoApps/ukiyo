@@ -2,9 +2,9 @@ import Image from "next/image";
 
 export default function Testimonial() {
   return (
-    <section className="w-full py-16 px-5 bg-primary-light">
+    <section className="w-full py-16 px-5 bg-sakura-pink/30">
       <div className="mx-auto max-w-3xl text-center">
-        <div className="rounded-2xl bg-white p-8 md:p-12 shadow-sm">
+        <div className="rounded-2xl bg-warm-cream p-8 md:p-12 shadow-cozy border border-soft-wood/20">
           <div className="flex justify-center gap-1 mb-6">
             {[...Array(5)].map((_, i) => (
               <svg
@@ -27,9 +27,9 @@ export default function Testimonial() {
               alt="Lourdes López"
               width={48}
               height={48}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover ring-2 ring-sakura-pink"
             />
-            <span className="text-sm font-bold text-foreground">
+            <span className="text-sm font-bold text-foreground font-heading">
               Lourdes López
             </span>
           </div>

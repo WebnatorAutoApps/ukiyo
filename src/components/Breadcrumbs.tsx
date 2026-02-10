@@ -31,7 +31,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       />
       <nav
         aria-label="Breadcrumb"
-        className="w-full bg-surface border-b border-border-color"
+        className="w-full bg-surface/80 border-b border-soft-wood/20"
       >
         <div className="mx-auto max-w-6xl px-5 py-2">
           <ol className="flex flex-wrap items-center gap-1 text-xs text-text-secondary">
@@ -39,7 +39,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
               <li key={index} className="flex items-center gap-1">
                 {index > 0 && (
                   <svg
-                    className="w-3 h-3 text-text-secondary/50"
+                    className="w-3 h-3 text-soft-wood"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 {item.href && index < items.length - 1 ? (
                   <Link
                     href={item.href}
-                    className="hover:text-primary transition-colors"
+                    className="hover:text-ukiyo-navy transition-colors"
                   >
                     {item.name}
                   </Link>

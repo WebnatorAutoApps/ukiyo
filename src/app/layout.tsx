@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Nunito, Quicksand, Varela_Round } from "next/font/google";
 import "./globals.css";
 import CopyPageInfo from "@/components/CopyPageInfo";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
+  weight: ["400", "600", "700", "800"],
+});
+
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const varelaRound = Varela_Round({
+  variable: "--font-varela-round",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const siteUrl = "https://www.mochisukiyo.com";
@@ -99,7 +112,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} antialiased`}>
+      <body className={`${nunito.variable} ${quicksand.variable} ${varelaRound.variable} antialiased`}>
         <LocalBusinessSchema />
         {children}
         <CopyPageInfo />

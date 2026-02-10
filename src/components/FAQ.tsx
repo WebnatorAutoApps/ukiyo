@@ -62,7 +62,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="w-full py-16 px-5 bg-white" id="preguntas-frecuentes">
+    <section className="w-full py-16 px-5 bg-surface" id="preguntas-frecuentes">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -70,7 +70,7 @@ export default function FAQ() {
         }}
       />
       <div className="mx-auto max-w-3xl">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-2">
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-2 font-heading">
           Preguntas frecuentes
         </h2>
         <p className="text-center text-text-secondary mb-10">
@@ -81,16 +81,16 @@ export default function FAQ() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="rounded-xl border border-border-color bg-white overflow-hidden"
+              className="rounded-2xl border border-soft-wood/30 bg-warm-cream overflow-hidden shadow-cozy"
             >
               <button
                 onClick={() =>
                   setOpenIndex(openIndex === index ? null : index)
                 }
-                className="w-full flex items-center justify-between p-5 text-left hover:bg-surface/50 transition-colors"
+                className="w-full flex items-center justify-between p-5 text-left hover:bg-sakura-pink/20 transition-colors"
                 aria-expanded={openIndex === index}
               >
-                <span className="text-sm font-semibold text-foreground pr-4">
+                <span className="text-sm font-semibold text-foreground pr-4 font-heading">
                   {faq.question}
                 </span>
                 <svg

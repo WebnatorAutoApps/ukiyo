@@ -9,7 +9,7 @@ export default function Header() {
   const [policiesOpen, setPoliciesOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-border-color">
+    <header className="sticky top-0 z-50 w-full bg-warm-cream/95 backdrop-blur-sm border-b border-soft-wood/40">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
         <Link href="/">
           <Image
@@ -23,23 +23,23 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground">
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground font-heading">
           <Link
             href="/"
-            className="hover:text-primary transition-colors"
+            className="hover:text-ukiyo-navy transition-colors"
           >
             Inicio
           </Link>
           <Link
             href="/tienda"
-            className="hover:text-primary transition-colors"
+            className="hover:text-ukiyo-navy transition-colors"
           >
             Tienda
           </Link>
           <div className="relative">
             <button
               onClick={() => setPoliciesOpen(!policiesOpen)}
-              className="flex items-center gap-1 hover:text-primary transition-colors"
+              className="flex items-center gap-1 hover:text-ukiyo-navy transition-colors"
             >
               Nuestras políticas
               <svg
@@ -57,16 +57,16 @@ export default function Header() {
               </svg>
             </button>
             {policiesOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white shadow-lg border border-border-color py-2">
+              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-warm-cream shadow-cozy-lg border border-soft-wood/30 py-2">
                 <Link
                   href="/terms-and-conditions"
-                  className="block px-4 py-2 text-sm text-text-body hover:bg-surface transition-colors"
+                  className="block px-4 py-2 text-sm text-text-body hover:bg-sakura-pink/30 transition-colors rounded-lg mx-1"
                 >
                   Términos y Condiciones
                 </Link>
                 <Link
                   href="/privacy-policy"
-                  className="block px-4 py-2 text-sm text-text-body hover:bg-surface transition-colors"
+                  className="block px-4 py-2 text-sm text-text-body hover:bg-sakura-pink/30 transition-colors rounded-lg mx-1"
                 >
                   Política de Privacidad
                 </Link>
@@ -93,18 +93,18 @@ export default function Header() {
 
       {/* Mobile Navigation */}
       {menuOpen && (
-        <div className="md:hidden border-t border-border-color bg-white">
-          <nav className="flex flex-col px-5 py-4 gap-4 text-sm font-medium text-foreground">
-            <Link href="/" className="hover:text-primary transition-colors">
+        <div className="md:hidden border-t border-soft-wood/30 bg-warm-cream">
+          <nav className="flex flex-col px-5 py-4 gap-4 text-sm font-medium text-foreground font-heading">
+            <Link href="/" className="hover:text-ukiyo-navy transition-colors">
               Inicio
             </Link>
-            <Link href="/tienda" className="hover:text-primary transition-colors">
+            <Link href="/tienda" className="hover:text-ukiyo-navy transition-colors">
               Tienda
             </Link>
-            <Link href="/terms-and-conditions" className="hover:text-primary transition-colors">
+            <Link href="/terms-and-conditions" className="hover:text-ukiyo-navy transition-colors">
               Términos y Condiciones
             </Link>
-            <Link href="/privacy-policy" className="hover:text-primary transition-colors">
+            <Link href="/privacy-policy" className="hover:text-ukiyo-navy transition-colors">
               Política de Privacidad
             </Link>
           </nav>

@@ -15,8 +15,11 @@ export default function TiendaHero() {
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 px-4 text-center">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-ukiyo-navy/40 px-4 text-center">
+          <span className="mb-3 text-sm text-sakura-pink font-heading tracking-widest uppercase">
+            ~ Tienda Online ~
+          </span>
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-4 font-heading">
             Pide Mochis Artesanales a Domicilio en Madrid Norte
           </h1>
           <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 drop-shadow">
@@ -26,9 +29,9 @@ export default function TiendaHero() {
             href="https://ufv9.adj.st/?adjust_deeplink=glovoapp%3A%2F%2Fopen%3Flink_type%3Dstore%26store_id%3D496002&adjust_t=s321jkn"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-8 py-3 text-sm font-semibold text-white hover:bg-primary-hover transition-colors shadow-lg"
+            className="inline-flex items-center gap-2 rounded-full bg-sakura-pink px-8 py-3 text-sm font-semibold text-ukiyo-navy hover:bg-sakura-pink/80 transition-all shadow-cozy font-heading"
           >
-            Ordenar
+            Ordenar con Glovo
           </a>
           <p className="mt-4 flex items-center gap-1.5 text-sm text-white/80">
             <span className="flex gap-0.5">

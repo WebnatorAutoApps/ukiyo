@@ -60,13 +60,13 @@ export default function TiendaTestimonials() {
   };
 
   return (
-    <section className="w-full py-16 px-5 bg-primary-light">
+    <section className="w-full py-16 px-5 bg-sakura-pink/30">
       <div className="mx-auto max-w-3xl">
         <div className="relative">
           {/* Navigation arrows */}
           <button
             onClick={goPrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-12 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md hover:bg-surface transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-12 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-warm-cream shadow-cozy hover:bg-sakura-pink/30 transition-colors"
             aria-label="Testimonio anterior"
           >
             <svg
@@ -85,7 +85,7 @@ export default function TiendaTestimonials() {
           </button>
           <button
             onClick={goNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-12 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md hover:bg-surface transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-12 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-warm-cream shadow-cozy hover:bg-sakura-pink/30 transition-colors"
             aria-label="Siguiente testimonio"
           >
             <svg
@@ -104,7 +104,7 @@ export default function TiendaTestimonials() {
           </button>
 
           {/* Testimonial card */}
-          <div className="rounded-2xl bg-white p-8 md:p-12 shadow-sm text-center">
+          <div className="rounded-2xl bg-warm-cream p-8 md:p-12 shadow-cozy text-center border border-soft-wood/20">
             <StarRating rating={testimonials[current].rating} />
             <blockquote className="text-lg md:text-xl text-text-body leading-relaxed italic mb-6">
               &ldquo;{testimonials[current].text}&rdquo;
@@ -115,9 +115,9 @@ export default function TiendaTestimonials() {
                 alt={testimonials[current].name}
                 width={48}
                 height={48}
-                className="rounded-full object-cover"
+                className="rounded-full object-cover ring-2 ring-sakura-pink"
               />
-              <span className="text-sm font-bold text-foreground">
+              <span className="text-sm font-bold text-foreground font-heading">
                 {testimonials[current].name}
               </span>
             </div>
@@ -131,8 +131,8 @@ export default function TiendaTestimonials() {
                 onClick={() => goTo(index)}
                 className={`h-2.5 rounded-full transition-all ${
                   index === current
-                    ? "w-8 bg-primary"
-                    : "w-2.5 bg-primary/30 hover:bg-primary/50"
+                    ? "w-8 bg-ukiyo-navy"
+                    : "w-2.5 bg-ukiyo-navy/30 hover:bg-ukiyo-navy/50"
                 }`}
                 aria-label={`Ir al testimonio ${index + 1}`}
               />
