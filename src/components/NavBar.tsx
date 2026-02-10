@@ -27,6 +27,12 @@ export default function NavBar() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-foreground font-heading">
           <Link
+            href="/menu"
+            className="hover:text-ukiyo-navy transition-colors"
+          >
+            {t.nav.menu}
+          </Link>
+          <Link
             href="/"
             className="hover:text-ukiyo-navy transition-colors"
           >
@@ -61,6 +67,13 @@ export default function NavBar() {
       {menuOpen && (
         <div className="md:hidden border-t border-soft-wood/30 bg-warm-cream">
           <div className="flex flex-col px-5 py-4 gap-4 text-sm font-medium text-foreground font-heading">
+            <Link
+              href="/menu"
+              className="hover:text-ukiyo-navy transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              {t.nav.menu}
+            </Link>
             <Link
               href="/"
               className="hover:text-ukiyo-navy transition-colors"

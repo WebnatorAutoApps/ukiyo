@@ -9,10 +9,12 @@ export const translations: Record<Locale, Translations> = {
       buyNow: "Compra Ahora",
       home: "Inicio",
       store: "Tienda",
+      menu: "Menú",
       ourPolicies: "Nuestras políticas",
       termsAndConditions: "Términos y Condiciones",
       privacyPolicy: "Política de Privacidad",
       toggleMenu: "Toggle menu",
+      viewMenu: "Ver Menú",
     },
 
     // Hero
@@ -354,6 +356,8 @@ export const translations: Record<Locale, Translations> = {
       homeSubtitle: "Mochis y Café en Madrid Norte",
       store: "Tienda",
       storeSubtitle: "Mochis y Bubble Tea en Madrid Norte",
+      menu: "Menú",
+      menuSubtitle: "Carta completa de Ukiyo Mochis & Coffee",
     },
 
     // WhatsApp
@@ -374,10 +378,12 @@ export const translations: Record<Locale, Translations> = {
       buyNow: "今すぐ購入",
       home: "ホーム",
       store: "ショップ",
+      menu: "メニュー",
       ourPolicies: "ポリシー",
       termsAndConditions: "利用規約",
       privacyPolicy: "プライバシーポリシー",
       toggleMenu: "メニュー切替",
+      viewMenu: "メニューを見る",
     },
 
     // Hero
@@ -715,6 +721,8 @@ export const translations: Record<Locale, Translations> = {
       homeSubtitle: "マドリード北部の餅とコーヒー",
       store: "ショップ",
       storeSubtitle: "マドリード北部の餅とバブルティー",
+      menu: "メニュー",
+      menuSubtitle: "Ukiyo Mochis & Coffee の全メニュー",
     },
 
     // WhatsApp
@@ -780,10 +788,12 @@ export interface Translations {
     buyNow: string;
     home: string;
     store: string;
+    menu: string;
     ourPolicies: string;
     termsAndConditions: string;
     privacyPolicy: string;
     toggleMenu: string;
+    viewMenu: string;
   };
   hero: {
     tagline: string;
@@ -887,6 +897,8 @@ export interface Translations {
     homeSubtitle: string;
     store: string;
     storeSubtitle: string;
+    menu: string;
+    menuSubtitle: string;
   };
   whatsapp: {
     ariaLabel: string;
