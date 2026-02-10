@@ -9,10 +9,12 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import LofiPlayer from "@/components/LofiPlayer";
 import FAQ from "@/components/FAQ";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import SakuraPetals from "@/components/SakuraPetals";
 
 export default function Home() {
   return (
     <>
+      <SakuraPetals />
       <Breadcrumbs
         items={[
           { name: "Inicio", href: "/" },

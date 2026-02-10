@@ -160,6 +160,27 @@ html {
   }
 }
 
+@keyframes petalFallGlobal {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) rotate(0deg) translateX(0);
+  }
+  10% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(50vh) rotate(180deg) translateX(30px);
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(105vh) rotate(360deg) translateX(-20px);
+  }
+}
+
 @keyframes vinylSpin {
   from {
     transform: rotate(0deg);
@@ -216,6 +237,15 @@ html {
   position: absolute;
   animation: petalFall 6s ease-in-out infinite;
   pointer-events: none;
+}
+
+/* Full-page petal animation */
+.petal-global {
+  position: absolute;
+  top: -30px;
+  animation: petalFallGlobal 10s ease-in-out infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
 }
 
 /* Lantern glow effect — inspired by Japanese paper lanterns */

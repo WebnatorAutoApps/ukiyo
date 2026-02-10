@@ -40,26 +40,6 @@ export default function Hero() {
           }}
         />
 
-        {/* Falling cherry blossom petals */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-[3]">
-          {[...Array(8)].map((_, i) => (
-            <svg
-              key={i}
-              className="petal"
-              style={{
-                left: `${8 + i * 11}%`,
-                animationDelay: `${i * 0.9}s`,
-                animationDuration: `${5 + i * 0.6}s`,
-              }}
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-            >
-              <ellipse cx="9" cy="9" rx="7" ry="4" fill="#FFB6C8" opacity="0.5" transform="rotate(30 9 9)" />
-            </svg>
-          ))}
-        </div>
-
         {/* Navigation overlay */}
         <nav className="absolute top-0 left-0 right-0 z-20">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
