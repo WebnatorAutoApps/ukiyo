@@ -3,10 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import LanguageToggle from "./LanguageToggle";
 
 export default function StickyHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
+  const { t } = useLanguage();
 
   const updateOpacity = useCallback(() => {
     const hero = document.getElementById("hero");
@@ -58,7 +61,7 @@ export default function StickyHeader() {
         <Link href="/">
           <Image
             src="/images/logo-ukiyo.png"
-            alt="Ukiyo Mochis & Coffee - Mochis artesanales y café en Madrid Norte"
+            alt={t.logoAlt}
             width={200}
             height={210}
             className="h-11 w-auto transition-all duration-300"
@@ -79,7 +82,7 @@ export default function StickyHeader() {
               textShadow: isScrolled ? "none" : "0 1px 3px rgba(0,0,0,0.3)",
             }}
           >
-            Sobre Nosotros
+            {t.nav.aboutUs}
           </Link>
           <Link
             href="#preguntas-frecuentes"
@@ -89,13 +92,14 @@ export default function StickyHeader() {
               textShadow: isScrolled ? "none" : "0 1px 3px rgba(0,0,0,0.3)",
             }}
           >
-            FAQ
+            {t.nav.faq}
           </Link>
+          <LanguageToggle variant={isScrolled ? "default" : "transparent"} />
           <Link
             href="/tienda"
             className="rounded-full bg-sakura-pink px-6 py-2.5 text-sm font-bold text-ukiyo-navy hover:bg-white transition-all shadow-cozy hover:shadow-cozy-lg"
           >
-            Compra Ahora
+            {t.nav.buyNow}
           </Link>
         </div>
 
@@ -107,7 +111,7 @@ export default function StickyHeader() {
             color: isScrolled ? "var(--foreground)" : "white",
             filter: isScrolled ? "none" : "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
           }}
-          aria-label="Toggle menu"
+          aria-label={t.nav.toggleMenu}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen ? (
@@ -137,21 +141,24 @@ export default function StickyHeader() {
               className="hover:text-sakura-pink transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              Sobre Nosotros
+              {t.nav.aboutUs}
             </Link>
             <Link
               href="#preguntas-frecuentes"
               className="hover:text-sakura-pink transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              FAQ
+              {t.nav.faq}
             </Link>
+            <div className="py-1">
+              <LanguageToggle variant={isScrolled ? "default" : "transparent"} />
+            </div>
             <Link
               href="/tienda"
               className="rounded-full bg-sakura-pink px-6 py-2.5 text-sm font-bold text-ukiyo-navy hover:bg-white transition-all text-center"
               onClick={() => setMenuOpen(false)}
             >
-              Compra Ahora
+              {t.nav.buyNow}
             </Link>
           </div>
         </div>

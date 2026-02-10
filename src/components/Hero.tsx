@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Hero() {
   const [imageError, setImageError] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <section id="hero" className="relative w-full overflow-hidden">
@@ -22,7 +24,7 @@ export default function Hero() {
             {/* Mobile hero — portrait illustration optimised for small screens */}
             <Image
               src="/images/hero-storefront-mobile.jpg"
-              alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
+              alt={t.hero.imageAlt}
               fill
               className="object-cover object-center md:hidden"
               priority
@@ -32,7 +34,7 @@ export default function Hero() {
             {/* Desktop hero — wide storefront image for larger screens */}
             <Image
               src="/images/hero-storefront.jpg"
-              alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
+              alt={t.hero.imageAlt}
               fill
               className="object-cover object-center hidden md:block"
               priority
@@ -54,12 +56,12 @@ export default function Hero() {
         {/* Hero content — centered on mobile, bottom-aligned on desktop */}
         <div className="absolute inset-0 flex flex-col items-center justify-center md:justify-end pb-0 md:pb-14 px-4 z-[4]">
           <span className="mb-3 text-sm md:text-base text-sakura-pink font-heading tracking-widest uppercase drop-shadow">
-            ~ El mundo flotante ~
+            {t.hero.tagline}
           </span>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center drop-shadow-lg font-heading leading-tight">
-            Mochis Artesanales y Café
+            {t.hero.title}
             <br />
-            <span className="text-sakura-pink drop-shadow">de Especialidad</span>
+            <span className="text-sakura-pink drop-shadow">{t.hero.titleAccent}</span>
           </h1>
         </div>
       </div>

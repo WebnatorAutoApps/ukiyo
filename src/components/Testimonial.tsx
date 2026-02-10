@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Testimonial() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative w-full py-16 px-5 bg-sakura-pink/30 overflow-hidden">
       <div className="relative mx-auto max-w-3xl text-center">
@@ -18,19 +23,18 @@ export default function Testimonial() {
             ))}
           </div>
           <blockquote className="text-lg md:text-xl text-text-body leading-relaxed italic">
-            &ldquo;Los mochis de Ukiyo son una delicia, suaves y cremosos,
-            perfectos para disfrutar con café. La mejor tienda de mochis de Madrid Norte.&rdquo;
+            &ldquo;{t.testimonial.quote}&rdquo;
           </blockquote>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Image
               src="/images/testimonial-avatar.jpg"
-              alt="Lourdes López"
+              alt={t.testimonial.name}
               width={48}
               height={48}
               className="rounded-full object-cover ring-2 ring-sakura-pink"
             />
             <span className="text-sm font-bold text-foreground font-heading">
-              Lourdes López
+              {t.testimonial.name}
             </span>
           </div>
         </div>

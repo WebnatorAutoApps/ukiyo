@@ -2,30 +2,15 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Sofía M.",
-    text: "Los mochis de Ukiyo son simplemente deliciosos, cada bocado es una experiencia única y satisfactoria.",
-    avatar: "/images/testimonial-sofia.jpg",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Carlos G.",
-    text: "Me encantaron los sabores, especialmente el de maracuyá. El café complementó perfectamente esta deliciosa elección.",
-    avatar: "/images/testimonial-carlos.jpg",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "María R.",
-    text: "Los mejores mochis artesanales que he probado en Madrid. La textura es perfecta y los sabores son increíbles.",
-    avatar: "/images/testimonial-maria.jpg",
-    rating: 5,
-  },
+const avatars = [
+  "/images/testimonial-sofia.jpg",
+  "/images/testimonial-carlos.jpg",
+  "/images/testimonial-maria.jpg",
 ];
+
+const ratings = [5, 5, 5];
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -46,6 +31,9 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function TiendaTestimonials() {
   const [current, setCurrent] = useState(0);
+  const { t } = useLanguage();
+
+  const testimonials = t.tiendaTestimonials.items;
 
   const goTo = (index: number) => {
     setCurrent(index);
@@ -67,7 +55,7 @@ export default function TiendaTestimonials() {
           <button
             onClick={goPrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-12 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-warm-cream shadow-cozy hover:bg-sakura-pink/30 transition-colors"
-            aria-label="Testimonio anterior"
+            aria-label={t.tiendaTestimonials.prevLabel}
           >
             <svg
               className="w-5 h-5 text-foreground"
@@ -86,7 +74,7 @@ export default function TiendaTestimonials() {
           <button
             onClick={goNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-12 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-warm-cream shadow-cozy hover:bg-sakura-pink/30 transition-colors"
-            aria-label="Siguiente testimonio"
+            aria-label={t.tiendaTestimonials.nextLabel}
           >
             <svg
               className="w-5 h-5 text-foreground"
@@ -105,13 +93,13 @@ export default function TiendaTestimonials() {
 
           {/* Testimonial card */}
           <div className="rounded-2xl bg-warm-cream p-8 md:p-12 shadow-cozy text-center border border-soft-wood/20">
-            <StarRating rating={testimonials[current].rating} />
+            <StarRating rating={ratings[current]} />
             <blockquote className="text-lg md:text-xl text-text-body leading-relaxed italic mb-6">
               &ldquo;{testimonials[current].text}&rdquo;
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <Image
-                src={testimonials[current].avatar}
+                src={avatars[current]}
                 alt={testimonials[current].name}
                 width={48}
                 height={48}
@@ -134,7 +122,7 @@ export default function TiendaTestimonials() {
                     ? "w-8 bg-ukiyo-navy"
                     : "w-2.5 bg-ukiyo-navy/30 hover:bg-ukiyo-navy/50"
                 }`}
-                aria-label={`Ir al testimonio ${index + 1}`}
+                aria-label={`${t.tiendaTestimonials.goToLabel} ${index + 1}`}
               />
             ))}
           </div>

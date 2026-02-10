@@ -3,42 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-const categories = [
-  {
-    title: "Momentos de dulzura,",
-    subtitle: "sabores únicos",
-    description:
-      "Descubre nuestros mochis artesanales elaborados a mano en Madrid Norte con ingredientes de primera calidad e inspiración japonesa.",
-    image: "/images/mochi-product-1.jpg",
-    imageAlt: "Mochis artesanales japoneses en Madrid Norte - Ukiyo Mochis & Coffee Fuencarral",
-    link: "/tienda",
-    buttonText: "Explorar",
-    aspectRatio: "628/558",
-  },
-  {
-    title: "Bubble Tea",
-    description:
-      "Refrescantes bubble teas con sabores auténticos y toppings únicos. Boba tea artesanal en Madrid Norte.",
-    image: "/images/bubble-tea.jpg",
-    imageAlt: "Bubble tea artesanal en Madrid Norte - Boba tea y té de burbujas en Ukiyo",
-    link: "/tienda",
-    buttonText: "Explorar",
-    aspectRatio: "543/254",
-  },
-  {
-    title: "Sabores únicos disponibles",
-    description:
-      "Variedad de sabores que combinan tradición japonesa con toques creativos. Anko, matcha, maracuyá y más en Madrid Norte.",
-    image: "/images/mochi-lifestyle.jpg",
-    imageAlt: "Variedad de mochis y sabores japoneses en Madrid Norte - anko, matcha y más",
-    link: "/tienda",
-    buttonText: "Explorar",
-    aspectRatio: "541/267",
-  },
-];
+interface CategoryData {
+  title: string;
+  subtitle?: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  link: string;
+  buttonText: string;
+  aspectRatio: string;
+}
 
-function MochiCard({ category, index }: { category: typeof categories[0]; index: number }) {
+function MochiCard({ category, index }: { category: CategoryData; index: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -101,11 +79,44 @@ function MochiCard({ category, index }: { category: typeof categories[0]; index:
 }
 
 export default function ProductCategories() {
+  const { t } = useLanguage();
+
+  const categories: CategoryData[] = [
+    {
+      title: t.categories.card1Title,
+      subtitle: t.categories.card1Subtitle,
+      description: t.categories.card1Desc,
+      image: "/images/mochi-product-1.jpg",
+      imageAlt: t.categories.card1ImageAlt,
+      link: "/tienda",
+      buttonText: t.categories.explore,
+      aspectRatio: "628/558",
+    },
+    {
+      title: t.categories.card2Title,
+      description: t.categories.card2Desc,
+      image: "/images/bubble-tea.jpg",
+      imageAlt: t.categories.card2ImageAlt,
+      link: "/tienda",
+      buttonText: t.categories.explore,
+      aspectRatio: "543/254",
+    },
+    {
+      title: t.categories.card3Title,
+      description: t.categories.card3Desc,
+      image: "/images/mochi-lifestyle.jpg",
+      imageAlt: t.categories.card3ImageAlt,
+      link: "/tienda",
+      buttonText: t.categories.explore,
+      aspectRatio: "541/267",
+    },
+  ];
+
   return (
     <section className="w-full py-16 px-5 bg-warm-cream">
       <div className="mx-auto max-w-6xl">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-10 font-heading">
-          Nuestras Delicias
+          {t.categories.sectionTitle}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* First card - tall */}

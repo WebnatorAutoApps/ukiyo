@@ -3,9 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
+  const { t } = useLanguage();
 
   return (
     <footer className="w-full bg-footer-bg text-white">
@@ -15,13 +17,13 @@ export default function Footer() {
           <div>
             <Image
               src="/images/logo-ukiyo.png"
-              alt="Ukiyo Mochis & Coffee - Mochis artesanales y bubble tea en Madrid Norte"
+              alt={t.logoAlt}
               width={120}
               height={40}
               className="h-10 w-auto brightness-0 invert mb-4"
             />
             <p className="text-sm text-warm-cream/60 leading-relaxed mb-4">
-              Mochis artesanales, bubble tea y café de especialidad en Madrid Norte
+              {t.footer.brandDescription}
             </p>
             <div className="flex gap-4">
               <a
@@ -51,26 +53,26 @@ export default function Footer() {
 
           {/* Policies */}
           <div>
-            <h3 className="text-base font-bold mb-4 font-heading">Nuestras Políticas</h3>
+            <h3 className="text-base font-bold mb-4 font-heading">{t.footer.policiesTitle}</h3>
             <div className="flex flex-col gap-2 text-sm text-warm-cream/60">
               <Link
                 href="/terms-and-conditions"
                 className="hover:text-sakura-pink transition-colors"
               >
-                Términos y Condiciones
+                {t.nav.termsAndConditions}
               </Link>
               <Link
                 href="/privacy-policy"
                 className="hover:text-sakura-pink transition-colors"
               >
-                Política de Privacidad
+                {t.nav.privacyPolicy}
               </Link>
             </div>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="text-base font-bold mb-4 font-heading">Contacto</h3>
+            <h3 className="text-base font-bold mb-4 font-heading">{t.footer.contactTitle}</h3>
             <div className="flex flex-col gap-2 text-sm text-warm-cream/60">
               <a
                 href="mailto:hola@mochisukiyo.com"
@@ -90,7 +92,7 @@ export default function Footer() {
           {/* Newsletter */}
           <div>
             <h3 className="text-base font-bold mb-4 font-heading">
-              ¿Quieres estar enterado de nuestros sabores?
+              {t.footer.newsletterTitle}
             </h3>
             <form
               onSubmit={(e) => {
@@ -102,14 +104,14 @@ export default function Footer() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ingresa tu correo electrónico"
+                placeholder={t.footer.emailPlaceholder}
                 className="rounded-full bg-white/10 border border-warm-cream/20 px-4 py-2.5 text-sm text-white placeholder-warm-cream/40 outline-none focus:ring-2 focus:ring-sakura-pink"
               />
               <button
                 type="submit"
                 className="rounded-full bg-sakura-pink px-4 py-2.5 text-sm font-semibold text-ukiyo-navy hover:bg-sakura-pink/80 transition-colors font-heading"
               >
-                Quiero enterarme de los nuevos sabores
+                {t.footer.newsletterButton}
               </button>
             </form>
           </div>
@@ -118,20 +120,20 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-10 border-t border-warm-cream/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-warm-cream/40">
-            &copy; {new Date().getFullYear()}. All rights reserved.
+            &copy; {new Date().getFullYear()}. {t.footer.allRightsReserved}
           </p>
           <div className="flex gap-6 text-xs text-warm-cream/40">
             <Link
               href="/terms-and-conditions"
               className="hover:text-sakura-pink transition-colors"
             >
-              Términos y Condiciones
+              {t.nav.termsAndConditions}
             </Link>
             <Link
               href="/privacy-policy"
               className="hover:text-sakura-pink transition-colors"
             >
-              Política de Privacidad
+              {t.nav.privacyPolicy}
             </Link>
           </div>
         </div>

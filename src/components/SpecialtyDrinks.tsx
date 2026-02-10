@@ -1,44 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-const hotDrinks = [
-  { name: "Café Latte Ukiyo", description: "Espresso suave con leche cremosa y un toque de vainilla", price: "3.50" },
-  { name: "Matcha Latte", description: "Té matcha ceremonial japonés con leche espumosa", price: "4.00" },
-  { name: "Hojicha Latte", description: "Té tostado japonés con notas ahumadas y dulces", price: "4.00" },
-  { name: "Chocolate Caliente Mochi", description: "Chocolate belga con malvaviscos mochi caseros", price: "4.50" },
-];
-
-const coldDrinks = [
-  { name: "Bubble Tea Clásico", description: "Té negro con leche, perlas de tapioca y azúcar morena", price: "5.00" },
-  { name: "Taro Bubble Tea", description: "Crema de taro con perlas de tapioca y leche de coco", price: "5.50" },
-  { name: "Matcha Bubble Tea", description: "Matcha frío con leche de avena y perlas de mango", price: "5.50" },
-  { name: "Fresa Bubble Tea", description: "Fresa natural con leche y boba de fresa", price: "5.00" },
-];
+const prices = {
+  hot: ["3.50", "4.00", "4.00", "4.50"],
+  cold: ["5.00", "5.50", "5.50", "5.00"],
+};
 
 export default function SpecialtyDrinks() {
   const [isHot, setIsHot] = useState(true);
-  const drinks = isHot ? hotDrinks : coldDrinks;
+  const { t } = useLanguage();
+
+  const drinkTranslations = isHot ? t.drinks.hotDrinks : t.drinks.coldDrinks;
+  const drinkPrices = isHot ? prices.hot : prices.cold;
 
   return (
     <section className="w-full py-16 px-5 bg-warm-cream">
       <div className="mx-auto max-w-4xl">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-3 font-heading">
-          Bebidas de Especialidad
+          {t.drinks.sectionTitle}
         </h2>
         <p className="text-center text-text-secondary mb-8">
-          Café, matcha, bubble tea y más — preparados con amor
+          {t.drinks.subtitle}
         </p>
 
         {/* Coffee Bean Toggle */}
         <div className="flex items-center justify-center gap-4 mb-10">
           <span className={`text-sm font-semibold font-heading transition-colors ${isHot ? "text-ukiyo-navy" : "text-text-secondary"}`}>
-            Caliente
+            {t.drinks.hot}
           </span>
           <button
             onClick={() => setIsHot(!isHot)}
             className="relative w-16 h-8 rounded-full bg-soft-wood/50 transition-colors focus:outline-none focus:ring-2 focus:ring-sakura-pink"
-            aria-label={isHot ? "Cambiar a bebidas frías" : "Cambiar a bebidas calientes"}
+            aria-label={isHot ? t.drinks.switchToCold : t.drinks.switchToHot}
           >
             <span
               className={`absolute top-1 w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center text-xs ${
@@ -68,13 +63,13 @@ export default function SpecialtyDrinks() {
             </span>
           </button>
           <span className={`text-sm font-semibold font-heading transition-colors ${!isHot ? "text-ukiyo-navy" : "text-text-secondary"}`}>
-            Frío / Bubble Tea
+            {t.drinks.cold}
           </span>
         </div>
 
         {/* Drinks Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {drinks.map((drink, index) => (
+          {drinkTranslations.map((drink, index) => (
             <div
               key={`${isHot ? "hot" : "cold"}-${index}`}
               className="rounded-2xl bg-wood-light/60 border border-soft-wood/30 p-5 shadow-cozy hover:shadow-cozy-lg transition-all duration-300"
@@ -85,7 +80,7 @@ export default function SpecialtyDrinks() {
                   <p className="mt-1 text-sm text-text-secondary leading-relaxed">{drink.description}</p>
                 </div>
                 <span className="text-lg font-bold text-ukiyo-navy whitespace-nowrap font-heading">
-                  {drink.price}€
+                  {drinkPrices[index]}€
                 </span>
               </div>
             </div>
