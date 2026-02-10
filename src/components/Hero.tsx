@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,27 +19,47 @@ export default function Hero() {
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Background transition layer */}
+      {/* Fallback background — visible if image fails to load */}
       <div
-        className={`absolute inset-0 bg-warm-cream transition-opacity duration-1000 ${
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(135deg, #5D5068 0%, #3D2E2E 50%, #5D5068 100%)",
+        }}
+      />
+
+      {/* Scroll transition layer */}
+      <div
+        className={`absolute inset-0 bg-warm-cream transition-opacity duration-1000 z-[1] ${
           scrolled ? "opacity-100" : "opacity-0"
         }`}
       />
 
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "938/460" }}>
-        <Image
-          src="/images/hero-banner.jpg"
-          alt="Ukiyo Mochis and Coffee - Mochis artesanales y café de especialidad en Madrid Norte"
-          fill
-          className={`object-cover transition-opacity duration-1000 ${
-            scrolled ? "opacity-30" : "opacity-100"
-          }`}
-          priority
-          sizes="100vw"
+      <div className="relative w-full min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh]">
+        {!imageError && (
+          <Image
+            src="/images/hero-banner.jpg"
+            alt="Ukiyo Mochis and Coffee - Mochis artesanales y café de especialidad en Madrid Norte"
+            fill
+            className={`object-cover object-center transition-opacity duration-1000 ${
+              scrolled ? "opacity-30" : "opacity-100"
+            }`}
+            priority
+            sizes="100vw"
+            onError={() => setImageError(true)}
+          />
+        )}
+
+        {/* Gradient overlay for text readability */}
+        <div
+          className="absolute inset-0 z-[2]"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(61,46,46,0.5) 0%, rgba(93,80,104,0.35) 40%, rgba(93,80,104,0.35) 60%, rgba(61,46,46,0.6) 100%)",
+          }}
         />
 
         {/* Falling petals */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-[3]">
           {[...Array(6)].map((_, i) => (
             <svg
               key={i}
@@ -140,14 +161,14 @@ export default function Hero() {
         </nav>
 
         {/* Hero content overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-ukiyo-navy/30 px-4">
-          <span className="mb-3 text-sm md:text-base text-sakura-pink font-heading tracking-widest uppercase">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-[4]">
+          <span className="mb-3 text-sm md:text-base text-sakura-pink font-heading tracking-widest uppercase drop-shadow">
             ~ El mundo flotante ~
           </span>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center drop-shadow-lg font-heading leading-tight">
             Mochis Artesanales y Café
             <br />
-            <span className="text-sakura-pink">de Especialidad</span>
+            <span className="text-sakura-pink drop-shadow">de Especialidad</span>
           </h1>
           <p className="mt-4 text-sm md:text-lg text-white/90 text-center max-w-2xl drop-shadow leading-relaxed">
             Sumérgete en una experiencia cozy de sabores japoneses en el corazón de Madrid Norte
