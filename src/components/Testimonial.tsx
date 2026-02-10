@@ -3,25 +3,6 @@ import Image from "next/image";
 export default function Testimonial() {
   return (
     <section className="relative w-full py-16 px-5 bg-sakura-pink/30 overflow-hidden">
-      {/* Decorative cherry blossom petals */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(4)].map((_, i) => (
-          <svg
-            key={i}
-            className="petal"
-            style={{
-              left: `${10 + i * 25}%`,
-              animationDelay: `${i * 1.5}s`,
-              animationDuration: `${6 + i * 0.8}s`,
-            }}
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-          >
-            <ellipse cx="7" cy="7" rx="5" ry="3" fill="#FFB6C8" opacity="0.35" transform="rotate(45 7 7)" />
-          </svg>
-        ))}
-      </div>
       <div className="relative mx-auto max-w-3xl text-center">
         <div className="rounded-2xl bg-warm-cream p-8 md:p-12 shadow-cozy border border-sakura-pink/20 lantern-glow">
           <div className="flex justify-center gap-1 mb-6">
