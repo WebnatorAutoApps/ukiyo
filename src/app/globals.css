@@ -271,6 +271,40 @@ html {
   animation-play-state: paused;
 }
 
+/* Mochi Counter section */
+.mochi-counter-section {
+  background: linear-gradient(
+    180deg,
+    var(--warm-cream) 0%,
+    var(--wood-light) 30%,
+    var(--wood-light) 70%,
+    var(--warm-cream) 100%
+  );
+}
+
+.mochi-counter-card {
+  background: var(--wood-texture);
+  background-size: 200% 200%;
+}
+
+.mochi-counter-card-body {
+  background: var(--wood-light);
+  border-top: 2px solid var(--soft-wood);
+}
+
+.mochi-counter-fade-left {
+  background: linear-gradient(to right, var(--wood-light), transparent);
+}
+
+.mochi-counter-fade-right {
+  background: linear-gradient(to left, var(--wood-light), transparent);
+}
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

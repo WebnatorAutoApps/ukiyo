@@ -10,6 +10,7 @@ import LofiPlayer from "@/components/LofiPlayer";
 import FAQ from "@/components/FAQ";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SakuraPetals from "@/components/SakuraPetals";
+import MochiCounter from "@/components/MochiCounter";
 import StickyHeader from "@/components/StickyHeader";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
       />
       <main>
         <Hero />
+        <MochiCounter />
         <ProductCategories />
         <SpecialtyDrinks />
         <About />
