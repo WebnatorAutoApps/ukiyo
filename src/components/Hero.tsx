@@ -2,20 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Hero() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 200);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -27,22 +18,13 @@ export default function Hero() {
         }}
       />
 
-      {/* Scroll transition layer */}
-      <div
-        className={`absolute inset-0 bg-warm-cream transition-opacity duration-1000 z-[1] ${
-          scrolled ? "opacity-100" : "opacity-0"
-        }`}
-      />
-
-      <div className="relative w-full min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh]">
+      <div className="relative w-full min-h-[100vh]">
         {!imageError && (
           <Image
             src="/images/hero-storefront.jpg"
             alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
             fill
-            className={`object-cover object-center transition-opacity duration-1000 ${
-              scrolled ? "opacity-30" : "opacity-100"
-            }`}
+            className="object-cover object-center"
             priority
             sizes="100vw"
             onError={() => setImageError(true)}
