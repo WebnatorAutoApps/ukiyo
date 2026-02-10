@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import LanguageToggle from "./LanguageToggle";
 
 export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-warm-cream/95 backdrop-blur-sm border-b border-soft-wood/40">
@@ -13,7 +16,7 @@ export default function NavBar() {
         <Link href="/">
           <Image
             src="/images/logo-ukiyo.png"
-            alt="Ukiyo Mochis & Coffee - Mochis artesanales y café en Madrid Norte"
+            alt={t.logoAlt}
             width={200}
             height={210}
             className="h-11 w-auto"
@@ -27,13 +30,14 @@ export default function NavBar() {
             href="/"
             className="hover:text-ukiyo-navy transition-colors"
           >
-            Sobre Nosotros
+            {t.nav.aboutUs}
           </Link>
+          <LanguageToggle />
           <Link
             href="/tienda"
             className="rounded-full bg-sakura-pink px-6 py-2.5 text-sm font-bold text-ukiyo-navy hover:bg-ukiyo-navy hover:text-white transition-all shadow-cozy hover:shadow-cozy-lg"
           >
-            Compra Ahora
+            {t.nav.buyNow}
           </Link>
         </div>
 
@@ -41,7 +45,7 @@ export default function NavBar() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden p-2 text-foreground"
-          aria-label="Toggle menu"
+          aria-label={t.nav.toggleMenu}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen ? (
@@ -62,14 +66,17 @@ export default function NavBar() {
               className="hover:text-ukiyo-navy transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              Sobre Nosotros
+              {t.nav.aboutUs}
             </Link>
+            <div className="py-1">
+              <LanguageToggle />
+            </div>
             <Link
               href="/tienda"
               className="rounded-full bg-sakura-pink px-6 py-2.5 text-sm font-bold text-ukiyo-navy hover:bg-ukiyo-navy hover:text-white transition-all text-center"
               onClick={() => setMenuOpen(false)}
             >
-              Compra Ahora
+              {t.nav.buyNow}
             </Link>
           </div>
         </div>

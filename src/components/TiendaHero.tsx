@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function TiendaHero() {
+  const { t } = useLanguage();
+
   return (
     <section className="w-full">
       <div
@@ -9,7 +14,7 @@ export default function TiendaHero() {
       >
         <Image
           src="/images/tienda-hero.png"
-          alt="Tienda de mochis artesanales y bubble tea en Madrid Norte - Pide con Glovo desde Fuencarral-El Pardo"
+          alt={t.tiendaHero.imageAlt}
           fill
           className="object-cover"
           priority
@@ -17,13 +22,13 @@ export default function TiendaHero() {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-ukiyo-navy/40 px-4 text-center">
           <span className="mb-3 text-sm text-sakura-pink font-heading tracking-widest uppercase">
-            ~ Tienda Online ~
+            {t.tiendaHero.tagline}
           </span>
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg mb-4 font-heading">
-            Pide Mochis Artesanales a Domicilio en Madrid Norte
+            {t.tiendaHero.heading}
           </h1>
           <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 drop-shadow">
-            Disfruta de nuestros packs de mochis japoneses, bubble tea y café de especialidad. ¡Haz tu pedido ahora con Glovo!
+            {t.tiendaHero.description}
           </p>
           <a
             href="https://ufv9.adj.st/?adjust_deeplink=glovoapp%3A%2F%2Fopen%3Flink_type%3Dstore%26store_id%3D496002&adjust_t=s321jkn"
@@ -31,7 +36,7 @@ export default function TiendaHero() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-sakura-pink px-8 py-3 text-sm font-semibold text-ukiyo-navy hover:bg-sakura-pink/80 transition-all shadow-cozy font-heading"
           >
-            Ordenar con Glovo
+            {t.tiendaHero.orderButton}
           </a>
           <p className="mt-4 flex items-center gap-1.5 text-sm text-white/80">
             <span className="flex gap-0.5">
@@ -46,7 +51,7 @@ export default function TiendaHero() {
                 </svg>
               ))}
             </span>
-            5 estrellas de satisfacción
+            {t.tiendaHero.starRating}
           </p>
         </div>
       </div>

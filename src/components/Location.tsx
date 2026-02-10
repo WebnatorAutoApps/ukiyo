@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Location() {
+  const { t } = useLanguage();
+
   return (
     <section className="w-full py-16 px-5 bg-warm-cream">
       <div className="mx-auto max-w-6xl">
@@ -8,7 +13,7 @@ export default function Location() {
           <div className="relative rounded-2xl overflow-hidden shadow-cozy" style={{ aspectRatio: "503/384" }}>
             <Image
               src="/images/location.jpg"
-              alt="Tienda Ukiyo Mochis & Coffee en Madrid Norte - Santiago de Compostela 36, Fuencarral-El Pardo"
+              alt={t.location.imageAlt}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -16,14 +21,14 @@ export default function Location() {
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground font-heading">
-              Visítanos en Madrid Norte
+              {t.location.heading}
             </h2>
             <address className="mt-4 text-base text-text-body leading-relaxed not-italic">
               <strong>Ukiyo Mochis &amp; Coffee</strong><br />
-              Santiago de Compostela 36, Fuencarral-El Pardo, 28034 Madrid
+              {t.location.address}
             </address>
             <p className="mt-2 text-sm text-text-secondary leading-relaxed">
-              Horario: Lun-Vie 10:00-20:00 · Sáb 10:00-21:00 · Dom 11:00-19:00
+              {t.location.hours}
             </p>
             <div className="mt-6 flex gap-4">
               <a
@@ -61,7 +66,7 @@ export default function Location() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Abrir en Waze
+              {t.location.openInWaze}
             </a>
           </div>
         </div>

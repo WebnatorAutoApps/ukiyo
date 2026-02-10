@@ -3,10 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import LanguageToggle from "./LanguageToggle";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [policiesOpen, setPoliciesOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-warm-cream/95 backdrop-blur-sm border-b border-soft-wood/40">
@@ -14,7 +17,7 @@ export default function Header() {
         <Link href="/">
           <Image
             src="/images/logo-ukiyo.png"
-            alt="Ukiyo Mochis & Coffee - Mochis artesanales y café en Madrid Norte"
+            alt={t.logoAlt}
             width={200}
             height={210}
             className="h-11 w-auto"
@@ -28,20 +31,20 @@ export default function Header() {
             href="/"
             className="hover:text-ukiyo-navy transition-colors"
           >
-            Inicio
+            {t.nav.home}
           </Link>
           <Link
             href="/tienda"
             className="hover:text-ukiyo-navy transition-colors"
           >
-            Tienda
+            {t.nav.store}
           </Link>
           <div className="relative">
             <button
               onClick={() => setPoliciesOpen(!policiesOpen)}
               className="flex items-center gap-1 hover:text-ukiyo-navy transition-colors"
             >
-              Nuestras políticas
+              {t.nav.ourPolicies}
               <svg
                 className={`w-4 h-4 transition-transform ${policiesOpen ? "rotate-180" : ""}`}
                 fill="none"
@@ -62,24 +65,25 @@ export default function Header() {
                   href="/terms-and-conditions"
                   className="block px-4 py-2 text-sm text-text-body hover:bg-sakura-pink/30 transition-colors rounded-lg mx-1"
                 >
-                  Términos y Condiciones
+                  {t.nav.termsAndConditions}
                 </Link>
                 <Link
                   href="/privacy-policy"
                   className="block px-4 py-2 text-sm text-text-body hover:bg-sakura-pink/30 transition-colors rounded-lg mx-1"
                 >
-                  Política de Privacidad
+                  {t.nav.privacyPolicy}
                 </Link>
               </div>
             )}
           </div>
+          <LanguageToggle />
         </nav>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden p-2 text-foreground"
-          aria-label="Toggle menu"
+          aria-label={t.nav.toggleMenu}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen ? (
@@ -96,17 +100,20 @@ export default function Header() {
         <div className="md:hidden border-t border-soft-wood/30 bg-warm-cream">
           <nav className="flex flex-col px-5 py-4 gap-4 text-sm font-medium text-foreground font-heading">
             <Link href="/" className="hover:text-ukiyo-navy transition-colors">
-              Inicio
+              {t.nav.home}
             </Link>
             <Link href="/tienda" className="hover:text-ukiyo-navy transition-colors">
-              Tienda
+              {t.nav.store}
             </Link>
             <Link href="/terms-and-conditions" className="hover:text-ukiyo-navy transition-colors">
-              Términos y Condiciones
+              {t.nav.termsAndConditions}
             </Link>
             <Link href="/privacy-policy" className="hover:text-ukiyo-navy transition-colors">
-              Política de Privacidad
+              {t.nav.privacyPolicy}
             </Link>
+            <div className="py-1">
+              <LanguageToggle />
+            </div>
           </nav>
         </div>
       )}

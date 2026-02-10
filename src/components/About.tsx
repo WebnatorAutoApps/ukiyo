@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function About() {
+  const { t } = useLanguage();
+
   return (
     <section id="sobre-nosotros" className="w-full py-16 px-5 bg-surface">
       <div className="mx-auto max-w-6xl">
@@ -11,7 +16,7 @@ export default function About() {
             <div className="relative rounded-2xl overflow-hidden shadow-cozy" style={{ aspectRatio: "612/464" }}>
               <Image
                 src="/images/about-photo.jpg"
-                alt="Elaboración de mochis artesanales en Ukiyo Mochis & Coffee Madrid Norte"
+                alt={t.about.imageAlt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -58,25 +63,25 @@ export default function About() {
           {/* Right: Text content */}
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground leading-tight font-heading">
-              Repostería japonesa artesanal en Madrid Norte
+              {t.about.heading}
             </h2>
 
             {/* Japanese quote */}
             <blockquote className="mt-4 pl-4 border-l-4 border-sakura-pink italic text-ukiyo-navy">
-              <p className="text-base font-heading">&ldquo;Ukiyo — el mundo flotante, donde cada momento es para saborear&rdquo;</p>
+              <p className="text-base font-heading">&ldquo;{t.about.quote}&rdquo;</p>
             </blockquote>
 
             <p className="mt-4 text-base text-text-body leading-relaxed">
-              En Ukiyo Mochis &amp; Coffee, somos la tienda de referencia de mochis artesanales en Madrid Norte. Desde nuestro local en Fuencarral-El Pardo, elaboramos a mano dulces japoneses que combinan tradición y creatividad, acompañados de café de especialidad y bubble tea.
+              {t.about.paragraph1}
             </p>
             <p className="mt-3 text-base text-text-body leading-relaxed">
-              Cada mochi es preparado uno a uno con ingredientes de primera calidad, cuidando su textura, sabor y estética. Ofrecemos sabores como anko, matcha, maracuyá, fresa y chocolate, fusionando lo mejor de la repostería japonesa con un toque moderno y madrileño.
+              {t.about.paragraph2}
             </p>
             <Link
               href="/tienda"
               className="mt-6 inline-block rounded-full bg-ukiyo-navy px-8 py-3 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading"
             >
-              Comprar
+              {t.about.buyButton}
             </Link>
           </div>
         </div>

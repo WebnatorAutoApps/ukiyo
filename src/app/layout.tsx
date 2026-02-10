@@ -3,6 +3,7 @@ import { Nunito, Quicksand, Varela_Round } from "next/font/google";
 import "./globals.css";
 import CopyPageInfo from "@/components/CopyPageInfo";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -113,9 +114,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${nunito.variable} ${quicksand.variable} ${varelaRound.variable} antialiased`}>
-        <LocalBusinessSchema />
-        {children}
-        <CopyPageInfo />
+        <LanguageProvider>
+          <LocalBusinessSchema />
+          {children}
+          <CopyPageInfo />
+        </LanguageProvider>
       </body>
     </html>
   );
