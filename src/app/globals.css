@@ -579,11 +579,12 @@ html {
   font-size: 12px;
   font-weight: 600;
   font-family: var(--font-heading);
-  color: var(--foreground);
+  color: #ffb6c1;
   background: var(--wood-light);
   border: 1.5px solid var(--soft-wood);
   box-shadow: 0 2px 8px rgba(93, 80, 104, 0.12);
   pointer-events: none;
+  opacity: 0.75;
   animation: fadeInUp 0.2s ease-out;
 }
 
