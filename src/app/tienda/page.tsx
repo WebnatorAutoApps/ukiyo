@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import TiendaHero from "@/components/TiendaHero";
+import TiendaProducts from "@/components/TiendaProducts";
 import TiendaTestimonials from "@/components/TiendaTestimonials";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import LofiPlayer from "@/components/LofiPlayer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
@@ -43,10 +45,12 @@ export default function TiendaPage() {
       />
       <main>
         <TiendaHero />
+        <TiendaProducts />
         <TiendaTestimonials />
       </main>
       <Footer />
       <WhatsAppButton />
+      <LofiPlayer />
     </>
   );
 }

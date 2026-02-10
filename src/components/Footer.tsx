@@ -20,7 +20,7 @@ export default function Footer() {
               height={40}
               className="h-10 w-auto brightness-0 invert mb-4"
             />
-            <p className="text-sm text-text-secondary leading-relaxed mb-4">
+            <p className="text-sm text-warm-cream/60 leading-relaxed mb-4">
               Mochis artesanales, bubble tea y café de especialidad en Madrid Norte
             </p>
             <div className="flex gap-4">
@@ -28,7 +28,7 @@ export default function Footer() {
                 href="https://www.instagram.com/ukiyomochis/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-secondary hover:text-white transition-colors"
+                className="text-warm-cream/60 hover:text-sakura-pink transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@ export default function Footer() {
                 href="https://www.tiktok.com/@ukiyomochisandcoffee"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-secondary hover:text-white transition-colors"
+                className="text-warm-cream/60 hover:text-sakura-pink transition-colors"
                 aria-label="TikTok"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -51,17 +51,17 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-base font-bold mb-4">Contacto</h3>
-            <div className="flex flex-col gap-2 text-sm text-text-secondary">
+            <h3 className="text-base font-bold mb-4 font-heading">Contacto</h3>
+            <div className="flex flex-col gap-2 text-sm text-warm-cream/60">
               <a
                 href="mailto:hola@mochisukiyo.com"
-                className="hover:text-white transition-colors"
+                className="hover:text-sakura-pink transition-colors"
               >
                 hola@mochisukiyo.com
               </a>
               <a
                 href="tel:+34605438663"
-                className="hover:text-white transition-colors"
+                className="hover:text-sakura-pink transition-colors"
               >
                 +34 605 43 86 63
               </a>
@@ -70,7 +70,7 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-base font-bold mb-4">
+            <h3 className="text-base font-bold mb-4 font-heading">
               ¿Quieres estar enterado de nuestros sabores?
             </h3>
             <form
@@ -84,11 +84,11 @@ export default function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Ingresa tu correo electrónico"
-                className="rounded-md bg-white px-4 py-2.5 text-sm text-foreground placeholder-text-secondary outline-none focus:ring-2 focus:ring-primary"
+                className="rounded-full bg-white/10 border border-warm-cream/20 px-4 py-2.5 text-sm text-white placeholder-warm-cream/40 outline-none focus:ring-2 focus:ring-sakura-pink"
               />
               <button
                 type="submit"
-                className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover transition-colors"
+                className="rounded-full bg-sakura-pink px-4 py-2.5 text-sm font-semibold text-ukiyo-navy hover:bg-sakura-pink/80 transition-colors font-heading"
               >
                 Quiero enterarme de los nuevos sabores
               </button>
@@ -97,20 +97,20 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-10 border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-text-secondary">
+        <div className="mt-10 border-t border-warm-cream/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-warm-cream/40">
             &copy; {new Date().getFullYear()}. All rights reserved.
           </p>
-          <div className="flex gap-6 text-xs text-text-secondary">
+          <div className="flex gap-6 text-xs text-warm-cream/40">
             <Link
               href="/terms-and-conditions"
-              className="hover:text-white transition-colors"
+              className="hover:text-sakura-pink transition-colors"
             >
               Términos y Condiciones
             </Link>
             <Link
               href="/privacy-policy"
-              className="hover:text-white transition-colors"
+              className="hover:text-sakura-pink transition-colors"
             >
               Política de Privacidad
             </Link>

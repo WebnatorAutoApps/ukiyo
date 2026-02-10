@@ -1,11 +1,13 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
+import SpecialtyDrinks from "@/components/SpecialtyDrinks";
 import About from "@/components/About";
 import Testimonial from "@/components/Testimonial";
 import Location from "@/components/Location";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import LofiPlayer from "@/components/LofiPlayer";
 import FAQ from "@/components/FAQ";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -22,6 +24,7 @@ export default function Home() {
       <main>
         <Hero />
         <ProductCategories />
+        <SpecialtyDrinks />
         <About />
         <Testimonial />
         <Location />
@@ -29,6 +32,7 @@ export default function Home() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <LofiPlayer />
     </>
   );
 }
