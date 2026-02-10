@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export type Season = "spring" | "summer" | "autumn" | "winter";
 
@@ -48,14 +48,44 @@ export default function SeasonalSlider({
   onSeasonChange,
   currentSeason,
 }: SeasonalSliderProps) {
-  const [hoveredSeason, setHoveredSeason] = useState<Season | null>(null);
+  const [tooltipSeason, setTooltipSeason] = useState<Season | null>(null);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentIndex = SEASONS.findIndex((s) => s.id === currentSeason);
+
+  const clearHideTimeout = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  }, []);
+
+  const showTooltip = useCallback(
+    (season: Season) => {
+      clearHideTimeout();
+      setTooltipSeason(season);
+      hideTimeoutRef.current = setTimeout(() => {
+        setTooltipSeason(null);
+        hideTimeoutRef.current = null;
+      }, 1000);
+    },
+    [clearHideTimeout]
+  );
+
+  const hideTooltip = useCallback(() => {
+    clearHideTimeout();
+    setTooltipSeason(null);
+  }, [clearHideTimeout]);
+
+  useEffect(() => {
+    return () => clearHideTimeout();
+  }, [clearHideTimeout]);
 
   const handleSeasonSelect = useCallback(
     (season: Season) => {
+      showTooltip(season);
       onSeasonChange(season);
     },
-    [onSeasonChange]
+    [onSeasonChange, showTooltip]
   );
 
   return (
@@ -88,10 +118,10 @@ export default function SeasonalSlider({
               left: `${index * (100 / (SEASONS.length - 1))}%`,
             }}
             onClick={() => handleSeasonSelect(season.id)}
-            onMouseEnter={() => setHoveredSeason(season.id)}
-            onMouseLeave={() => setHoveredSeason(null)}
-            onFocus={() => setHoveredSeason(season.id)}
-            onBlur={() => setHoveredSeason(null)}
+            onMouseDown={() => showTooltip(season.id)}
+            onMouseUp={hideTooltip}
+            onTouchStart={() => showTooltip(season.id)}
+            onTouchEnd={hideTooltip}
             role="radio"
             aria-checked={currentSeason === season.id}
             aria-label={`${season.label} — ${season.tooltip}`}
@@ -99,8 +129,8 @@ export default function SeasonalSlider({
           >
             <span className="seasonal-slider__icon">{season.icon}</span>
 
-            {/* Tooltip */}
-            {hoveredSeason === season.id && (
+            {/* Tooltip — appears on interaction, auto-hides after 1s */}
+            {tooltipSeason === season.id && (
               <span
                 className="seasonal-slider__tooltip"
                 role="tooltip"
