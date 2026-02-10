@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 
 const mochiProducts = [
   {
@@ -30,7 +30,7 @@ const mochiProducts = [
 // Duplicate for seamless infinite scroll
 const carouselItems = [...mochiProducts, ...mochiProducts];
 
-function MochiProductCard({
+const MochiProductCard = memo(function MochiProductCard({
   product,
 }: {
   product: (typeof mochiProducts)[0];
@@ -40,30 +40,33 @@ function MochiProductCard({
 
   return (
     <div
-      className="mochi-counter-card group relative flex-shrink-0 w-[260px] sm:w-[280px] rounded-2xl overflow-hidden shadow-cozy hover:shadow-cozy-lg transition-all duration-300"
+      className="mochi-counter-card group relative flex-shrink-0 w-[260px] sm:w-[280px] rounded-2xl overflow-hidden shadow-cozy hover:shadow-cozy-lg transition-shadow duration-300"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       role="group"
       aria-label={product.name}
+      style={{ willChange: "transform" }}
     >
-      {/* Steam effect on hover */}
-      {hovered && (
-        <div className="absolute top-0 left-0 right-0 z-10 h-20 pointer-events-none">
-          <span className="steam-particle" />
-          <span className="steam-particle" />
-          <span className="steam-particle" />
-        </div>
-      )}
+      {/* Steam effect — always rendered, toggled via CSS opacity for perf */}
+      <div
+        className="absolute top-0 left-0 right-0 z-10 h-20 pointer-events-none transition-opacity duration-300"
+        style={{ opacity: hovered ? 1 : 0 }}
+      >
+        <span className="steam-particle" />
+        <span className="steam-particle" />
+        <span className="steam-particle" />
+      </div>
 
-      {/* Sparkle effect on hover */}
-      {hovered && (
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          <span className="sparkle" />
-          <span className="sparkle" />
-          <span className="sparkle" />
-          <span className="sparkle" />
-        </div>
-      )}
+      {/* Sparkle effect — always rendered, toggled via CSS opacity for perf */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-300"
+        style={{ opacity: hovered ? 1 : 0 }}
+      >
+        <span className="sparkle" />
+        <span className="sparkle" />
+        <span className="sparkle" />
+        <span className="sparkle" />
+      </div>
 
       {/* Image */}
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: "1/1" }}>
@@ -101,11 +104,18 @@ function MochiProductCard({
       </div>
     </div>
   );
-}
+});
 
 export default function MochiCounter() {
   const trackRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (!trackRef.current) return;
@@ -117,45 +127,45 @@ export default function MochiCounter() {
     }
   }, []);
 
-  // Auto-scroll logic
+  // Auto-scroll logic — uses refs to avoid re-creating the animation loop on pause/unpause
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
     let animationId: number;
-    let scrollPos = 0;
     const speed = 0.5; // pixels per frame
 
+    // Sync initial scroll position
+    scrollPosRef.current = track.scrollLeft;
+
     const step = () => {
-      if (!isPaused) {
-        scrollPos += speed;
+      if (!isPausedRef.current) {
+        scrollPosRef.current += speed;
         // Reset when we've scrolled through the first set of items
         const halfWidth = track.scrollWidth / 2;
-        if (scrollPos >= halfWidth) {
-          scrollPos = 0;
+        if (scrollPosRef.current >= halfWidth) {
+          scrollPosRef.current = 0;
         }
-        track.scrollLeft = scrollPos;
+        track.scrollLeft = scrollPosRef.current;
       }
       animationId = requestAnimationFrame(step);
     };
 
-    // Sync scroll position on start
-    scrollPos = track.scrollLeft;
     animationId = requestAnimationFrame(step);
 
     return () => cancelAnimationFrame(animationId);
-  }, [isPaused]);
+  }, []);
 
   return (
     <section
       className="w-full py-14 px-5 mochi-counter-section overflow-hidden"
-      aria-label="Mostrador de Mochis"
+      aria-label="Nuestros Mochis"
     >
       <div className="mx-auto max-w-6xl">
         {/* Section header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground font-heading">
-            Mostrador de Mochis
+            Nuestros Mochis
           </h2>
           <p className="mt-2 text-text-secondary text-sm md:text-base">
             Nuestros sabores más populares, hechos a mano cada día
