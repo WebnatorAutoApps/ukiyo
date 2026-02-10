@@ -75,6 +75,16 @@ export default function StickyHeader() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium font-heading">
           <Link
+            href="/menu"
+            className="transition-colors duration-300"
+            style={{
+              color: isScrolled ? "var(--foreground)" : "rgba(255,255,255,0.9)",
+              textShadow: isScrolled ? "none" : "0 1px 3px rgba(0,0,0,0.3)",
+            }}
+          >
+            {t.nav.menu}
+          </Link>
+          <Link
             href="#sobre-nosotros"
             className="transition-colors duration-300"
             style={{
@@ -136,6 +146,13 @@ export default function StickyHeader() {
             className="flex flex-col px-5 py-4 gap-4 text-sm font-medium font-heading"
             style={{ color: isScrolled ? "var(--foreground)" : "white" }}
           >
+            <Link
+              href="/menu"
+              className="hover:text-sakura-pink transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              {t.nav.menu}
+            </Link>
             <Link
               href="#sobre-nosotros"
               className="hover:text-sakura-pink transition-colors"
