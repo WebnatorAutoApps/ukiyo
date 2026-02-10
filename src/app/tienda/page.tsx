@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
+import NavBar from "@/components/NavBar";
 import TiendaHero from "@/components/TiendaHero";
 import TiendaProducts from "@/components/TiendaProducts";
 import TiendaTestimonials from "@/components/TiendaTestimonials";
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 export default function TiendaPage() {
   return (
     <>
-      <Header />
+      <NavBar />
       <Breadcrumbs
         items={[
           { name: "Inicio", href: "/" },
