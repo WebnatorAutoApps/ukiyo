@@ -259,6 +259,8 @@ export const translations: Record<Locale, Translations> = {
       popular: "Popular",
       from: "desde",
       unit: "ud.",
+      seasonalHot: "☀️ Caliente",
+      seasonalCold: "❄️ Frío",
       highlights: [
         {
           name: "Ukiyo Combo",
@@ -310,19 +312,26 @@ export const translations: Record<Locale, Translations> = {
             { name: "Taro Bubble Tea", price: "5,50€", description: "Crema de taro con perlas de tapioca y leche de coco" },
             { name: "Matcha Bubble Tea", price: "5,50€", description: "Matcha frío con leche de avena y perlas de mango" },
             { name: "Fresa Bubble Tea", price: "5,00€", description: "Fresa natural con leche y boba de fresa" },
-            { name: "Café Latte Ukiyo", price: "3,50€", description: "Espresso suave con leche cremosa y un toque de vainilla" },
-            { name: "Matcha Latte", price: "4,00€", description: "Té matcha ceremonial japonés con leche espumosa" },
+            { name: "Café Latte Ukiyo", price: "3,50€", description: "Espresso suave con leche cremosa y un toque de vainilla", hot: true },
+            { name: "Matcha Latte", price: "4,00€", description: "Té matcha ceremonial japonés con leche espumosa", hot: true },
+            { name: "Espresso / Americano", price: "2,50€", description: "Café de especialidad de tueste medio, intenso y aromático", hot: true },
+            { name: "Cappuccino", price: "3,00€", description: "Espresso con leche espumosa y un toque de cacao", hot: true },
+            { name: "Chai Latte", price: "4,00€", description: "Té chai especiado con leche cremosa y canela", hot: true, tag: "popular" },
           ],
         },
         {
           id: "savory",
-          name: "Savory & Brunch",
+          name: "Brunch & Salado",
           emoji: "🥯",
           items: [
             { name: "Bocadillo de Pernil", price: "7,50€", description: "Jamón asado artesanal en pan crujiente recién horneado", tag: "nuevo" },
             { name: "Tostada de Aguacate", price: "6,50€", description: "Aguacate fresco sobre pan artesanal con semillas" },
             { name: "Croissant de Jamón y Queso", price: "4,50€", description: "Croissant mantequilla con jamón y queso fundido" },
             { name: "Bagel de Salmón", price: "7,00€", description: "Salmón ahumado con queso crema y alcaparras", tag: "nuevo" },
+            { name: "Trío de Baos", price: "7,50€", description: "Tres baos al vapor rellenos de cerdo, pollo y vegetales con salsa hoisin", tag: "popular" },
+            { name: "Tosta de Salmón", price: "7,00€", description: "Salmón ahumado sobre tosta crujiente con queso crema y eneldo", tag: "nuevo" },
+            { name: "Gyozas Variadas", price: "6,50€", description: "Mix de gyozas de pollo, gambas y verduras a la plancha" },
+            { name: "Tequeños", price: "5,50€", description: "Palitos crujientes de masa rellenos de queso fundido con salsa de guayaba", tag: "nuevo" },
           ],
         },
         {
@@ -611,6 +620,8 @@ export const translations: Record<Locale, Translations> = {
       popular: "人気",
       from: "から",
       unit: "個",
+      seasonalHot: "☀️ ホット",
+      seasonalCold: "❄️ コールド",
       highlights: [
         {
           name: "Ukiyo コンボ",
@@ -662,19 +673,26 @@ export const translations: Record<Locale, Translations> = {
             { name: "タロバブルティー", price: "5,50€", description: "タロクリームとタピオカパール、ココナッツミルク" },
             { name: "抹茶バブルティー", price: "5,50€", description: "アイス抹茶とオーツミルク、マンゴーパール" },
             { name: "いちごバブルティー", price: "5,00€", description: "フレッシュいちごとミルク、いちごボバ" },
-            { name: "Ukiyo カフェラテ", price: "3,50€", description: "なめらかなエスプレッソにクリーミーなミルクとバニラの香り" },
-            { name: "抹茶ラテ", price: "4,00€", description: "日本の茶道用抹茶とふわふわのミルク" },
+            { name: "Ukiyo カフェラテ", price: "3,50€", description: "なめらかなエスプレッソにクリーミーなミルクとバニラの香り", hot: true },
+            { name: "抹茶ラテ", price: "4,00€", description: "日本の茶道用抹茶とふわふわのミルク", hot: true },
+            { name: "エスプレッソ / アメリカーノ", price: "2,50€", description: "ミディアムローストのスペシャルティコーヒー、力強い香り", hot: true },
+            { name: "カプチーノ", price: "3,00€", description: "エスプレッソにふわふわミルクとカカオの香り", hot: true },
+            { name: "チャイラテ", price: "4,00€", description: "スパイスの効いたチャイティーにクリーミーなミルクとシナモン", hot: true, tag: "popular" },
           ],
         },
         {
           id: "savory",
-          name: "食事 & ブランチ",
+          name: "ブランチ & 食事",
           emoji: "🥯",
           items: [
             { name: "ペルニルサンド", price: "7,50€", description: "焼き上げハムの手作りサンドイッチ", tag: "nuevo" },
             { name: "アボカドトースト", price: "6,50€", description: "新鮮なアボカドと種子のアルチザンパン" },
             { name: "ハムチーズクロワッサン", price: "4,50€", description: "バタークロワッサンにハムと溶けるチーズ" },
             { name: "サーモンベーグル", price: "7,00€", description: "スモークサーモンとクリームチーズ、ケッパー", tag: "nuevo" },
+            { name: "バオ三種盛り", price: "7,50€", description: "豚肉、鶏肉、野菜の3種類の蒸しバオにホイシンソース添え", tag: "popular" },
+            { name: "サーモントースト", price: "7,00€", description: "スモークサーモンのカリカリトーストにクリームチーズとディル", tag: "nuevo" },
+            { name: "ミックス餃子", price: "6,50€", description: "チキン、エビ、野菜の鉄板焼き餃子ミックス" },
+            { name: "テケーニョス", price: "5,50€", description: "チーズたっぷりのカリカリ揚げスティック、グアバソース添え", tag: "nuevo" },
           ],
         },
         {
@@ -725,6 +743,7 @@ interface MenuItem {
   description?: string;
   tag?: string;
   priceModifier?: string;
+  hot?: boolean;
 }
 
 interface MenuCategory {
@@ -829,6 +848,8 @@ export interface Translations {
     popular: string;
     from: string;
     unit: string;
+    seasonalHot: string;
+    seasonalCold: string;
     highlights: MenuHighlight[];
     categories: MenuCategory[];
   };
