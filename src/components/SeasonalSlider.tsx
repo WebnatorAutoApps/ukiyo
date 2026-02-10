@@ -54,11 +54,6 @@ export default function SeasonalSlider({
   const handleSeasonSelect = useCallback(
     (season: Season) => {
       onSeasonChange(season);
-      try {
-        localStorage.setItem("ukiyo-season", season);
-      } catch {
-        // localStorage not available
-      }
     },
     [onSeasonChange]
   );

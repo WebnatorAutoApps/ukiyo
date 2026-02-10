@@ -3,15 +3,8 @@
 import Image from "next/image";
 import { useState, useCallback } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
-import SeasonalSlider, {
-  type Season,
-  getCurrentSeason,
-  getStoredSeason,
-} from "./SeasonalSlider";
-
-function getInitialSeason(): Season {
-  return getStoredSeason() ?? getCurrentSeason();
-}
+import { useSeason } from "@/context/SeasonContext";
+import SeasonalSlider, { type Season } from "./SeasonalSlider";
 
 const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
   spring: {
@@ -35,8 +28,8 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
 export default function Hero() {
   const [imageError, setImageError] = useState(false);
   const { t } = useLanguage();
-  const [activeSeason, setActiveSeason] = useState<Season>(getInitialSeason);
-  const [displayedSeason, setDisplayedSeason] = useState<Season>(getInitialSeason);
+  const { season: activeSeason, setSeason } = useSeason();
+  const [displayedSeason, setDisplayedSeason] = useState<Season>(activeSeason);
   const [isFading, setIsFading] = useState(false);
 
   const handleSeasonChange = useCallback(
@@ -44,7 +37,7 @@ export default function Hero() {
       if (newSeason === activeSeason) return;
       // Start fade out
       setIsFading(true);
-      setActiveSeason(newSeason);
+      setSeason(newSeason);
 
       // After fade out completes, swap image and fade in
       const timer = setTimeout(() => {
@@ -55,7 +48,7 @@ export default function Hero() {
 
       return () => clearTimeout(timer);
     },
-    [activeSeason]
+    [activeSeason, setSeason]
   );
 
   const images = SEASON_IMAGES[displayedSeason];
