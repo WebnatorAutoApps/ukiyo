@@ -199,6 +199,7 @@ html {
   background: rgba(255, 209, 220, 0.6);
   animation: steamFloat 2s ease-out infinite;
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .steam-particle:nth-child(1) { left: 30%; animation-delay: 0s; }
@@ -214,6 +215,7 @@ html {
   background: #FFD1DC;
   animation: sparkle 1.5s ease-in-out infinite;
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .sparkle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
