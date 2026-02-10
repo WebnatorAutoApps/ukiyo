@@ -11,7 +11,7 @@ export default function LanguageToggle({ variant = "default" }: { variant?: "def
     <div className="flex items-center gap-1.5">
       <button
         onClick={() => setLocale("es")}
-        className={`px-2 py-1 text-xs font-bold rounded-md transition-all font-heading ${
+        className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-full transition-all font-heading ${
           !isJapanese
             ? variant === "transparent"
               ? "bg-white/20 text-white"
@@ -23,12 +23,12 @@ export default function LanguageToggle({ variant = "default" }: { variant?: "def
         aria-label="Cambiar a Español"
         aria-current={!isJapanese ? "true" : undefined}
       >
+        <span className="text-sm leading-none" role="img" aria-hidden="true">🇪🇸</span>
         ES
       </button>
-      <span className={`text-xs ${variant === "transparent" ? "text-white/40" : "text-text-secondary"}`}>/</span>
       <button
         onClick={() => setLocale("ja")}
-        className={`px-2 py-1 text-xs font-bold rounded-md transition-all font-heading ${
+        className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-full transition-all font-heading ${
           isJapanese
             ? variant === "transparent"
               ? "bg-white/20 text-white"
@@ -40,6 +40,7 @@ export default function LanguageToggle({ variant = "default" }: { variant?: "def
         aria-label="日本語に切り替え"
         aria-current={isJapanese ? "true" : undefined}
       >
+        <span className="text-sm leading-none" role="img" aria-hidden="true">🇯🇵</span>
         JA
       </button>
     </div>
