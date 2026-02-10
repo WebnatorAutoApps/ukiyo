@@ -4,6 +4,7 @@ import "./globals.css";
 import CopyPageInfo from "@/components/CopyPageInfo";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import { LanguageProvider } from "@/i18n/LanguageContext";
+import { SeasonProvider } from "@/context/SeasonContext";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -115,9 +116,11 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${nunito.variable} ${quicksand.variable} ${varelaRound.variable} antialiased`}>
         <LanguageProvider>
-          <LocalBusinessSchema />
-          {children}
-          <CopyPageInfo />
+          <SeasonProvider>
+            <LocalBusinessSchema />
+            {children}
+            <CopyPageInfo />
+          </SeasonProvider>
         </LanguageProvider>
       </body>
     </html>
