@@ -70,10 +70,10 @@ export const metadata: Metadata = {
       "Los mejores mochis artesanales, bubble tea y café de especialidad en Madrid Norte. Elaborados a mano con ingredientes de primera calidad en Fuencarral-El Pardo.",
     images: [
       {
-        url: "/images/hero-banner.png",
+        url: "/images/hero-storefront.jpg",
         width: 1224,
-        height: 360,
-        alt: "Ukiyo Mochis & Coffee - Mochis artesanales en Madrid Norte",
+        height: 688,
+        alt: "Ukiyo Mochis & Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales en Madrid Norte",
       },
     ],
   },
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
       "Ukiyo Mochis & Coffee | Mochis Artesanales en Madrid Norte",
     description:
       "Descubre los mejores mochis artesanales y bubble tea en Madrid Norte. Visítanos en Fuencarral-El Pardo.",
-    images: ["/images/hero-banner.png"],
+    images: ["/images/hero-storefront.jpg"],
   },
   robots: {
     index: true,

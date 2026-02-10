@@ -19,11 +19,11 @@ export default function Hero() {
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Fallback background — visible if image fails to load */}
+      {/* Fallback background — soft pink gradient matching the storefront illustration */}
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(135deg, #5D5068 0%, #3D2E2E 50%, #5D5068 100%)",
+          background: "linear-gradient(135deg, #FFD1DC 0%, #FFC4D6 30%, #FADADD 60%, #F5E6D3 100%)",
         }}
       />
 
@@ -37,8 +37,8 @@ export default function Hero() {
       <div className="relative w-full min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh]">
         {!imageError && (
           <Image
-            src="/images/hero-banner.jpg"
-            alt="Ukiyo Mochis and Coffee - Mochis artesanales y café de especialidad en Madrid Norte"
+            src="/images/hero-storefront.jpg"
+            alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
             fill
             className={`object-cover object-center transition-opacity duration-1000 ${
               scrolled ? "opacity-30" : "opacity-100"
@@ -49,31 +49,31 @@ export default function Hero() {
           />
         )}
 
-        {/* Gradient overlay for text readability */}
+        {/* Soft gradient overlay — lighter to preserve the illustration's pastel tones */}
         <div
           className="absolute inset-0 z-[2]"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(61,46,46,0.5) 0%, rgba(93,80,104,0.35) 40%, rgba(93,80,104,0.35) 60%, rgba(61,46,46,0.6) 100%)",
+              "linear-gradient(to bottom, rgba(255,209,220,0.15) 0%, rgba(255,209,220,0.05) 30%, transparent 50%, rgba(61,46,46,0.3) 80%, rgba(61,46,46,0.55) 100%)",
           }}
         />
 
-        {/* Falling petals */}
+        {/* Falling cherry blossom petals */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-[3]">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <svg
               key={i}
               className="petal"
               style={{
-                left: `${15 + i * 14}%`,
-                animationDelay: `${i * 1.2}s`,
-                animationDuration: `${5 + i * 0.5}s`,
+                left: `${8 + i * 11}%`,
+                animationDelay: `${i * 0.9}s`,
+                animationDuration: `${5 + i * 0.6}s`,
               }}
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
             >
-              <ellipse cx="8" cy="8" rx="6" ry="4" fill="#FFD1DC" opacity="0.6" transform="rotate(30 8 8)" />
+              <ellipse cx="9" cy="9" rx="7" ry="4" fill="#FFB6C8" opacity="0.5" transform="rotate(30 9 9)" />
             </svg>
           ))}
         </div>
@@ -160,8 +160,8 @@ export default function Hero() {
           )}
         </nav>
 
-        {/* Hero content overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-[4]">
+        {/* Hero content — positioned at bottom to not obstruct the storefront illustration */}
+        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-10 md:pb-14 px-4 z-[4]">
           <span className="mb-3 text-sm md:text-base text-sakura-pink font-heading tracking-widest uppercase drop-shadow">
             ~ El mundo flotante ~
           </span>
