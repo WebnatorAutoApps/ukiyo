@@ -170,23 +170,6 @@ export default function Hero() {
             <br />
             <span className="text-sakura-pink drop-shadow">de Especialidad</span>
           </h1>
-          <p className="mt-4 text-sm md:text-lg text-white/90 text-center max-w-2xl drop-shadow leading-relaxed">
-            Sumérgete en una experiencia cozy de sabores japoneses en el corazón de Madrid Norte
-          </p>
-          <div className="mt-6 flex gap-4">
-            <a
-              href="/tienda"
-              className="rounded-full bg-sakura-pink px-8 py-3 text-sm font-semibold text-ukiyo-navy hover:bg-sakura-pink/80 transition-all shadow-cozy hover:shadow-cozy-lg font-heading"
-            >
-              Compra Ahora
-            </a>
-            <a
-              href="#sobre-nosotros"
-              className="rounded-full border-2 border-white/60 px-8 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all font-heading"
-            >
-              Nuestra Historia
-            </a>
-          </div>
         </div>
       </div>
     </section>
