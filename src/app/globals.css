@@ -454,6 +454,180 @@ html {
   box-shadow: 0 2px 8px rgba(93, 80, 104, 0.12);
 }
 
+/* ───── Hero seasonal image fade ───── */
+.hero-season-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.hero-season-image--fading {
+  opacity: 0;
+}
+
+/* ───── Seasonal slider ───── */
+.seasonal-slider {
+  width: 260px;
+  padding: 10px 0;
+}
+
+@media (min-width: 768px) {
+  .seasonal-slider {
+    width: 340px;
+  }
+}
+
+/* Wooden branch track */
+.seasonal-slider__track {
+  position: relative;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    #C4A882 0%,
+    #D4B896 40%,
+    #EBC8A6 60%,
+    #C4A882 100%
+  );
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Sliding cat-face thumb */
+.seasonal-slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.seasonal-slider__thumb-face {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+  animation: float 3s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .seasonal-slider__thumb-face {
+    font-size: 26px;
+  }
+}
+
+/* Season stop buttons */
+.seasonal-slider__stop {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .seasonal-slider__stop {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Season icon */
+.seasonal-slider__icon {
+  font-size: 20px;
+  transition: transform 0.25s ease;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+@media (min-width: 768px) {
+  .seasonal-slider__icon {
+    font-size: 24px;
+  }
+}
+
+.seasonal-slider__stop:hover .seasonal-slider__icon,
+.seasonal-slider__stop:focus-visible .seasonal-slider__icon {
+  transform: scale(1.25);
+}
+
+.seasonal-slider__stop--active .seasonal-slider__icon {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 6px rgba(255, 209, 220, 0.6));
+}
+
+/* Tooltip bubble */
+.seasonal-slider__tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-heading);
+  color: var(--foreground);
+  background: var(--wood-light);
+  border: 1.5px solid var(--soft-wood);
+  box-shadow: 0 2px 8px rgba(93, 80, 104, 0.12);
+  pointer-events: none;
+  animation: fadeInUp 0.2s ease-out;
+}
+
+/* Tooltip caret */
+.seasonal-slider__tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--soft-wood);
+}
+
+/* Keep tooltip within viewport on edges */
+.seasonal-slider__stop:first-child .seasonal-slider__tooltip {
+  left: 0;
+  transform: translateX(0);
+}
+
+.seasonal-slider__stop:first-child .seasonal-slider__tooltip::after {
+  left: 20px;
+  transform: translateX(0);
+}
+
+.seasonal-slider__stop:last-child .seasonal-slider__tooltip {
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+}
+
+.seasonal-slider__stop:last-child .seasonal-slider__tooltip::after {
+  left: auto;
+  right: 20px;
+  transform: translateX(0);
+}
+
+/* Focus outline */
+.seasonal-slider__stop:focus-visible {
+  outline: 2px solid var(--sakura-pink);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
