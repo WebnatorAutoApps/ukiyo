@@ -51,8 +51,8 @@ export default function Hero() {
           }}
         />
 
-        {/* Hero content — positioned at bottom to not obstruct the storefront illustration */}
-        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-10 md:pb-14 px-4 z-[4]">
+        {/* Hero content — centered on mobile, bottom-aligned on desktop */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center md:justify-end pb-0 md:pb-14 px-4 z-[4]">
           <span className="mb-3 text-sm md:text-base text-sakura-pink font-heading tracking-widest uppercase drop-shadow">
             ~ El mundo flotante ~
           </span>
