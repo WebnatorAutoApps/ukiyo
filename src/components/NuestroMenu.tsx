@@ -257,7 +257,7 @@ export default function NuestroMenu() {
   return (
     <section
       id="nuestro-menu"
-      className="w-full py-16 px-5 bg-warm-cream"
+      className="w-full py-16 px-5 bg-warm-cream overflow-hidden"
       aria-label={t.menu.sectionTitle}
     >
       <div className="mx-auto max-w-6xl">
@@ -292,9 +292,9 @@ export default function NuestroMenu() {
         </div>
 
         {/* Seasonal Toggle + Category Tabs */}
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 max-w-full">
           <SeasonalToggle isHot={isHotMode} onToggle={handleSeasonalToggle} t={t} />
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide flex-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide min-w-0 max-w-full sm:flex-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
             {filteredCategories.map((category, index) => (
               <CategoryTab
                 key={category.id}
