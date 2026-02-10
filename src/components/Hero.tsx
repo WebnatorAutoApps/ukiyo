@@ -23,10 +23,10 @@ export default function Hero() {
         }`}
       />
 
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "1224/460" }}>
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "938/460" }}>
         <Image
-          src="/images/hero-banner.png"
-          alt="Mochis artesanales y bubble tea en Madrid Norte - Ukiyo Mochis & Coffee en Fuencarral-El Pardo"
+          src="/images/hero-banner.jpg"
+          alt="Ukiyo Mochis and Coffee - Mochis artesanales y café de especialidad en Madrid Norte"
           fill
           className={`object-cover transition-opacity duration-1000 ${
             scrolled ? "opacity-30" : "opacity-100"
