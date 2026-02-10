@@ -249,6 +249,96 @@ export const translations: Record<Locale, Translations> = {
       ],
     },
 
+    // Nuestro Menú
+    menu: {
+      sectionTitle: "Nuestro Menú",
+      sectionSubtitle: "Descubre nuestras delicias artesanales",
+      featuredTitle: "Destacados",
+      nuevo: "¡NUEVO!",
+      bestSeller: "Best Seller",
+      popular: "Popular",
+      from: "desde",
+      unit: "ud.",
+      highlights: [
+        {
+          name: "Ukiyo Combo",
+          description: "2 mochis + bubble tea a elegir",
+          price: "9,90€",
+          tag: "bestSeller",
+          image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=400&fit=crop&q=80",
+          imageAlt: "Ukiyo Combo - 2 mochis artesanales y bubble tea",
+        },
+        {
+          name: "Mochis Artesanales",
+          description: "Elaborados a mano cada día con ingredientes premium",
+          price: "3,50€",
+          tag: "bestSeller",
+          image: "https://images.unsplash.com/photo-1631206616829-3e5e6e61db9e?w=600&h=400&fit=crop&q=80",
+          imageAlt: "Mochis artesanales japoneses hechos a mano",
+        },
+        {
+          name: "Bocadillo de Pernil",
+          description: "Jamón asado artesanal en pan crujiente recién horneado",
+          price: "7,50€",
+          tag: "nuevo",
+          image: "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&h=400&fit=crop&q=80",
+          imageAlt: "Bocadillo de pernil artesanal",
+        },
+      ],
+      categories: [
+        {
+          id: "mochis",
+          name: "Mochis & Sweet",
+          emoji: "🌸",
+          items: [
+            { name: "Mochi de Oreo", price: "3,50€", description: "Crujiente galleta Oreo envuelta en suave mochi artesanal", tag: "bestSeller" },
+            { name: "Mochi de Nutella", price: "3,50€", description: "Nutella cremosa en un mochi suave y esponjoso", tag: "bestSeller" },
+            { name: "Mochi de Matcha", price: "3,50€", description: "Auténtico matcha japonés en un mochi cremoso", tag: "popular" },
+            { name: "Mochi de Maracuyá", price: "3,50€", description: "Explosión tropical de maracuyá fresco" },
+            { name: "Mochi de Fresa", price: "3,50€", description: "Fresa natural en mochi artesanal" },
+            { name: "Mochi de Chocolate", price: "3,50€", description: "Chocolate belga intenso en mochi suave" },
+            { name: "Mochi de Mango", price: "3,50€", description: "Mango maduro en mochi esponjoso" },
+            { name: "Mochi de Lotus Biscoff", price: "4,00€", description: "Crema de galleta Lotus en mochi crujiente", priceModifier: "+0,50€", tag: "nuevo" },
+          ],
+        },
+        {
+          id: "drinks",
+          name: "Bubble Tea & Drinks",
+          emoji: "🧋",
+          items: [
+            { name: "Bubble Tea Clásico", price: "5,00€", description: "Té negro con leche, perlas de tapioca y azúcar morena", tag: "bestSeller" },
+            { name: "Taro Bubble Tea", price: "5,50€", description: "Crema de taro con perlas de tapioca y leche de coco" },
+            { name: "Matcha Bubble Tea", price: "5,50€", description: "Matcha frío con leche de avena y perlas de mango" },
+            { name: "Fresa Bubble Tea", price: "5,00€", description: "Fresa natural con leche y boba de fresa" },
+            { name: "Café Latte Ukiyo", price: "3,50€", description: "Espresso suave con leche cremosa y un toque de vainilla" },
+            { name: "Matcha Latte", price: "4,00€", description: "Té matcha ceremonial japonés con leche espumosa" },
+          ],
+        },
+        {
+          id: "savory",
+          name: "Savory & Brunch",
+          emoji: "🥯",
+          items: [
+            { name: "Bocadillo de Pernil", price: "7,50€", description: "Jamón asado artesanal en pan crujiente recién horneado", tag: "nuevo" },
+            { name: "Tostada de Aguacate", price: "6,50€", description: "Aguacate fresco sobre pan artesanal con semillas" },
+            { name: "Croissant de Jamón y Queso", price: "4,50€", description: "Croissant mantequilla con jamón y queso fundido" },
+            { name: "Bagel de Salmón", price: "7,00€", description: "Salmón ahumado con queso crema y alcaparras", tag: "nuevo" },
+          ],
+        },
+        {
+          id: "tapas",
+          name: "Tapas",
+          emoji: "🥟",
+          items: [
+            { name: "Gyozas de Pollo", price: "6,50€", description: "Empanadillas japonesas de pollo a la plancha", tag: "popular" },
+            { name: "Edamame con Sal", price: "4,00€", description: "Vainas de soja al vapor con sal marina" },
+            { name: "Takoyaki", price: "6,00€", description: "Bolitas crujientes de pulpo estilo Osaka", tag: "nuevo" },
+            { name: "Dim Sum Variado", price: "7,50€", description: "Selección de dim sum al vapor y frito" },
+          ],
+        },
+      ],
+    },
+
     // Breadcrumbs
     breadcrumbs: {
       home: "Inicio",
@@ -511,6 +601,96 @@ export const translations: Record<Locale, Translations> = {
       ],
     },
 
+    // Nuestro Menú
+    menu: {
+      sectionTitle: "メニュー",
+      sectionSubtitle: "手作りのこだわりスイーツをご覧ください",
+      featuredTitle: "おすすめ",
+      nuevo: "新商品！",
+      bestSeller: "人気No.1",
+      popular: "人気",
+      from: "から",
+      unit: "個",
+      highlights: [
+        {
+          name: "Ukiyo コンボ",
+          description: "餅2個 + お好みのバブルティー",
+          price: "9,90€",
+          tag: "bestSeller",
+          image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=400&fit=crop&q=80",
+          imageAlt: "Ukiyo コンボ - 手作り餅2個とバブルティー",
+        },
+        {
+          name: "手作り餅",
+          description: "毎日手作り、厳選素材を使用",
+          price: "3,50€",
+          tag: "bestSeller",
+          image: "https://images.unsplash.com/photo-1631206616829-3e5e6e61db9e?w=600&h=400&fit=crop&q=80",
+          imageAlt: "手作り和風餅",
+        },
+        {
+          name: "ペルニルサンド",
+          description: "焼き上げハムの手作りサンドイッチ",
+          price: "7,50€",
+          tag: "nuevo",
+          image: "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&h=400&fit=crop&q=80",
+          imageAlt: "手作りペルニルサンドイッチ",
+        },
+      ],
+      categories: [
+        {
+          id: "mochis",
+          name: "餅 & スイーツ",
+          emoji: "🌸",
+          items: [
+            { name: "オレオ餅", price: "3,50€", description: "サクサクのオレオクッキーを柔らかい手作り餅で包みました", tag: "bestSeller" },
+            { name: "ヌテラ餅", price: "3,50€", description: "クリーミーなヌテラを柔らかいもちもち餅で", tag: "bestSeller" },
+            { name: "抹茶餅", price: "3,50€", description: "本格的な日本の抹茶をクリーミーな餅で", tag: "popular" },
+            { name: "パッションフルーツ餅", price: "3,50€", description: "フレッシュなパッションフルーツの爽やかな味わい" },
+            { name: "いちご餅", price: "3,50€", description: "天然いちごの手作り餅" },
+            { name: "チョコレート餅", price: "3,50€", description: "濃厚なベルギーチョコレートの柔らか餅" },
+            { name: "マンゴー餅", price: "3,50€", description: "完熟マンゴーのふわふわ餅" },
+            { name: "ロータスビスコフ餅", price: "4,00€", description: "ロータスクッキークリームのサクサク餅", priceModifier: "+0,50€", tag: "nuevo" },
+          ],
+        },
+        {
+          id: "drinks",
+          name: "バブルティー & ドリンク",
+          emoji: "🧋",
+          items: [
+            { name: "クラシックバブルティー", price: "5,00€", description: "紅茶とミルク、タピオカパール、黒糖", tag: "bestSeller" },
+            { name: "タロバブルティー", price: "5,50€", description: "タロクリームとタピオカパール、ココナッツミルク" },
+            { name: "抹茶バブルティー", price: "5,50€", description: "アイス抹茶とオーツミルク、マンゴーパール" },
+            { name: "いちごバブルティー", price: "5,00€", description: "フレッシュいちごとミルク、いちごボバ" },
+            { name: "Ukiyo カフェラテ", price: "3,50€", description: "なめらかなエスプレッソにクリーミーなミルクとバニラの香り" },
+            { name: "抹茶ラテ", price: "4,00€", description: "日本の茶道用抹茶とふわふわのミルク" },
+          ],
+        },
+        {
+          id: "savory",
+          name: "食事 & ブランチ",
+          emoji: "🥯",
+          items: [
+            { name: "ペルニルサンド", price: "7,50€", description: "焼き上げハムの手作りサンドイッチ", tag: "nuevo" },
+            { name: "アボカドトースト", price: "6,50€", description: "新鮮なアボカドと種子のアルチザンパン" },
+            { name: "ハムチーズクロワッサン", price: "4,50€", description: "バタークロワッサンにハムと溶けるチーズ" },
+            { name: "サーモンベーグル", price: "7,00€", description: "スモークサーモンとクリームチーズ、ケッパー", tag: "nuevo" },
+          ],
+        },
+        {
+          id: "tapas",
+          name: "タパス",
+          emoji: "🥟",
+          items: [
+            { name: "チキン餃子", price: "6,50€", description: "鉄板焼きチキン餃子", tag: "popular" },
+            { name: "枝豆塩味", price: "4,00€", description: "蒸し枝豆の海塩添え" },
+            { name: "たこ焼き", price: "6,00€", description: "大阪スタイルのカリカリたこ焼き", tag: "nuevo" },
+            { name: "点心盛り合わせ", price: "7,50€", description: "蒸しと揚げの点心セレクション" },
+          ],
+        },
+      ],
+    },
+
     // Breadcrumbs
     breadcrumbs: {
       home: "ホーム",
@@ -529,6 +709,30 @@ export const translations: Record<Locale, Translations> = {
       "Ukiyo Mochis & Coffee - マドリード北部の手作り餅とコーヒー",
   },
 };
+
+interface MenuHighlight {
+  name: string;
+  description: string;
+  price: string;
+  tag: string;
+  image: string;
+  imageAlt: string;
+}
+
+interface MenuItem {
+  name: string;
+  price: string;
+  description?: string;
+  tag?: string;
+  priceModifier?: string;
+}
+
+interface MenuCategory {
+  id: string;
+  name: string;
+  emoji: string;
+  items: MenuItem[];
+}
 
 interface DrinkItem {
   name: string;
@@ -615,6 +819,18 @@ export interface Translations {
     sectionTitle: string;
     subtitle: string;
     items: FaqItem[];
+  };
+  menu: {
+    sectionTitle: string;
+    sectionSubtitle: string;
+    featuredTitle: string;
+    nuevo: string;
+    bestSeller: string;
+    popular: string;
+    from: string;
+    unit: string;
+    highlights: MenuHighlight[];
+    categories: MenuCategory[];
   };
   footer: {
     brandDescription: string;

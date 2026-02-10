@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
 import SpecialtyDrinks from "@/components/SpecialtyDrinks";
+import NuestroMenu from "@/components/NuestroMenu";
 import About from "@/components/About";
 import Testimonial from "@/components/Testimonial";
 import Location from "@/components/Location";
@@ -29,6 +30,7 @@ export default function Home() {
         <MochiCounter />
         <ProductCategories />
         <SpecialtyDrinks />
+        <NuestroMenu />
         <About />
         <Testimonial />
         <Location />

@@ -307,6 +307,58 @@ html {
   display: none;
 }
 
+/* Nuestro Menú — cherry blossom title petals */
+@keyframes menuPetalDrift {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) rotate(0deg);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(30px) rotate(180deg) translateX(8px);
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(60px) rotate(360deg) translateX(-5px);
+  }
+}
+
+.menu-petal-container {
+  position: absolute;
+}
+
+.menu-petal {
+  position: absolute;
+  top: -10px;
+  animation: menuPetalDrift 4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* NUEVO tag pulsing animation */
+@keyframes nuevoPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+.menu-nuevo-tag {
+  animation: nuevoPulse 2s ease-in-out infinite;
+}
+
+/* fadeInUp animation utility */
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease-out;
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
