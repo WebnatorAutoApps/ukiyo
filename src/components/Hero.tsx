@@ -18,15 +18,28 @@ export default function Hero() {
 
       <div className="relative w-full min-h-[100vh]">
         {!imageError && (
-          <Image
-            src="/images/hero-storefront.jpg"
-            alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
-            fill
-            className="object-cover object-center"
-            priority
-            sizes="100vw"
-            onError={() => setImageError(true)}
-          />
+          <>
+            {/* Mobile hero — portrait illustration optimised for small screens */}
+            <Image
+              src="/images/hero-storefront-mobile.jpg"
+              alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
+              fill
+              className="object-cover object-center md:hidden"
+              priority
+              sizes="(max-width: 767px) 100vw, 0px"
+              onError={() => setImageError(true)}
+            />
+            {/* Desktop hero — wide storefront image for larger screens */}
+            <Image
+              src="/images/hero-storefront.jpg"
+              alt="Ukiyo Mochis and Coffee - Fachada estilo anime de nuestra tienda de mochis artesanales y café en Madrid Norte"
+              fill
+              className="object-cover object-center hidden md:block"
+              priority
+              sizes="(min-width: 768px) 100vw, 0px"
+              onError={() => setImageError(true)}
+            />
+          </>
         )}
 
         {/* Soft gradient overlay — lighter to preserve the illustration's pastel tones */}
