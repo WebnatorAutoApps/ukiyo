@@ -580,11 +580,10 @@ html {
   font-weight: 600;
   font-family: var(--font-heading);
   color: #ffb6c1;
-  background: var(--wood-light);
-  border: 1.5px solid var(--soft-wood);
+  background: rgba(245, 230, 211, 0.55);
+  border: 1.5px solid rgba(235, 200, 166, 0.55);
   box-shadow: 0 2px 8px rgba(93, 80, 104, 0.12);
   pointer-events: none;
-  opacity: 0.75;
   animation: fadeInUp 0.2s ease-out;
 }
 
@@ -596,7 +595,7 @@ html {
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: var(--soft-wood);
+  border-top-color: rgba(235, 200, 166, 0.55);
 }
 
 /* Keep tooltip within viewport on edges */
