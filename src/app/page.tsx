@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
 import SpecialtyDrinks from "@/components/SpecialtyDrinks";
@@ -14,7 +13,6 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export default function Home() {
   return (
     <>
-      <Header />
       <Breadcrumbs
         items={[
           { name: "Inicio", href: "/" },

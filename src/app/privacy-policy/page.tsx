@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
+import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicy() {
   return (
     <>
-      <Header />
+      <NavBar />
       <main className="mx-auto max-w-3xl px-5 py-16">
         <article className="text-black" style={{ fontSize: "16px", lineHeight: 1.3 }}>
           <h1 className="text-2xl font-bold mb-4">

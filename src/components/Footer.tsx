@@ -10,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-footer-bg text-white">
       <div className="mx-auto max-w-6xl px-5 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
             <Image
@@ -46,6 +46,25 @@ export default function Footer() {
                   <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.01a8.35 8.35 0 004.76 1.49v-3.45a4.85 4.85 0 01-1-.36z" />
                 </svg>
               </a>
+            </div>
+          </div>
+
+          {/* Policies */}
+          <div>
+            <h3 className="text-base font-bold mb-4 font-heading">Nuestras Políticas</h3>
+            <div className="flex flex-col gap-2 text-sm text-warm-cream/60">
+              <Link
+                href="/terms-and-conditions"
+                className="hover:text-sakura-pink transition-colors"
+              >
+                Términos y Condiciones
+              </Link>
+              <Link
+                href="/privacy-policy"
+                className="hover:text-sakura-pink transition-colors"
+              >
+                Política de Privacidad
+              </Link>
             </div>
           </div>
 
