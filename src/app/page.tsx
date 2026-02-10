@@ -10,11 +10,13 @@ import LofiPlayer from "@/components/LofiPlayer";
 import FAQ from "@/components/FAQ";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SakuraPetals from "@/components/SakuraPetals";
+import StickyHeader from "@/components/StickyHeader";
 
 export default function Home() {
   return (
     <>
       <SakuraPetals />
+      <StickyHeader />
       <Breadcrumbs
         items={[
           { name: "Inicio", href: "/" },
