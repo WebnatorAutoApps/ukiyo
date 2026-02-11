@@ -46,6 +46,12 @@ const mochiProducts = [
     image: "/images/mochi-choco-coco.jpg",
     emoji: "🥥",
   },
+  {
+    name: "Mochi de Maracuyá",
+    description: "Exótica pulpa de maracuyá tropical en mochi suave y artesanal",
+    image: "/images/mochi-maracuya.jpg",
+    emoji: "🍈",
+  },
 ];
 
 // Duplicate for seamless infinite scroll
