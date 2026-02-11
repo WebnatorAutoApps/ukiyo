@@ -1,9 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect, useCallback, memo } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
+import { useSeason } from "@/context/SeasonContext";
+import type { Season } from "@/components/SeasonalSlider";
 
-const mochiProducts = [
+interface MochiProduct {
+  name: string;
+  description: string;
+  image: string;
+  emoji: string;
+  seasonal?: boolean;
+  season?: Season;
+}
+
+const mochiProducts: MochiProduct[] = [
   {
     name: "Mochi de Oreo",
     description: "Crujiente galleta Oreo envuelta en suave mochi artesanal",
@@ -58,15 +69,20 @@ const mochiProducts = [
     image: "/images/mochi-tarta-queso-fresa.jpg",
     emoji: "🍓",
   },
+  {
+    name: "Mochi de Calabaza",
+    description: "Cremosa calabaza especiada de temporada en mochi artesanal suave",
+    image: "/images/mochi-pumpkin.jpg",
+    emoji: "🎃",
+    seasonal: true,
+    season: "autumn",
+  },
 ];
-
-// Duplicate for seamless infinite scroll
-const carouselItems = [...mochiProducts, ...mochiProducts];
 
 const MochiProductCard = memo(function MochiProductCard({
   product,
 }: {
-  product: (typeof mochiProducts)[0];
+  product: MochiProduct;
 }) {
   const [hovered, setHovered] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -140,6 +156,25 @@ export default function MochiCounter() {
   const isPausedRef = useRef(false);
   const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
+  const { season } = useSeason();
+
+  const visibleProducts = useMemo(
+    () => mochiProducts.filter((p) => !p.seasonal || p.season === season),
+    [season]
+  );
+
+  const carouselItems = useMemo(
+    () => [...visibleProducts, ...visibleProducts],
+    [visibleProducts]
+  );
+
+  // Reset scroll position when season changes
+  useEffect(() => {
+    if (trackRef.current) {
+      scrollPosRef.current = 0;
+      trackRef.current.scrollLeft = 0;
+    }
+  }, [season]);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -183,7 +218,7 @@ export default function MochiCounter() {
     animationId = requestAnimationFrame(step);
 
     return () => cancelAnimationFrame(animationId);
-  }, []);
+  }, [visibleProducts]);
 
   return (
     <section
