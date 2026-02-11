@@ -248,6 +248,18 @@ export const translations: Record<Locale, Translations> = {
           name: "María R.",
           text: "Los mejores mochis artesanales que he probado en Madrid. La textura es perfecta y los sabores son increíbles.",
         },
+        {
+          name: "Elena T.",
+          text: "El brunch de Ukiyo es espectacular. La tostada de aguacate y el croissant de jamón y queso están riquísimos, y todo acompañado de un café increíble.",
+        },
+        {
+          name: "Javier P.",
+          text: "Los postres artesanales de Ukiyo son otra cosa. El mochi de Lotus Biscoff y el de chocolate belga son auténticas obras de arte, suaves y llenos de sabor.",
+        },
+        {
+          name: "Lucía D.",
+          text: "El matcha bubble tea es mi favorito absoluto. Cremoso, refrescante y con las perlas de mango que le dan un toque tropical perfecto. Vuelvo cada semana.",
+        },
       ],
     },
 
@@ -612,6 +624,18 @@ export const translations: Record<Locale, Translations> = {
         {
           name: "マリア R.",
           text: "マドリードで食べた中で最高の手作り餅。食感も完璧で味も素晴らしいです。",
+        },
+        {
+          name: "エレナ T.",
+          text: "Ukiyoのブランチは最高です。アボカドトーストとハムチーズクロワッサンがとても美味しくて、素晴らしいコーヒーと一緒に楽しめます。",
+        },
+        {
+          name: "ハビエル P.",
+          text: "Ukiyoの手作りスイーツは格別です。ロータスビスコフ餅とベルギーチョコレート餅は芸術品のよう。柔らかくて風味豊かです。",
+        },
+        {
+          name: "ルシア D.",
+          text: "抹茶バブルティーが一番のお気に入り。クリーミーで爽やかで、マンゴーパールのトロピカルな味わいが最高。毎週通っています。",
         },
       ],
     },
