@@ -7,21 +7,18 @@ const mochiProducts = [
   {
     name: "Mochi de Oreo",
     description: "Crujiente galleta Oreo envuelta en suave mochi artesanal",
-    price: "3,50€",
     image: "https://images.unsplash.com/photo-1631206616829-3e5e6e61db9e?w=400&h=400&fit=crop&q=80",
     emoji: "🍪",
   },
   {
     name: "Mochi de Matcha",
     description: "Auténtico matcha japonés en un mochi cremoso y delicado",
-    price: "3,50€",
     image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=400&fit=crop&q=80",
     emoji: "🍵",
   },
   {
     name: "Mochi de Mango",
     description: "Explosión tropical de mango maduro en mochi esponjoso",
-    price: "3,50€",
     image: "https://images.unsplash.com/photo-1582716401356-b0e6ee11e8f5?w=400&h=400&fit=crop&q=80",
     emoji: "🥭",
   },
@@ -86,10 +83,6 @@ const MochiProductCard = memo(function MochiProductCard({
             onError={() => setImgError(true)}
           />
         )}
-        {/* Price tag */}
-        <div className="absolute top-3 right-3 z-10 bg-ukiyo-navy/90 text-white text-sm font-bold px-3 py-1 rounded-full font-heading">
-          {product.price}
-        </div>
       </div>
 
       {/* Content */}
