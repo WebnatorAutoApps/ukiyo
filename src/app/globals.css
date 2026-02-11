@@ -425,35 +425,6 @@ html {
   transform: scaleY(0.9);
 }
 
-/* Seasonal toggle */
-.seasonal-toggle {
-  display: inline-flex;
-  border-radius: 9999px;
-  padding: 4px;
-  gap: 0;
-  background: var(--wood-light);
-  border: 2px solid var(--soft-wood);
-}
-
-.seasonal-toggle-btn {
-  padding: 6px 16px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  transition: all 0.3s ease;
-  font-family: var(--font-heading);
-}
-
-.seasonal-toggle-btn.active {
-  background: var(--wood-texture);
-  color: var(--foreground);
-  box-shadow: 0 2px 8px rgba(93, 80, 104, 0.12);
-}
-
 /* ───── Hero seasonal image fade ───── */
 .hero-season-image {
   position: absolute;
