@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { type Season, getCurrentSeason, getStoredSeason } from "@/components/SeasonalSlider";
+import { usePathname } from "next/navigation";
+import { type Season, getCurrentSeason } from "@/components/SeasonalSlider";
 
 interface SeasonContextType {
   season: Season;
@@ -13,27 +14,31 @@ const SeasonContext = createContext<SeasonContextType>({
   setSeason: () => {},
 });
 
-export function SeasonProvider({ children }: { children: React.ReactNode }) {
-  const [season, setSeasonState] = useState<Season>(() => getStoredSeason() ?? getCurrentSeason());
+/** Resets season to current whenever the route changes. */
+function SeasonResetter({ resetSeason }: { resetSeason: () => void }) {
+  const pathname = usePathname();
 
   useEffect(() => {
-    const stored = getStoredSeason();
-    if (stored) {
-      setSeasonState(stored);
-    }
+    resetSeason();
+  }, [pathname, resetSeason]);
+
+  return null;
+}
+
+export function SeasonProvider({ children }: { children: React.ReactNode }) {
+  const [season, setSeasonState] = useState<Season>(getCurrentSeason);
+
+  const resetSeason = useCallback(() => {
+    setSeasonState(getCurrentSeason());
   }, []);
 
   const setSeason = useCallback((newSeason: Season) => {
     setSeasonState(newSeason);
-    try {
-      localStorage.setItem("ukiyo-season", newSeason);
-    } catch {
-      // localStorage not available
-    }
   }, []);
 
   return (
     <SeasonContext.Provider value={{ season, setSeason }}>
+      <SeasonResetter resetSeason={resetSeason} />
       {children}
     </SeasonContext.Provider>
   );
