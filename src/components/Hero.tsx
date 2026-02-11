@@ -28,6 +28,8 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
 
 const ALL_SEASONS: Season[] = ["spring", "summer", "autumn", "winter"];
 
+const FADE_DURATION_MS = 400;
+
 // Tiny 4x4 pink/cream blur placeholder matching the fallback gradient
 const BLUR_PLACEHOLDER =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVQI12P4/58BAwMDAwMDA8P/f/8ZGBgYGBgY/v//z8DAwMDAwPD//38GBob/DAwMDP//MzAwMDAwMDAwAABfSBEH3wvMOAAAAABJRU5ErkJggg==";
@@ -42,25 +44,82 @@ function preloadImage(src: string): Promise<void> {
   });
 }
 
+/** Renders a pair of mobile + desktop hero images for a given season */
+function SeasonLayer({
+  season,
+  alt,
+  priority,
+  className,
+  onLoad,
+  onError,
+}: {
+  season: Season;
+  alt: string;
+  priority: boolean;
+  className?: string;
+  onLoad?: () => void;
+  onError?: () => void;
+}) {
+  const images = SEASON_IMAGES[season];
+  return (
+    <div className={className}>
+      <Image
+        src={images.mobile}
+        alt={alt}
+        fill
+        className="object-cover object-center md:hidden"
+        priority={priority}
+        placeholder="blur"
+        blurDataURL={BLUR_PLACEHOLDER}
+        sizes="(max-width: 767px) 100vw, 0px"
+        onLoad={onLoad}
+        onError={onError}
+      />
+      <Image
+        src={images.desktop}
+        alt={alt}
+        fill
+        className="object-cover object-center hidden md:block"
+        priority={priority}
+        placeholder="blur"
+        blurDataURL={BLUR_PLACEHOLDER}
+        sizes="(min-width: 768px) 100vw, 0px"
+        onLoad={onLoad}
+        onError={onError}
+      />
+    </div>
+  );
+}
+
 export default function Hero() {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { t } = useLanguage();
   const { season: activeSeason, setSeason } = useSeason();
-  const [displayedSeason, setDisplayedSeason] = useState<Season>(activeSeason);
-  const [isFading, setIsFading] = useState(false);
+
+  // Base layer: the currently visible season image
+  const [baseSeason, setBaseSeason] = useState<Season>(activeSeason);
+  // Incoming layer: the season fading in on top (null when idle)
+  const [incomingSeason, setIncomingSeason] = useState<Season | null>(null);
+  // Whether the incoming layer has started its opacity transition
+  const [incomingVisible, setIncomingVisible] = useState(false);
+
   const { ref: heroRef, isInView } = useHeroInView("200px");
   const reducedMotion = usePrefersReducedMotion();
   const preloadedRef = useRef<Set<string>>(new Set());
+  // Track the latest requested season so rapid clicks always resolve to the last one
+  const pendingSeasonRef = useRef<Season | null>(null);
+  // Abort controller for cancelling in-flight transitions
+  const transitionIdRef = useRef(0);
 
-  // Sync displayed season when context resets (e.g. on navigation)
+  // Sync base season when context resets (e.g. on navigation)
   useEffect(() => {
-    if (!isFading && displayedSeason !== activeSeason) {
-      setDisplayedSeason(activeSeason);
+    if (incomingSeason === null && baseSeason !== activeSeason) {
+      setBaseSeason(activeSeason);
       setImageError(false);
       setImageLoaded(false);
     }
-  }, [activeSeason, displayedSeason, isFading]);
+  }, [activeSeason, baseSeason, incomingSeason]);
 
   // Preload inactive season images once hero is in view
   useEffect(() => {
@@ -111,31 +170,55 @@ export default function Hero() {
         Promise.all(imagesToLoad)
           .catch(() => {})
           .then(() => {
-            setDisplayedSeason(newSeason);
+            setBaseSeason(newSeason);
+            setIncomingSeason(null);
+            setIncomingVisible(false);
             setImageError(false);
             setImageLoaded(false);
           });
         return;
       }
 
-      // Start fade out
-      setIsFading(true);
+      // Track the latest request so rapid clicks converge
+      pendingSeasonRef.current = newSeason;
+      const id = ++transitionIdRef.current;
 
-      // Wait for both fade-out AND image preload before swapping
-      const fadePromise = new Promise((r) => setTimeout(r, 400));
-      Promise.all([fadePromise, ...imagesToLoad])
+      // Wait for images to be ready, then start crossfade
+      Promise.all(imagesToLoad)
         .catch(() => {/* proceed even if preload fails */})
         .then(() => {
-          setDisplayedSeason(newSeason);
-          setImageError(false);
-          setImageLoaded(false);
-          setIsFading(false);
+          // If a newer transition was requested, skip this one
+          if (transitionIdRef.current !== id) return;
+
+          // Mount the incoming layer at opacity 0
+          setIncomingSeason(newSeason);
+          setIncomingVisible(false);
+
+          // Trigger the fade-in on the next frame so the browser registers opacity 0 first
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              if (transitionIdRef.current !== id) return;
+              setIncomingVisible(true);
+            });
+          });
+
+          // After the CSS transition completes, promote incoming to base
+          setTimeout(() => {
+            if (transitionIdRef.current !== id) return;
+
+            setBaseSeason(newSeason);
+            setIncomingSeason(null);
+            setIncomingVisible(false);
+            setImageError(false);
+            setImageLoaded(false);
+            pendingSeasonRef.current = null;
+          }, FADE_DURATION_MS);
         });
     },
     [activeSeason, setSeason, reducedMotion]
   );
 
-  const images = SEASON_IMAGES[displayedSeason];
+  const baseImages = SEASON_IMAGES[baseSeason];
 
   // Only mark as priority for the first render (above the fold, LCP)
   const shouldPrioritize = isInView;
@@ -156,49 +239,38 @@ export default function Hero() {
       />
 
       <div className="relative w-full min-h-[100vh]">
+        {/* Base layer — currently displayed season */}
         {!imageError && isInView && (
-          <div
-            className={`hero-season-image ${isFading ? "hero-season-image--fading" : ""} ${!imageLoaded ? "hero-season-image--loading" : "hero-season-image--loaded"}`}
-          >
-            {/* Mobile hero — portrait illustration optimised for small screens */}
-            <Image
-              src={images.mobile}
-              alt={t.hero.imageAlt}
-              fill
-              className="object-cover object-center md:hidden"
-              priority={shouldPrioritize}
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
-              sizes="(max-width: 767px) 100vw, 0px"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageError(true)}
-            />
-            {/* Desktop hero — wide storefront image for larger screens */}
-            <Image
-              src={images.desktop}
-              alt={t.hero.imageAlt}
-              fill
-              className="object-cover object-center hidden md:block"
-              priority={shouldPrioritize}
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
-              sizes="(min-width: 768px) 100vw, 0px"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageError(true)}
-            />
-          </div>
+          <SeasonLayer
+            season={baseSeason}
+            alt={t.hero.imageAlt}
+            priority={shouldPrioritize}
+            className={`hero-season-image ${!imageLoaded ? "hero-season-image--loading" : "hero-season-image--loaded"}`}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
+          />
+        )}
+
+        {/* Incoming layer — new season crossfading in on top */}
+        {incomingSeason !== null && isInView && (
+          <SeasonLayer
+            season={incomingSeason}
+            alt={t.hero.imageAlt}
+            priority={false}
+            className={`hero-season-image hero-season-image--incoming ${incomingVisible ? "hero-season-image--incoming-visible" : ""}`}
+          />
         )}
 
         {/* noscript fallback — render active season image eagerly when JS is disabled */}
         <noscript>
           <img
-            src={images.mobile}
+            src={baseImages.mobile}
             alt=""
             className="md:hidden"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
           />
           <img
-            src={images.desktop}
+            src={baseImages.desktop}
             alt=""
             className="hidden md:block"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}

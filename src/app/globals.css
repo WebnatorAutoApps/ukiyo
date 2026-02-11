@@ -487,10 +487,7 @@ html {
   z-index: 1;
   opacity: 1;
   transition: opacity 0.4s ease-in-out;
-}
-
-.hero-season-image--fading {
-  opacity: 0;
+  will-change: opacity;
 }
 
 /* Lazy-load fade-in: starts transparent, fades to full opacity once loaded */
@@ -499,6 +496,16 @@ html {
 }
 
 .hero-season-image--loaded {
+  opacity: 1;
+}
+
+/* Crossfade incoming layer — sits above base, fades from 0 → 1 */
+.hero-season-image--incoming {
+  z-index: 1;
+  opacity: 0;
+}
+
+.hero-season-image--incoming-visible {
   opacity: 1;
 }
 
