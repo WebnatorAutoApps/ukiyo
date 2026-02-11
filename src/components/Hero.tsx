@@ -13,7 +13,7 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
   },
   summer: {
     desktop: "/images/hero-summer.svg",
-    mobile: "/images/hero-summer-mobile.svg",
+    mobile: "/images/hero-summer-mobile.jpg",
   },
   autumn: {
     desktop: "/images/hero-autumn.svg",
