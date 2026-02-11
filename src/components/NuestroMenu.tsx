@@ -237,8 +237,8 @@ export default function NuestroMenu() {
         </div>
 
         {/* Category Tabs */}
-        <div className="mb-6 max-w-full">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+        <div className="mb-6 max-w-full -mx-3">
+          <div className="flex gap-3 overflow-x-auto px-3 py-3 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
             {categories.map((category, index) => (
               <CategoryTab
                 key={category.id}
