@@ -60,12 +60,9 @@ export default function TiendaProducts() {
                   <p className="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-2">
                     {productTranslation.description}
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div>
                     <span className="text-xl font-bold text-ukiyo-navy font-heading">
                       {product.price.toFixed(2)}€
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-ukiyo-navy px-5 py-2 text-sm font-semibold text-white group-hover:bg-primary-hover transition-colors font-heading">
-                      {t.tiendaProducts.viewProduct}
                     </span>
                   </div>
                 </div>
