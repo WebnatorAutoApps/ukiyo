@@ -77,6 +77,14 @@ const mochiProducts: MochiProduct[] = [
     seasonal: true,
     season: "autumn",
   },
+  {
+    name: "Mochi de Frambuesa",
+    description: "Frambuesas frescas en un mochi artesanal suave y cremoso",
+    image: "/images/mochi-raspberry.jpg",
+    emoji: "🫐",
+    seasonal: true,
+    season: "winter",
+  },
 ];
 
 const MochiProductCard = memo(function MochiProductCard({
@@ -96,6 +104,15 @@ const MochiProductCard = memo(function MochiProductCard({
       aria-label={product.name}
       style={{ willChange: "transform" }}
     >
+      {/* Seasonal badge */}
+      {product.seasonal && (
+        <div className="absolute top-3 left-3 z-20">
+          <span className="seasonal-badge">
+            {product.season === "winter" ? "❄️" : "🎃"} De temporada
+          </span>
+        </div>
+      )}
+
       {/* Steam effect — always rendered, toggled via CSS opacity for perf */}
       <div
         className="absolute top-0 left-0 right-0 z-10 h-20 pointer-events-none transition-opacity duration-300"

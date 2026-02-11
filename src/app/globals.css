@@ -296,6 +296,32 @@ html {
   border-top: 2px solid var(--soft-wood);
 }
 
+/* Seasonal badge for limited-time mochi items */
+.seasonal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: #fff;
+  background: linear-gradient(135deg, #7b9acc 0%, #5d7fbf 100%);
+  box-shadow: 0 2px 8px rgba(93, 127, 191, 0.35);
+  letter-spacing: 0.03em;
+  animation: seasonalPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes seasonalPulse {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(93, 127, 191, 0.35);
+  }
+  50% {
+    box-shadow: 0 2px 12px rgba(93, 127, 191, 0.55), 0 0 0 4px rgba(93, 127, 191, 0.1);
+  }
+}
+
 .mochi-counter-fade-left {
   background: linear-gradient(to right, var(--wood-light), transparent);
 }
