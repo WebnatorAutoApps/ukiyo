@@ -478,12 +478,17 @@ export const translations: Record<Locale, Translations> = {
     admin: {
       title: "Panel de Administración",
       subtitle: "Inicia sesión para continuar",
-      usernameLabel: "Usuario",
-      usernamePlaceholder: "Ingresa tu usuario",
+      emailLabel: "Correo electrónico",
+      emailPlaceholder: "Ingresa tu correo electrónico",
       passwordLabel: "Contraseña",
       passwordPlaceholder: "Ingresa tu contraseña",
       submitButton: "Iniciar Sesión",
+      loadingButton: "Iniciando sesión...",
       emptyFieldsError: "Por favor, completa todos los campos",
+      loginError: "Credenciales incorrectas. Por favor, intenta de nuevo.",
+      logoutButton: "Cerrar Sesión",
+      dashboardTitle: "Panel de Administración",
+      dashboardWelcome: "Has iniciado sesión correctamente.",
     },
 
     // Logo alt
@@ -964,12 +969,17 @@ export const translations: Record<Locale, Translations> = {
     admin: {
       title: "管理パネル",
       subtitle: "ログインしてください",
-      usernameLabel: "ユーザー名",
-      usernamePlaceholder: "ユーザー名を入力",
+      emailLabel: "メールアドレス",
+      emailPlaceholder: "メールアドレスを入力",
       passwordLabel: "パスワード",
       passwordPlaceholder: "パスワードを入力",
       submitButton: "ログイン",
+      loadingButton: "ログイン中...",
       emptyFieldsError: "すべてのフィールドを入力してください",
+      loginError: "認証情報が正しくありません。もう一度お試しください。",
+      logoutButton: "ログアウト",
+      dashboardTitle: "管理パネル",
+      dashboardWelcome: "正常にログインしました。",
     },
 
     // Logo alt
@@ -1189,12 +1199,17 @@ export interface Translations {
   admin: {
     title: string;
     subtitle: string;
-    usernameLabel: string;
-    usernamePlaceholder: string;
+    emailLabel: string;
+    emailPlaceholder: string;
     passwordLabel: string;
     passwordPlaceholder: string;
     submitButton: string;
+    loadingButton: string;
     emptyFieldsError: string;
+    loginError: string;
+    logoutButton: string;
+    dashboardTitle: string;
+    dashboardWelcome: string;
   };
   logoAlt: string;
 }
