@@ -474,6 +474,18 @@ export const translations: Record<Locale, Translations> = {
       ariaLabel: "Contactar por WhatsApp",
     },
 
+    // Admin
+    admin: {
+      title: "Panel de Administración",
+      subtitle: "Inicia sesión para continuar",
+      usernameLabel: "Usuario",
+      usernamePlaceholder: "Ingresa tu usuario",
+      passwordLabel: "Contraseña",
+      passwordPlaceholder: "Ingresa tu contraseña",
+      submitButton: "Iniciar Sesión",
+      emptyFieldsError: "Por favor, completa todos los campos",
+    },
+
     // Logo alt
     logoAlt:
       "Ukiyo Mochis & Coffee - Mochis artesanales y café en Madrid Norte",
@@ -948,6 +960,18 @@ export const translations: Record<Locale, Translations> = {
       ariaLabel: "WhatsAppでお問い合わせ",
     },
 
+    // Admin
+    admin: {
+      title: "管理パネル",
+      subtitle: "ログインしてください",
+      usernameLabel: "ユーザー名",
+      usernamePlaceholder: "ユーザー名を入力",
+      passwordLabel: "パスワード",
+      passwordPlaceholder: "パスワードを入力",
+      submitButton: "ログイン",
+      emptyFieldsError: "すべてのフィールドを入力してください",
+    },
+
     // Logo alt
     logoAlt:
       "Ukiyo Mochis & Coffee - マドリード北部の手作り餅とコーヒー",
@@ -1161,6 +1185,16 @@ export interface Translations {
   };
   whatsapp: {
     ariaLabel: string;
+  };
+  admin: {
+    title: string;
+    subtitle: string;
+    usernameLabel: string;
+    usernamePlaceholder: string;
+    passwordLabel: string;
+    passwordPlaceholder: string;
+    submitButton: string;
+    emptyFieldsError: string;
   };
   logoAlt: string;
 }
