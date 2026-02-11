@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 function CherryBlossom({ index }: { index: number }) {
@@ -186,73 +186,12 @@ function MenuItemRow({
   );
 }
 
-function SeasonalToggle({
-  isHot,
-  onToggle,
-  t,
-}: {
-  isHot: boolean;
-  onToggle: (hot: boolean) => void;
-  t: ReturnType<typeof useLanguage>["t"];
-}) {
-  return (
-    <div className="seasonal-toggle" role="radiogroup" aria-label="Seasonal mode">
-      <button
-        className={`seasonal-toggle-btn ${isHot ? "active" : ""}`}
-        onClick={() => onToggle(true)}
-        role="radio"
-        aria-checked={isHot}
-      >
-        {t.menu.seasonalHot}
-      </button>
-      <button
-        className={`seasonal-toggle-btn ${!isHot ? "active" : ""}`}
-        onClick={() => onToggle(false)}
-        role="radio"
-        aria-checked={!isHot}
-      >
-        {t.menu.seasonalCold}
-      </button>
-    </div>
-  );
-}
-
 export default function NuestroMenu() {
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState(0);
-  const [isHotMode, setIsHotMode] = useState(true);
 
-  // In cold mode: hide coffees (hot items in drinks), show bubble teas first
-  // Reorder categories: put drinks first in cold mode
-  const filteredCategories = useMemo(() => {
-    if (isHotMode) return t.menu.categories;
-
-    return t.menu.categories
-      .map((category) => {
-        if (category.id === "drinks") {
-          // In cold mode, filter out hot items (coffees)
-          return {
-            ...category,
-            items: category.items.filter((item) => !item.hot),
-          };
-        }
-        return category;
-      })
-      // In cold mode, move drinks to the front
-      .sort((a, b) => {
-        if (a.id === "drinks") return -1;
-        if (b.id === "drinks") return 1;
-        return 0;
-      });
-  }, [t.menu.categories, isHotMode]);
-
-  // Reset active category when toggling seasonal mode
-  const handleSeasonalToggle = (hot: boolean) => {
-    setIsHotMode(hot);
-    setActiveCategory(0);
-  };
-
-  const currentCategory = filteredCategories[activeCategory];
+  const categories = t.menu.categories;
+  const currentCategory = categories[activeCategory];
 
   return (
     <section
@@ -291,11 +230,10 @@ export default function NuestroMenu() {
           </div>
         </div>
 
-        {/* Seasonal Toggle + Category Tabs */}
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 max-w-full">
-          <SeasonalToggle isHot={isHotMode} onToggle={handleSeasonalToggle} t={t} />
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide min-w-0 max-w-full sm:flex-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-            {filteredCategories.map((category, index) => (
+        {/* Category Tabs */}
+        <div className="mb-6 max-w-full">
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            {categories.map((category, index) => (
               <CategoryTab
                 key={category.id}
                 category={category}
@@ -309,7 +247,7 @@ export default function NuestroMenu() {
         {/* Menu Items Grid */}
         <div
           className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-          key={`${currentCategory.id}-${isHotMode}`}
+          key={currentCategory.id}
         >
           {currentCategory.items.map((item, index) => (
             <div
