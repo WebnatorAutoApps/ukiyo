@@ -445,6 +445,16 @@ export const translations: Record<Locale, Translations> = {
       menuSubtitle: "Carta completa de Ukiyo Mochis & Coffee",
     },
 
+    // Lo-Fi Player
+    lofiPlayer: {
+      title: "Ukiyo Lo-Fi Radio",
+      subtitle: "Cozy beats para relajarte",
+      play: "Reproducir música",
+      pause: "Pausar música",
+      open: "Abrir reproductor lo-fi",
+      close: "Cerrar reproductor",
+    },
+
     // WhatsApp
     whatsapp: {
       ariaLabel: "Contactar por WhatsApp",
@@ -895,6 +905,16 @@ export const translations: Record<Locale, Translations> = {
       menuSubtitle: "Ukiyo Mochis & Coffee の全メニュー",
     },
 
+    // Lo-Fi Player
+    lofiPlayer: {
+      title: "Ukiyo Lo-Fi Radio",
+      subtitle: "リラックスできるビーツ",
+      play: "音楽を再生",
+      pause: "音楽を一時停止",
+      open: "Lo-Fiプレイヤーを開く",
+      close: "プレイヤーを閉じる",
+    },
+
     // WhatsApp
     whatsapp: {
       ariaLabel: "WhatsAppでお問い合わせ",
@@ -1090,6 +1110,14 @@ export interface Translations {
     storeSubtitle: string;
     menu: string;
     menuSubtitle: string;
+  };
+  lofiPlayer: {
+    title: string;
+    subtitle: string;
+    play: string;
+    pause: string;
+    open: string;
+    close: string;
   };
   whatsapp: {
     ariaLabel: string;

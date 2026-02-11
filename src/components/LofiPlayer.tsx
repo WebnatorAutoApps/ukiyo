@@ -1,37 +1,59 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+
+const LOFI_STREAM_URL =
+  "https://cdn.freesound.org/previews/612/612095_5674468-lq.mp3";
 
 export default function LofiPlayer() {
+  const { t } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    // Create audio element with a royalty-free lo-fi placeholder
-    // Using a silent source since we can't bundle audio files
-    audioRef.current = new Audio();
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
+  const syncPlayState = useCallback(() => {
+    if (audioRef.current) {
+      setIsPlaying(!audioRef.current.paused);
+    }
   }, []);
 
-  const togglePlay = () => {
-    if (!audioRef.current) return;
+  useEffect(() => {
+    const audio = new Audio(LOFI_STREAM_URL);
+    audio.loop = true;
+    audio.volume = 0.3;
+    audio.preload = "none";
+
+    audio.addEventListener("play", syncPlayState);
+    audio.addEventListener("pause", syncPlayState);
+    audio.addEventListener("ended", syncPlayState);
+
+    audioRef.current = audio;
+
+    return () => {
+      audio.removeEventListener("play", syncPlayState);
+      audio.removeEventListener("pause", syncPlayState);
+      audio.removeEventListener("ended", syncPlayState);
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      audioRef.current = null;
+    };
+  }, [syncPlayState]);
+
+  const togglePlay = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
     if (isPlaying) {
-      audioRef.current.pause();
+      audio.pause();
     } else {
-      audioRef.current.play().catch(() => {
-        // Autoplay blocked by browser
-      });
+      try {
+        await audio.play();
+      } catch {
+        // Autoplay blocked by browser — state stays synced via event listeners
+      }
     }
-    setIsPlaying(!isPlaying);
   };
 
   return (
@@ -45,8 +67,8 @@ export default function LofiPlayer() {
               <div className="w-3 h-3 rounded-full bg-soft-wood" />
             </div>
             <div>
-              <p className="text-xs font-bold text-foreground font-heading">Ukiyo Lo-Fi Radio</p>
-              <p className="text-xs text-text-secondary">Cozy beats para relajarte</p>
+              <p className="text-xs font-bold text-foreground font-heading">{t.lofiPlayer.title}</p>
+              <p className="text-xs text-text-secondary">{t.lofiPlayer.subtitle}</p>
             </div>
           </div>
 
@@ -72,7 +94,7 @@ export default function LofiPlayer() {
             <button
               onClick={togglePlay}
               className="w-10 h-10 rounded-full bg-ukiyo-navy text-white flex items-center justify-center hover:bg-primary-hover transition-colors"
-              aria-label={isPlaying ? "Pausar música" : "Reproducir música"}
+              aria-label={isPlaying ? t.lofiPlayer.pause : t.lofiPlayer.play}
             >
               {isPlaying ? (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -93,7 +115,7 @@ export default function LofiPlayer() {
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-14 h-14 rounded-full bg-wood-light border-2 border-soft-wood shadow-cozy-lg flex items-center justify-center hover:scale-105 transition-transform"
-        aria-label={isExpanded ? "Cerrar reproductor" : "Abrir reproductor lo-fi"}
+        aria-label={isExpanded ? t.lofiPlayer.close : t.lofiPlayer.open}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           {/* Radio icon */}
