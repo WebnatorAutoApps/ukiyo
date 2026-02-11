@@ -7,7 +7,7 @@ const mochiProducts = [
   {
     name: "Mochi de Oreo",
     description: "Crujiente galleta Oreo envuelta en suave mochi artesanal",
-    image: "https://images.unsplash.com/photo-1631206616829-3e5e6e61db9e?w=400&h=400&fit=crop&q=80",
+    image: "/images/mochi-oreo.jpg",
     emoji: "🍪",
   },
   {
