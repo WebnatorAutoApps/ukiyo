@@ -5,10 +5,15 @@ import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useHeroInView } from "@/hooks/useHeroLazyLoad";
 
+// Tiny 4x4 dark purple blur placeholder matching the fallback gradient
+const BLUR_PLACEHOLDER =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMElEQVQI12NoaGhgYGBgYGBgaGxsZGBgYGhoYGBgYGhqamJgYGhsbGRgYGhubgYAQzMH1TBwbMoAAAAASUVORK5CYII=";
+
 export default function TiendaHero() {
   const { t } = useLanguage();
   const { ref: heroRef, isInView } = useHeroInView("200px");
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   return (
     <section className="w-full" ref={heroRef as React.RefObject<HTMLElement>}>
@@ -25,7 +30,7 @@ export default function TiendaHero() {
           }}
         />
 
-        {isInView && (
+        {!imageError && isInView && (
           <div
             className={`hero-season-image ${imageLoaded ? "hero-season-image--loaded" : "hero-season-image--loading"}`}
           >
@@ -35,11 +40,23 @@ export default function TiendaHero() {
               fill
               className="object-cover"
               priority={isInView}
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               sizes="100vw"
               onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
             />
           </div>
         )}
+
+        {/* noscript fallback — render image eagerly when JS is disabled */}
+        <noscript>
+          <img
+            src="/images/tienda-hero.png"
+            alt=""
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </noscript>
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-ukiyo-navy/40 px-4 text-center z-[2]">
           <span className="mb-3 text-sm text-sakura-pink font-heading tracking-widest uppercase">
             {t.tiendaHero.tagline}

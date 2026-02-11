@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useSeason } from "@/context/SeasonContext";
-import { useHeroInView } from "@/hooks/useHeroLazyLoad";
+import { useHeroInView, usePrefersReducedMotion } from "@/hooks/useHeroLazyLoad";
 import SeasonalSlider, { type Season } from "./SeasonalSlider";
 
 const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
@@ -28,6 +28,10 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
 
 const ALL_SEASONS: Season[] = ["spring", "summer", "autumn", "winter"];
 
+// Tiny 4x4 pink/cream blur placeholder matching the fallback gradient
+const BLUR_PLACEHOLDER =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVQI12P4/58BAwMDAwMDA8P/f/8ZGBgYGBgY/v//z8DAwMDAwPD//38GBob/DAwMDP//MzAwMDAwMDAwAABfSBEH3wvMOAAAAABJRU5ErkJggg==";
+
 /** Preload an image and return a promise */
 function preloadImage(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -46,6 +50,7 @@ export default function Hero() {
   const [displayedSeason, setDisplayedSeason] = useState<Season>(activeSeason);
   const [isFading, setIsFading] = useState(false);
   const { ref: heroRef, isInView } = useHeroInView("200px");
+  const reducedMotion = usePrefersReducedMotion();
   const preloadedRef = useRef<Set<string>>(new Set());
 
   // Preload inactive season images once hero is in view
@@ -90,9 +95,22 @@ export default function Hero() {
         );
       }
 
+      setSeason(newSeason);
+
+      // Skip fade animation when user prefers reduced motion
+      if (reducedMotion) {
+        Promise.all(imagesToLoad)
+          .catch(() => {})
+          .then(() => {
+            setDisplayedSeason(newSeason);
+            setImageError(false);
+            setImageLoaded(false);
+          });
+        return;
+      }
+
       // Start fade out
       setIsFading(true);
-      setSeason(newSeason);
 
       // Wait for both fade-out AND image preload before swapping
       const fadePromise = new Promise((r) => setTimeout(r, 400));
@@ -105,7 +123,7 @@ export default function Hero() {
           setIsFading(false);
         });
     },
-    [activeSeason, setSeason]
+    [activeSeason, setSeason, reducedMotion]
   );
 
   const images = SEASON_IMAGES[displayedSeason];
@@ -140,6 +158,8 @@ export default function Hero() {
               fill
               className="object-cover object-center md:hidden"
               priority={shouldPrioritize}
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               sizes="(max-width: 767px) 100vw, 0px"
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
@@ -151,12 +171,30 @@ export default function Hero() {
               fill
               className="object-cover object-center hidden md:block"
               priority={shouldPrioritize}
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               sizes="(min-width: 768px) 100vw, 0px"
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
           </div>
         )}
+
+        {/* noscript fallback — render active season image eagerly when JS is disabled */}
+        <noscript>
+          <img
+            src={images.mobile}
+            alt=""
+            className="md:hidden"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <img
+            src={images.desktop}
+            alt=""
+            className="hidden md:block"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </noscript>
 
         {/* Soft gradient overlay — lighter to preserve the illustration's pastel tones */}
         <div
