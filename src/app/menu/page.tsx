@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import LofiPlayer from "@/components/LofiPlayer";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import SakuraPetals from "@/components/SakuraPetals";
 
 export const metadata: Metadata = {
   title:
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
 export default function MenuPage() {
   return (
     <>
+      <SakuraPetals />
       <NavBar />
       <Breadcrumbs
         items={[

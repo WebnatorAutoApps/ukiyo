@@ -5,9 +5,9 @@ import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 function CherryBlossom({ index }: { index: number }) {
-  const delays = [0, 1.2, 2.4, 0.8, 1.8, 3.0];
-  const lefts = [10, 30, 55, 75, 90, 45];
-  const sizes = [14, 10, 12, 10, 14, 11];
+  const delays = [0, 1.2, 2.4, 0.8, 1.8, 3.0, 0.5, 2.0, 1.5, 3.5, 0.3, 2.8];
+  const lefts = [5, 15, 25, 35, 48, 58, 68, 78, 88, 95, 42, 72];
+  const sizes = [14, 10, 12, 10, 14, 11, 13, 10, 12, 14, 11, 13];
 
   return (
     <span
@@ -203,22 +203,21 @@ export default function NuestroMenu() {
   return (
     <section
       id="nuestro-menu"
-      className="w-full py-16 px-5 bg-warm-cream overflow-hidden"
+      className="w-full py-16 px-5 bg-warm-cream overflow-hidden relative"
       aria-label={t.menu.sectionTitle}
     >
-      <div className="mx-auto max-w-6xl">
-        {/* Section Title with cherry blossom animation */}
+      {/* Cherry blossom petals covering entire section */}
+      <div className="menu-petal-container absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <CherryBlossom key={i} index={i} />
+        ))}
+      </div>
+      <div className="mx-auto max-w-6xl relative z-10">
+        {/* Section Title */}
         <div className="text-center mb-10 relative">
-          <div className="relative inline-block">
-            <div className="menu-petal-container absolute inset-0 overflow-hidden pointer-events-none" style={{ top: "-20px", bottom: "-20px", left: "-30px", right: "-30px" }}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <CherryBlossom key={i} index={i} />
-              ))}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground font-heading relative z-10">
-              {t.menu.sectionTitle}
-            </h2>
-          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground font-heading">
+            {t.menu.sectionTitle}
+          </h2>
           <p className="mt-3 text-text-secondary text-sm md:text-base">
             {t.menu.sectionSubtitle}
           </p>
