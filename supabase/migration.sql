@@ -30,19 +30,6 @@ create table if not exists public.mochi_tags (
 -- Create index on mochi_tags for faster lookups
 create index if not exists idx_mochi_tags_mochi_id on public.mochi_tags(mochi_id);
 
--- Auto-update updated_at on mochis row changes
-create or replace function public.update_updated_at()
-returns trigger as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$ language plpgsql;
-
-create trigger mochis_updated_at
-  before update on public.mochis
-  for each row execute function public.update_updated_at();
-
 -- Enable Row Level Security
 alter table public.mochis enable row level security;
 alter table public.mochi_tags enable row level security;
@@ -74,6 +61,14 @@ create policy "Authenticated can update mochi_tags" on public.mochi_tags
 
 create policy "Authenticated can delete mochi_tags" on public.mochi_tags
   for delete to authenticated using (true);
+
+-- Create storage bucket for images (run separately if needed)
+-- insert into storage.buckets (id, name, public) values ('images', 'images', true);
+
+-- Storage policies for images bucket
+-- create policy "Public read images" on storage.objects for select using (bucket_id = 'images');
+-- create policy "Authenticated upload images" on storage.objects for insert to authenticated with check (bucket_id = 'images');
+-- create policy "Authenticated delete images" on storage.objects for delete to authenticated using (bucket_id = 'images');
 
 -- Seed data: existing mochis from translations
 insert into public.mochis (title_es, title_ja, description_es, description_ja, price, image_url, emoji, display_order) values
