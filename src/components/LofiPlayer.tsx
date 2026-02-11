@@ -3,13 +3,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const LOFI_STREAM_URL =
-  "https://cdn.freesound.org/previews/612/612095_5674468-lq.mp3";
+const LOFI_AUDIO_URL = "/audio/White_snow_chill_days.mp3";
 
 export default function LofiPlayer() {
   const { t } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [volume, setVolume] = useState(0.3);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const syncPlayState = useCallback(() => {
@@ -19,9 +19,9 @@ export default function LofiPlayer() {
   }, []);
 
   useEffect(() => {
-    const audio = new Audio(LOFI_STREAM_URL);
+    const audio = new Audio(LOFI_AUDIO_URL);
     audio.loop = true;
-    audio.volume = 0.3;
+    audio.volume = volume;
     audio.preload = "none";
 
     audio.addEventListener("play", syncPlayState);
@@ -39,6 +39,7 @@ export default function LofiPlayer() {
       audio.load();
       audioRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncPlayState]);
 
   const togglePlay = async () => {
@@ -53,6 +54,14 @@ export default function LofiPlayer() {
       } catch {
         // Autoplay blocked by browser — state stays synced via event listeners
       }
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
     }
   };
 
@@ -107,6 +116,25 @@ export default function LofiPlayer() {
                 </svg>
               )}
             </button>
+          </div>
+
+          {/* Volume slider */}
+          <div className="flex items-center gap-2 mt-3">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5D5068" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              {volume > 0 && <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />}
+              {volume > 0.5 && <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />}
+            </svg>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-soft-wood/50 accent-ukiyo-navy"
+              aria-label={t.lofiPlayer.volume}
+            />
           </div>
         </div>
       )}
