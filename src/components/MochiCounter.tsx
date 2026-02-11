@@ -3,7 +3,15 @@
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
 import { useSeason } from "@/context/SeasonContext";
+import { useLanguage } from "@/i18n/LanguageContext";
 import type { Season } from "@/components/SeasonalSlider";
+
+interface MochiImageData {
+  image: string;
+  emoji: string;
+  seasonal?: boolean;
+  season?: Season;
+}
 
 interface MochiProduct {
   name: string;
@@ -14,83 +22,26 @@ interface MochiProduct {
   season?: Season;
 }
 
-const mochiProducts: MochiProduct[] = [
-  {
-    name: "Mochi de Oreo",
-    description: "Crujiente galleta Oreo envuelta en suave mochi artesanal",
-    image: "/images/mochi-oreo.jpg",
-    emoji: "🍪",
-  },
-  {
-    name: "Mochi de Nutella",
-    description: "Irresistible Nutella cremosa dentro de un mochi suave y esponjoso",
-    image: "/images/mochi-nutella.jpg",
-    emoji: "🍫",
-  },
-  {
-    name: "Mochi de Anko",
-    description: "Tradicional pasta de judía roja azuki en mochi artesanal japonés",
-    image: "/images/mochi-anko.jpg",
-    emoji: "🫘",
-  },
-  {
-    name: "Mochi de Matcha",
-    description: "Auténtico matcha japonés en un mochi cremoso y delicado",
-    image: "/images/mochi-matcha.jpg",
-    emoji: "🍵",
-  },
-  {
-    name: "Mochi de Mango",
-    description: "Explosión tropical de mango maduro en mochi esponjoso",
-    image: "/images/mochi-mango.jpg",
-    emoji: "🥭",
-  },
-  {
-    name: "Mochi de Lemon Pie",
-    description: "Cremoso lemon curd con merengue tostado en mochi artesanal",
-    image: "/images/mochi-lemon-pie.jpg",
-    emoji: "🍋",
-  },
-  {
-    name: "Mochi de Choco Coco",
-    description: "Intenso chocolate con coco rallado en un mochi suave y esponjoso",
-    image: "/images/mochi-choco-coco.jpg",
-    emoji: "🥥",
-  },
-  {
-    name: "Mochi de Maracuyá",
-    description: "Exótica pulpa de maracuyá tropical en mochi suave y artesanal",
-    image: "/images/mochi-maracuya.jpg",
-    emoji: "🍈",
-  },
-  {
-    name: "Mochi Tarta de Queso con Fresa",
-    description: "Cremosa tarta de queso con fresa natural en mochi artesanal",
-    image: "/images/mochi-tarta-queso-fresa.jpg",
-    emoji: "🍓",
-  },
-  {
-    name: "Mochi de Calabaza",
-    description: "Cremosa calabaza especiada de temporada en mochi artesanal suave",
-    image: "/images/mochi-pumpkin.jpg",
-    emoji: "🎃",
-    seasonal: true,
-    season: "autumn",
-  },
-  {
-    name: "Mochi de Frambuesa",
-    description: "Frambuesas frescas en un mochi artesanal suave y cremoso",
-    image: "/images/mochi-raspberry.jpg",
-    emoji: "🫐",
-    seasonal: true,
-    season: "winter",
-  },
+const mochiImages: MochiImageData[] = [
+  { image: "/images/mochi-oreo.jpg", emoji: "🍪" },
+  { image: "/images/mochi-nutella.jpg", emoji: "🍫" },
+  { image: "/images/mochi-anko.jpg", emoji: "🫘" },
+  { image: "/images/mochi-matcha.jpg", emoji: "🍵" },
+  { image: "/images/mochi-mango.jpg", emoji: "🥭" },
+  { image: "/images/mochi-lemon-pie.jpg", emoji: "🍋" },
+  { image: "/images/mochi-choco-coco.jpg", emoji: "🥥" },
+  { image: "/images/mochi-maracuya.jpg", emoji: "🍈" },
+  { image: "/images/mochi-tarta-queso-fresa.jpg", emoji: "🍓" },
+  { image: "/images/mochi-pumpkin.jpg", emoji: "🎃", seasonal: true, season: "autumn" },
+  { image: "/images/mochi-raspberry.jpg", emoji: "🫐", seasonal: true, season: "winter" },
 ];
 
 const MochiProductCard = memo(function MochiProductCard({
   product,
+  seasonalBadge,
 }: {
   product: MochiProduct;
+  seasonalBadge: string;
 }) {
   const [hovered, setHovered] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -108,7 +59,7 @@ const MochiProductCard = memo(function MochiProductCard({
       {product.seasonal && (
         <div className="absolute top-3 left-3 z-20">
           <span className="seasonal-badge">
-            {product.season === "winter" ? "❄️" : "🎃"} De temporada
+            {product.season === "winter" ? "❄️" : "🎃"} {seasonalBadge}
           </span>
         </div>
       )}
@@ -169,15 +120,26 @@ const MochiProductCard = memo(function MochiProductCard({
 });
 
 export default function MochiCounter() {
+  const { t } = useLanguage();
   const trackRef = useRef<HTMLDivElement>(null);
   const isPausedRef = useRef(false);
   const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
   const { season } = useSeason();
 
+  const mochiProducts: MochiProduct[] = useMemo(
+    () =>
+      mochiImages.map((item, i) => ({
+        ...item,
+        name: t.mochiCounter.products[i].name,
+        description: t.mochiCounter.products[i].description,
+      })),
+    [t]
+  );
+
   const visibleProducts = useMemo(
     () => mochiProducts.filter((p) => !p.seasonal || p.season === season),
-    [season]
+    [mochiProducts, season]
   );
 
   const carouselItems = useMemo(
@@ -240,16 +202,16 @@ export default function MochiCounter() {
   return (
     <section
       className="w-full py-14 px-5 mochi-counter-section overflow-hidden"
-      aria-label="Nuestros Mochis"
+      aria-label={t.mochiCounter.sectionTitle}
     >
       <div className="mx-auto max-w-6xl">
         {/* Section header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground font-heading">
-            Nuestros Mochis
+            {t.mochiCounter.sectionTitle}
           </h2>
           <p className="mt-2 text-text-secondary text-sm md:text-base">
-            Nuestros sabores más populares, hechos a mano cada día
+            {t.mochiCounter.subtitle}
           </p>
         </div>
 
@@ -269,13 +231,13 @@ export default function MochiCounter() {
             ref={trackRef}
             className="flex gap-6 overflow-x-auto scrollbar-hide py-2 px-1"
             role="region"
-            aria-label="Carrusel de mochis"
+            aria-label={t.mochiCounter.carouselLabel}
             tabIndex={0}
             onKeyDown={handleKeyDown}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {carouselItems.map((product, index) => (
-              <MochiProductCard key={index} product={product} />
+              <MochiProductCard key={index} product={product} seasonalBadge={t.mochiCounter.seasonalBadge} />
             ))}
           </div>
         </div>
