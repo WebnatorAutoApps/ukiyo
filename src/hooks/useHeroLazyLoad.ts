@@ -39,3 +39,22 @@ export function useHeroInView(rootMargin = "200px") {
 
   return { ref, isInView };
 }
+
+/**
+ * Returns true when the user prefers reduced motion.
+ * Used to skip or shorten JS-driven fade transitions in hero components.
+ */
+export function usePrefersReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReduced(mq.matches);
+
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  return prefersReduced;
+}
