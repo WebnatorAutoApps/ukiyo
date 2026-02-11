@@ -363,6 +363,57 @@ export const translations: Record<Locale, Translations> = {
       ],
     },
 
+    // Menu Slider
+    menuSlider: {
+      sectionTitle: "Descubre Nuestras Delicias",
+      subtitle: "Explora lo mejor de Ukiyo — mochis, bubble tea y mucho más",
+      carouselLabel: "Carrusel de productos destacados",
+      products: [
+        {
+          name: "Mochis Artesanales",
+          description: "Suaves por fuera, cremosos por dentro. Hechos a mano cada día con ingredientes premium.",
+          image: "/images/mochi-product-1.jpg",
+          emoji: "🍡",
+          imageAlt: "Mochis artesanales japoneses hechos a mano en Madrid Norte",
+        },
+        {
+          name: "Matcha Latte",
+          description: "Té matcha ceremonial japonés con leche espumosa. Un clásico que enamora.",
+          image: "/images/mochi-matcha.jpg",
+          emoji: "🍵",
+          imageAlt: "Matcha latte con té ceremonial japonés",
+        },
+        {
+          name: "Bubble Tea",
+          description: "Refrescante y divertido, con perlas de tapioca y sabores auténticos.",
+          image: "/images/bubble-tea.jpg",
+          emoji: "🧋",
+          imageAlt: "Bubble tea artesanal con perlas de tapioca",
+        },
+        {
+          name: "Ramen Ukiyo",
+          description: "Caldo reconfortante con fideos artesanales y toppings tradicionales japoneses.",
+          image: "/images/staff-product.jpg",
+          emoji: "🍜",
+          imageAlt: "Ramen japonés con caldo reconfortante y fideos artesanales",
+        },
+        {
+          name: "Pancakes Japoneses",
+          description: "Esponjosos y ligeros como una nube, con sirope de arce y frutas frescas.",
+          image: "/images/mochi-lifestyle.jpg",
+          emoji: "🥞",
+          imageAlt: "Pancakes japoneses esponjosos estilo soufflé",
+        },
+        {
+          name: "Bocadillo de Pernil",
+          description: "Jamón asado artesanal en pan crujiente recién horneado. Nuevo y delicioso.",
+          image: "/images/about-photo.jpg",
+          emoji: "🥖",
+          imageAlt: "Bocadillo de pernil artesanal con pan crujiente",
+        },
+      ],
+    },
+
     // Mochi Counter
     mochiCounter: {
       sectionTitle: "Nuestros Mochis",
@@ -762,6 +813,57 @@ export const translations: Record<Locale, Translations> = {
       ],
     },
 
+    // Menu Slider
+    menuSlider: {
+      sectionTitle: "こだわりの逸品をご覧ください",
+      subtitle: "Ukiyoの人気メニュー — 餅、バブルティーなど",
+      carouselLabel: "おすすめ商品カルーセル",
+      products: [
+        {
+          name: "手作り餅",
+          description: "外はもちもち、中はクリーミー。毎日厳選素材で一つ一つ手作り。",
+          image: "/images/mochi-product-1.jpg",
+          emoji: "🍡",
+          imageAlt: "マドリード北部の手作り和風餅",
+        },
+        {
+          name: "抹茶ラテ",
+          description: "日本の茶道用抹茶とふわふわのミルク。定番の一杯。",
+          image: "/images/mochi-matcha.jpg",
+          emoji: "🍵",
+          imageAlt: "茶道用抹茶ラテ",
+        },
+        {
+          name: "バブルティー",
+          description: "爽やかで楽しい、タピオカパールと本格フレーバー。",
+          image: "/images/bubble-tea.jpg",
+          emoji: "🧋",
+          imageAlt: "タピオカパール入り手作りバブルティー",
+        },
+        {
+          name: "Ukiyo ラーメン",
+          description: "心温まるスープに手作り麺と伝統的な日本のトッピング。",
+          image: "/images/staff-product.jpg",
+          emoji: "🍜",
+          imageAlt: "心温まるスープの日本のラーメン",
+        },
+        {
+          name: "ふわふわパンケーキ",
+          description: "雲のように軽くてふわふわ、メープルシロップとフレッシュフルーツ添え。",
+          image: "/images/mochi-lifestyle.jpg",
+          emoji: "🥞",
+          imageAlt: "スフレスタイルのふわふわ日本式パンケーキ",
+        },
+        {
+          name: "ペルニルサンド",
+          description: "焼き上げハムを焼きたてのカリカリパンで。新メニュー。",
+          image: "/images/about-photo.jpg",
+          emoji: "🥖",
+          imageAlt: "カリカリパンの手作りペルニルサンドイッチ",
+        },
+      ],
+    },
+
     // Mochi Counter
     mochiCounter: {
       sectionTitle: "こだわりの餅",
@@ -803,6 +905,14 @@ export const translations: Record<Locale, Translations> = {
       "Ukiyo Mochis & Coffee - マドリード北部の手作り餅とコーヒー",
   },
 };
+
+interface MenuSliderProduct {
+  name: string;
+  description: string;
+  image: string;
+  emoji: string;
+  imageAlt: string;
+}
 
 interface MenuHighlight {
   name: string;
@@ -959,6 +1069,12 @@ export interface Translations {
     nextLabel: string;
     goToLabel: string;
     items: TestimonialItem[];
+  };
+  menuSlider: {
+    sectionTitle: string;
+    subtitle: string;
+    carouselLabel: string;
+    products: MenuSliderProduct[];
   };
   mochiCounter: {
     sectionTitle: string;

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import NavBar from "@/components/NavBar";
 import NuestroMenu from "@/components/NuestroMenu";
 import SpecialtyDrinks from "@/components/SpecialtyDrinks";
-import ProductCategories from "@/components/ProductCategories";
+import MenuProductSlider from "@/components/MenuProductSlider";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import LofiPlayer from "@/components/LofiPlayer";
@@ -46,7 +46,7 @@ export default function MenuPage() {
         ]}
       />
       <main>
-        <ProductCategories />
+        <MenuProductSlider />
         <SpecialtyDrinks />
         <NuestroMenu />
       </main>
