@@ -7,21 +7,29 @@ import type { MochiWithTags } from "@/lib/database.types";
 
 export function useMochis() {
   const [mochis, setMochis] = useState<MochiWithTags[]>([]);
-  const [loaded, setLoaded] = useState(!supabaseConfigured);
+  const [loading, setLoading] = useState(supabaseConfigured);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!supabaseConfigured) return;
 
     let cancelled = false;
-    fetchMochis().then((data) => {
-      if (!cancelled) {
-        setMochis(data);
-        setLoaded(true);
-      }
-    });
+    fetchMochis()
+      .then((data) => {
+        if (!cancelled) {
+          setMochis(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError(true);
+          setLoading(false);
+        }
+      });
 
     return () => { cancelled = true; };
   }, []);
 
-  return { mochis, loaded, hasData: mochis.length > 0 };
+  return { mochis, loading, error, hasData: mochis.length > 0 };
 }
