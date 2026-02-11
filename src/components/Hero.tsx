@@ -53,6 +53,15 @@ export default function Hero() {
   const reducedMotion = usePrefersReducedMotion();
   const preloadedRef = useRef<Set<string>>(new Set());
 
+  // Sync displayed season when context resets (e.g. on navigation)
+  useEffect(() => {
+    if (!isFading && displayedSeason !== activeSeason) {
+      setDisplayedSeason(activeSeason);
+      setImageError(false);
+      setImageLoaded(false);
+    }
+  }, [activeSeason, displayedSeason, isFading]);
+
   // Preload inactive season images once hero is in view
   useEffect(() => {
     if (!isInView) return;

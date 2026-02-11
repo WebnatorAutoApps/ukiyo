@@ -81,19 +81,6 @@ function getCurrentSeason(): Season {
   return "winter";
 }
 
-function getStoredSeason(): Season | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = localStorage.getItem("ukiyo-season");
-    if (stored && ["spring", "summer", "autumn", "winter"].includes(stored)) {
-      return stored as Season;
-    }
-  } catch {
-    // localStorage not available
-  }
-  return null;
-}
-
 interface SeasonalSliderProps {
   onSeasonChange: (season: Season) => void;
   currentSeason: Season;
@@ -200,4 +187,4 @@ export default function SeasonalSlider({
   );
 }
 
-export { SEASONS, getCurrentSeason, getStoredSeason };
+export { SEASONS, getCurrentSeason };
