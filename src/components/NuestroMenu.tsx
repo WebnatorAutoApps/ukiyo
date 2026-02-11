@@ -220,23 +220,20 @@ function mochiToMenuItem(mochi: MochiWithTags, locale: string): {
 export default function NuestroMenu() {
   const { t, locale } = useLanguage();
   const [activeCategory, setActiveCategory] = useState(0);
-  const { mochis: dbMochis, hasData } = useMochis();
+  const { mochis: dbMochis, loading: mochisLoading } = useMochis();
 
-  // Build categories with Supabase mochis replacing the mochis category
+  // Build categories with Supabase mochis as source of truth for mochis category
   const categories = useMemo(() => {
     const translationCategories = t.menu.categories;
 
-    if (!hasData) return translationCategories;
-
-    // Replace mochis category items with Supabase data
     return translationCategories.map((cat) => {
       if (cat.id === "mochis") {
         const mochiItems = dbMochis.map((m) => mochiToMenuItem(m, locale));
-        return { ...cat, items: mochiItems.length > 0 ? mochiItems : cat.items };
+        return { ...cat, items: mochiItems };
       }
       return cat;
     });
-  }, [t.menu.categories, hasData, dbMochis, locale]);
+  }, [t.menu.categories, dbMochis, locale]);
 
   const currentCategory = categories[activeCategory];
 
@@ -295,19 +292,33 @@ export default function NuestroMenu() {
           className="grid grid-cols-1 sm:grid-cols-2 gap-3"
           key={currentCategory.id}
         >
-          {currentCategory.items.map((item, index) => (
-            <div
-              key={`${currentCategory.id}-${index}`}
-              className="animate-fadeInUp"
-              style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}
-            >
-              <MenuItemRow
-                item={item}
-                t={t}
-                isMochiCategory={currentCategory.id === "mochis"}
-              />
-            </div>
-          ))}
+          {mochisLoading && currentCategory.id === "mochis" ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="rounded-xl bg-wood-light/60 border border-soft-wood/30 p-4 animate-pulse">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
+                    <div className="h-3 bg-soft-wood/20 rounded w-full" />
+                  </div>
+                  <div className="h-5 bg-soft-wood/30 rounded w-12" />
+                </div>
+              </div>
+            ))
+          ) : (
+            currentCategory.items.map((item, index) => (
+              <div
+                key={`${currentCategory.id}-${index}`}
+                className="animate-fadeInUp"
+                style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}
+              >
+                <MenuItemRow
+                  item={item}
+                  t={t}
+                  isMochiCategory={currentCategory.id === "mochis"}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

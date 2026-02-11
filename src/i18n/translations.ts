@@ -306,17 +306,7 @@ export const translations: Record<Locale, Translations> = {
           id: "mochis",
           name: "Mochis & Sweet",
           emoji: "🌸",
-          items: [
-            { name: "Mochi de Oreo", price: "3,50€", description: "Crujiente galleta Oreo envuelta en suave mochi artesanal", tag: "bestSeller" },
-            { name: "Mochi de Nutella", price: "3,50€", description: "Nutella cremosa en un mochi suave y esponjoso", tag: "bestSeller" },
-            { name: "Mochi de Matcha", price: "3,50€", description: "Auténtico matcha japonés en un mochi cremoso", tag: "popular" },
-            { name: "Mochi de Maracuyá", price: "3,50€", description: "Explosión tropical de maracuyá fresco" },
-            { name: "Mochi de Fresa", price: "3,50€", description: "Fresa natural en mochi artesanal" },
-            { name: "Mochi de Chocolate", price: "3,50€", description: "Chocolate belga intenso en mochi suave" },
-            { name: "Mochi de Mango", price: "3,50€", description: "Mango maduro en mochi esponjoso" },
-            { name: "Mochi de Lotus Biscoff", price: "4,00€", description: "Crema de galleta Lotus en mochi crujiente", priceModifier: "+0,50€", tag: "nuevo" },
-            { name: "Mochi de Frambuesa", price: "3,50€", description: "Frambuesas frescas en un mochi artesanal suave y cremoso", tag: "seasonal" },
-          ],
+          items: [],
         },
         {
           id: "drinks",
@@ -420,19 +410,6 @@ export const translations: Record<Locale, Translations> = {
       subtitle: "Nuestros sabores más populares, hechos a mano cada día",
       carouselLabel: "Carrusel de mochis",
       seasonalBadge: "De temporada",
-      products: [
-        { name: "Mochi de Oreo", description: "Crujiente galleta Oreo envuelta en suave mochi artesanal" },
-        { name: "Mochi de Nutella", description: "Irresistible Nutella cremosa dentro de un mochi suave y esponjoso" },
-        { name: "Mochi de Anko", description: "Tradicional pasta de judía roja azuki en mochi artesanal japonés" },
-        { name: "Mochi de Matcha", description: "Auténtico matcha japonés en un mochi cremoso y delicado" },
-        { name: "Mochi de Mango", description: "Explosión tropical de mango maduro en mochi esponjoso" },
-        { name: "Mochi de Lemon Pie", description: "Cremoso lemon curd con merengue tostado en mochi artesanal" },
-        { name: "Mochi de Choco Coco", description: "Intenso chocolate con coco rallado en un mochi suave y esponjoso" },
-        { name: "Mochi de Maracuyá", description: "Exótica pulpa de maracuyá tropical en mochi suave y artesanal" },
-        { name: "Mochi Tarta de Queso con Fresa", description: "Cremosa tarta de queso con fresa natural en mochi artesanal" },
-        { name: "Mochi de Calabaza", description: "Cremosa calabaza especiada de temporada en mochi artesanal suave" },
-        { name: "Mochi de Frambuesa", description: "Frambuesas frescas en un mochi artesanal suave y cremoso" },
-      ],
     },
 
     // Breadcrumbs
@@ -829,17 +806,7 @@ export const translations: Record<Locale, Translations> = {
           id: "mochis",
           name: "餅 & スイーツ",
           emoji: "🌸",
-          items: [
-            { name: "オレオ餅", price: "3,50€", description: "サクサクのオレオクッキーを柔らかい手作り餅で包みました", tag: "bestSeller" },
-            { name: "ヌテラ餅", price: "3,50€", description: "クリーミーなヌテラを柔らかいもちもち餅で", tag: "bestSeller" },
-            { name: "抹茶餅", price: "3,50€", description: "本格的な日本の抹茶をクリーミーな餅で", tag: "popular" },
-            { name: "パッションフルーツ餅", price: "3,50€", description: "フレッシュなパッションフルーツの爽やかな味わい" },
-            { name: "いちご餅", price: "3,50€", description: "天然いちごの手作り餅" },
-            { name: "チョコレート餅", price: "3,50€", description: "濃厚なベルギーチョコレートの柔らか餅" },
-            { name: "マンゴー餅", price: "3,50€", description: "完熟マンゴーのふわふわ餅" },
-            { name: "ロータスビスコフ餅", price: "4,00€", description: "ロータスクッキークリームのサクサク餅", priceModifier: "+0,50€", tag: "nuevo" },
-            { name: "ラズベリー餅", price: "3,50€", description: "フレッシュラズベリーの柔らかくクリーミーな手作り餅", tag: "seasonal" },
-          ],
+          items: [],
         },
         {
           id: "drinks",
@@ -943,19 +910,6 @@ export const translations: Record<Locale, Translations> = {
       subtitle: "毎日手作り、一番人気のフレーバーたち",
       carouselLabel: "餅カルーセル",
       seasonalBadge: "季節限定",
-      products: [
-        { name: "オレオ餅", description: "サクサクのオレオクッキーを柔らかい手作り餅で包みました" },
-        { name: "ヌテラ餅", description: "たまらないクリーミーなヌテラを柔らかくふわふわの餅で" },
-        { name: "あんこ餅", description: "伝統的な小豆あんを職人手作りの餅で包んだ和の逸品" },
-        { name: "抹茶餅", description: "本格的な日本の抹茶をクリーミーで繊細な餅で" },
-        { name: "マンゴー餅", description: "完熟マンゴーのトロピカルな味わいがふわふわ餅に" },
-        { name: "レモンパイ餅", description: "クリーミーなレモンカードと焼きメレンゲの手作り餅" },
-        { name: "チョコココ餅", description: "濃厚チョコレートとココナッツフレークの柔らかふわふわ餅" },
-        { name: "パッションフルーツ餅", description: "エキゾチックなパッションフルーツの柔らかい手作り餅" },
-        { name: "いちごチーズケーキ餅", description: "クリーミーなチーズケーキとフレッシュいちごの手作り餅" },
-        { name: "かぼちゃ餅", description: "季節限定のクリーミーなスパイスかぼちゃの柔らかい手作り餅" },
-        { name: "ラズベリー餅", description: "フレッシュラズベリーの柔らかくクリーミーな手作り餅" },
-      ],
     },
 
     // Breadcrumbs
@@ -1227,7 +1181,6 @@ export interface Translations {
     subtitle: string;
     carouselLabel: string;
     seasonalBadge: string;
-    products: ProductItem[];
   };
   breadcrumbs: {
     home: string;
