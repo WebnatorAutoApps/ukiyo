@@ -335,6 +335,35 @@ html {
   display: none;
 }
 
+/* Menu Product Slider section */
+.menu-slider-section {
+  background: linear-gradient(
+    180deg,
+    var(--warm-cream) 0%,
+    var(--wood-light) 30%,
+    var(--wood-light) 70%,
+    var(--warm-cream) 100%
+  );
+}
+
+.menu-slider-card {
+  background: var(--wood-texture);
+  background-size: 200% 200%;
+}
+
+.menu-slider-card-body {
+  background: var(--wood-light);
+  border-top: 2px solid var(--soft-wood);
+}
+
+.menu-slider-fade-left {
+  background: linear-gradient(to right, var(--wood-light), transparent);
+}
+
+.menu-slider-fade-right {
+  background: linear-gradient(to left, var(--wood-light), transparent);
+}
+
 /* Nuestro Menú — cherry blossom petals covering entire section */
 @keyframes menuPetalDrift {
   0% {
