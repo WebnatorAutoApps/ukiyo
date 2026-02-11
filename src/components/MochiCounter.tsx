@@ -28,6 +28,12 @@ const mochiProducts = [
     image: "/images/mochi-mango.jpg",
     emoji: "🥭",
   },
+  {
+    name: "Mochi de Lemon Pie",
+    description: "Cremoso lemon curd con merengue tostado en mochi artesanal",
+    image: "/images/mochi-lemon-pie.jpg",
+    emoji: "🍋",
+  },
 ];
 
 // Duplicate for seamless infinite scroll
