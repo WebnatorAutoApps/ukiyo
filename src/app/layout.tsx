@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito, Quicksand, Varela_Round } from "next/font/google";
 import "./globals.css";
-import CopyPageInfo from "@/components/CopyPageInfo";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { SeasonProvider } from "@/context/SeasonContext";
@@ -119,7 +118,6 @@ export default function RootLayout({
           <SeasonProvider>
             <LocalBusinessSchema />
             {children}
-            <CopyPageInfo />
           </SeasonProvider>
         </LanguageProvider>
       </body>
