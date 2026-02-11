@@ -273,6 +273,7 @@ export const translations: Record<Locale, Translations> = {
       popular: "Popular",
       from: "desde",
       unit: "ud.",
+      seasonal: "❄️ De temporada",
       seasonalHot: "☀️ Caliente",
       seasonalCold: "❄️ Frío",
       highlights: [
@@ -315,6 +316,7 @@ export const translations: Record<Locale, Translations> = {
             { name: "Mochi de Chocolate", price: "3,50€", description: "Chocolate belga intenso en mochi suave" },
             { name: "Mochi de Mango", price: "3,50€", description: "Mango maduro en mochi esponjoso" },
             { name: "Mochi de Lotus Biscoff", price: "4,00€", description: "Crema de galleta Lotus en mochi crujiente", priceModifier: "+0,50€", tag: "nuevo" },
+            { name: "Mochi de Frambuesa", price: "3,50€", description: "Frambuesas frescas en un mochi artesanal suave y cremoso", tag: "seasonal" },
           ],
         },
         {
@@ -650,6 +652,7 @@ export const translations: Record<Locale, Translations> = {
       popular: "人気",
       from: "から",
       unit: "個",
+      seasonal: "❄️ 季節限定",
       seasonalHot: "☀️ ホット",
       seasonalCold: "❄️ コールド",
       highlights: [
@@ -692,6 +695,7 @@ export const translations: Record<Locale, Translations> = {
             { name: "チョコレート餅", price: "3,50€", description: "濃厚なベルギーチョコレートの柔らか餅" },
             { name: "マンゴー餅", price: "3,50€", description: "完熟マンゴーのふわふわ餅" },
             { name: "ロータスビスコフ餅", price: "4,00€", description: "ロータスクッキークリームのサクサク餅", priceModifier: "+0,50€", tag: "nuevo" },
+            { name: "ラズベリー餅", price: "3,50€", description: "フレッシュラズベリーの柔らかくクリーミーな手作り餅", tag: "seasonal" },
           ],
         },
         {
@@ -882,6 +886,7 @@ export interface Translations {
     popular: string;
     from: string;
     unit: string;
+    seasonal: string;
     seasonalHot: string;
     seasonalCold: string;
     highlights: MenuHighlight[];

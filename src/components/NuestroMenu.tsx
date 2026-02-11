@@ -46,6 +46,13 @@ function TagBadge({ tag, t }: { tag: string; t: ReturnType<typeof useLanguage>["
       </span>
     );
   }
+  if (tag === "seasonal") {
+    return (
+      <span className="seasonal-badge text-[11px]">
+        {t.menu.seasonal}
+      </span>
+    );
+  }
   return null;
 }
 
