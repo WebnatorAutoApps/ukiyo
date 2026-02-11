@@ -215,7 +215,6 @@ export const translations: Record<Locale, Translations> = {
     tiendaProducts: {
       sectionTitle: "Nuestros productos",
       available: "Disponible",
-      viewProduct: "Ver producto",
       products: [
         {
           name: "Mochis artesanales Ukiyo",
@@ -615,7 +614,6 @@ export const translations: Record<Locale, Translations> = {
     tiendaProducts: {
       sectionTitle: "商品ラインナップ",
       available: "在庫あり",
-      viewProduct: "商品を見る",
       products: [
         {
           name: "Ukiyo 手作り餅",
@@ -954,7 +952,6 @@ export interface Translations {
   tiendaProducts: {
     sectionTitle: string;
     available: string;
-    viewProduct: string;
     products: ProductItem[];
   };
   tiendaTestimonials: {
