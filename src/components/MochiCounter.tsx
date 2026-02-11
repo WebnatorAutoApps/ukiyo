@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
 import { useSeason } from "@/context/SeasonContext";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useMochis } from "@/hooks/useMochis";
 import type { Season } from "@/components/SeasonalSlider";
 
 interface MochiImageData {
@@ -22,7 +23,7 @@ interface MochiProduct {
   season?: Season;
 }
 
-const mochiImages: MochiImageData[] = [
+const fallbackMochiImages: MochiImageData[] = [
   { image: "/images/mochi-oreo.jpg", emoji: "🍪" },
   { image: "/images/mochi-nutella.jpg", emoji: "🍫" },
   { image: "/images/mochi-anko.jpg", emoji: "🫘" },
@@ -35,6 +36,13 @@ const mochiImages: MochiImageData[] = [
   { image: "/images/mochi-pumpkin.jpg", emoji: "🎃", seasonal: true, season: "autumn" },
   { image: "/images/mochi-raspberry.jpg", emoji: "🫐", seasonal: true, season: "winter" },
 ];
+
+// Map database season values to component season values
+function mapSeason(dbSeason: string | null): Season | undefined {
+  if (!dbSeason) return undefined;
+  const map: Record<string, Season> = { spring: "spring", summer: "summer", fall: "autumn", winter: "winter" };
+  return map[dbSeason];
+}
 
 const MochiProductCard = memo(function MochiProductCard({
   product,
@@ -120,12 +128,13 @@ const MochiProductCard = memo(function MochiProductCard({
 });
 
 export default function MochiCounter() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const trackRef = useRef<HTMLDivElement>(null);
   const isPausedRef = useRef(false);
   const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
   const { season } = useSeason();
+  const { mochis: dbMochis, hasData } = useMochis();
 
   // Drag-to-scroll state
   const isDraggingRef = useRef(false);
@@ -133,15 +142,29 @@ export default function MochiCounter() {
   const dragScrollStartRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  const mochiProducts: MochiProduct[] = useMemo(
-    () =>
-      mochiImages.map((item, i) => ({
-        ...item,
-        name: t.mochiCounter.products[i].name,
-        description: t.mochiCounter.products[i].description,
-      })),
-    [t]
-  );
+  // Build product list from Supabase data or fallback to translations
+  const mochiProducts: MochiProduct[] = useMemo(() => {
+    if (hasData) {
+      return dbMochis.map((m) => {
+        const seasonalTag = m.mochi_tags.find((tag) => tag.tag_name === "seasonal");
+        const isSeasonal = !!seasonalTag;
+        return {
+          name: locale === "ja" ? m.title_ja : m.title_es,
+          description: locale === "ja" ? m.description_ja : m.description_es,
+          image: m.image_url,
+          emoji: m.emoji,
+          seasonal: isSeasonal,
+          season: isSeasonal ? mapSeason(seasonalTag.season) : undefined,
+        };
+      });
+    }
+    // Fallback to hardcoded data from translations
+    return fallbackMochiImages.map((item, i) => ({
+      ...item,
+      name: t.mochiCounter.products[i]?.name ?? "",
+      description: t.mochiCounter.products[i]?.description ?? "",
+    }));
+  }, [hasData, dbMochis, locale, t]);
 
   const visibleProducts = useMemo(
     () => mochiProducts.filter((p) => !p.seasonal || p.season === season),

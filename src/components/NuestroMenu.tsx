@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useMochis } from "@/hooks/useMochis";
+import type { MochiWithTags } from "@/lib/database.types";
 
 function CherryBlossom({ index }: { index: number }) {
   const delays = [0, 1.2, 2.4, 0.8, 1.8, 3.0, 0.5, 2.0, 1.5, 3.5, 0.3, 2.8];
@@ -193,11 +195,49 @@ function MenuItemRow({
   );
 }
 
-export default function NuestroMenu() {
-  const { t } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState(0);
+// Convert database mochi to menu item format
+function mochiToMenuItem(mochi: MochiWithTags, locale: string): {
+  name: string;
+  price: string;
+  description?: string;
+  tag?: string;
+  priceModifier?: string;
+} {
+  const name = locale === "ja" ? mochi.title_ja : mochi.title_es;
+  const description = locale === "ja" ? mochi.description_ja : mochi.description_es;
 
-  const categories = t.menu.categories;
+  // Map tag: prioritize first tag found
+  let tag: string | undefined;
+  for (const t of mochi.mochi_tags) {
+    if (t.tag_name === "nuevo") { tag = "nuevo"; break; }
+    if (t.tag_name === "popular") { tag = "popular"; break; }
+    if (t.tag_name === "seasonal") { tag = "seasonal"; break; }
+  }
+
+  return { name, price: mochi.price, description, tag };
+}
+
+export default function NuestroMenu() {
+  const { t, locale } = useLanguage();
+  const [activeCategory, setActiveCategory] = useState(0);
+  const { mochis: dbMochis, hasData } = useMochis();
+
+  // Build categories with Supabase mochis replacing the mochis category
+  const categories = useMemo(() => {
+    const translationCategories = t.menu.categories;
+
+    if (!hasData) return translationCategories;
+
+    // Replace mochis category items with Supabase data
+    return translationCategories.map((cat) => {
+      if (cat.id === "mochis") {
+        const mochiItems = dbMochis.map((m) => mochiToMenuItem(m, locale));
+        return { ...cat, items: mochiItems.length > 0 ? mochiItems : cat.items };
+      }
+      return cat;
+    });
+  }, [t.menu.categories, hasData, dbMochis, locale]);
+
   const currentCategory = categories[activeCategory];
 
   return (
