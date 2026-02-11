@@ -3,21 +3,48 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { supabase, supabaseConfigured } from "@/lib/supabase";
 
-export default function AdminLogin() {
-  const [username, setUsername] = useState("");
+interface AdminLoginProps {
+  onLoginSuccess: () => void;
+}
+
+export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { t } = useLanguage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!username.trim() || !password.trim()) {
+    if (!email.trim() || !password.trim()) {
       setError(t.admin.emptyFieldsError);
       return;
     }
+
+    if (!supabaseConfigured) {
+      setError(t.admin.loginError);
+      return;
+    }
+
+    setLoading(true);
+
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password: password.trim(),
+    });
+
+    setLoading(false);
+
+    if (authError) {
+      setError(t.admin.loginError);
+      return;
+    }
+
+    onLoginSuccess();
   };
 
   return (
@@ -45,19 +72,19 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="text-sm font-semibold text-foreground font-heading"
               >
-                {t.admin.usernameLabel}
+                {t.admin.emailLabel}
               </label>
               <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder={t.admin.usernamePlaceholder}
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t.admin.emailPlaceholder}
                 className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground placeholder-text-secondary/50 outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
-                autoComplete="username"
+                autoComplete="email"
               />
             </div>
 
@@ -87,9 +114,10 @@ export default function AdminLogin() {
 
             <button
               type="submit"
-              className="mt-2 rounded-xl bg-ukiyo-navy px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading"
+              disabled={loading}
+              className="mt-2 rounded-xl bg-ukiyo-navy px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading disabled:opacity-50"
             >
-              {t.admin.submitButton}
+              {loading ? t.admin.loadingButton : t.admin.submitButton}
             </button>
           </form>
         </div>
