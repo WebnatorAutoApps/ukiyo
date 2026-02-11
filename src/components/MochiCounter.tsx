@@ -7,6 +7,13 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useMochis } from "@/hooks/useMochis";
 import type { Season } from "@/components/SeasonalSlider";
 
+interface MochiImageData {
+  image: string;
+  emoji: string;
+  seasonal?: boolean;
+  season?: Season;
+}
+
 interface MochiProduct {
   name: string;
   description: string;
@@ -16,6 +23,19 @@ interface MochiProduct {
   season?: Season;
 }
 
+const fallbackMochiImages: MochiImageData[] = [
+  { image: "/images/mochi-oreo.jpg", emoji: "🍪" },
+  { image: "/images/mochi-nutella.jpg", emoji: "🍫" },
+  { image: "/images/mochi-anko.jpg", emoji: "🫘" },
+  { image: "/images/mochi-matcha.jpg", emoji: "🍵" },
+  { image: "/images/mochi-mango.jpg", emoji: "🥭" },
+  { image: "/images/mochi-lemon-pie.jpg", emoji: "🍋" },
+  { image: "/images/mochi-choco-coco.jpg", emoji: "🥥" },
+  { image: "/images/mochi-maracuya.jpg", emoji: "🍈" },
+  { image: "/images/mochi-tarta-queso-fresa.jpg", emoji: "🍓" },
+  { image: "/images/mochi-pumpkin.jpg", emoji: "🎃", seasonal: true, season: "autumn" },
+  { image: "/images/mochi-raspberry.jpg", emoji: "🫐", seasonal: true, season: "winter" },
+];
 
 // Map database season values to component season values
 function mapSeason(dbSeason: string | null): Season | undefined {
@@ -114,7 +134,7 @@ export default function MochiCounter() {
   const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
   const { season } = useSeason();
-  const { mochis: dbMochis, loading: mochisLoading } = useMochis();
+  const { mochis: dbMochis, hasData } = useMochis();
 
   // Drag-to-scroll state
   const isDraggingRef = useRef(false);
@@ -122,21 +142,29 @@ export default function MochiCounter() {
   const dragScrollStartRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Build product list from Supabase data
+  // Build product list from Supabase data or fallback to translations
   const mochiProducts: MochiProduct[] = useMemo(() => {
-    return dbMochis.map((m) => {
-      const seasonalTag = m.mochi_tags.find((tag) => tag.tag_name === "seasonal");
-      const isSeasonal = !!seasonalTag;
-      return {
-        name: locale === "ja" ? m.title_ja : m.title_es,
-        description: locale === "ja" ? m.description_ja : m.description_es,
-        image: m.image_url,
-        emoji: m.emoji,
-        seasonal: isSeasonal,
-        season: isSeasonal ? mapSeason(seasonalTag.season) : undefined,
-      };
-    });
-  }, [dbMochis, locale]);
+    if (hasData) {
+      return dbMochis.map((m) => {
+        const seasonalTag = m.mochi_tags.find((tag) => tag.tag_name === "seasonal");
+        const isSeasonal = !!seasonalTag;
+        return {
+          name: locale === "ja" ? m.title_ja : m.title_es,
+          description: locale === "ja" ? m.description_ja : m.description_es,
+          image: m.image_url,
+          emoji: m.emoji,
+          seasonal: isSeasonal,
+          season: isSeasonal ? mapSeason(seasonalTag.season) : undefined,
+        };
+      });
+    }
+    // Fallback to hardcoded data from translations
+    return fallbackMochiImages.map((item, i) => ({
+      ...item,
+      name: t.mochiCounter.products[i]?.name ?? "",
+      description: t.mochiCounter.products[i]?.description ?? "",
+    }));
+  }, [hasData, dbMochis, locale, t]);
 
   const visibleProducts = useMemo(
     () => mochiProducts.filter((p) => !p.seasonal || p.season === season),
@@ -281,52 +309,38 @@ export default function MochiCounter() {
         </div>
 
         {/* Carousel */}
-        {mochisLoading ? (
-          <div className="flex gap-6 overflow-hidden py-2 px-1">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex-shrink-0 w-[260px] sm:w-[280px] rounded-2xl overflow-hidden shadow-cozy animate-pulse">
-                <div className="w-full bg-soft-wood/30" style={{ aspectRatio: "1/1" }} />
-                <div className="p-4 bg-wood-light/60">
-                  <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
-                  <div className="h-3 bg-soft-wood/20 rounded w-full" />
-                </div>
-              </div>
+        <div
+          className="relative"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => { handleDragEnd(); setIsPaused(false); }}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
+        >
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none mochi-counter-fade-left" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none mochi-counter-fade-right" />
+
+          <div
+            ref={trackRef}
+            className={`flex gap-6 overflow-x-auto scrollbar-hide py-2 px-1 ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
+            role="region"
+            aria-label={t.mochiCounter.carouselLabel}
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseLeave}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {carouselItems.map((product, index) => (
+              <MochiProductCard key={index} product={product} seasonalBadge={t.mochiCounter.seasonalBadge} />
             ))}
           </div>
-        ) : (
-          <div
-            className="relative"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => { handleDragEnd(); setIsPaused(false); }}
-            onFocus={() => setIsPaused(true)}
-            onBlur={() => setIsPaused(false)}
-          >
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none mochi-counter-fade-left" />
-            <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none mochi-counter-fade-right" />
-
-            <div
-              ref={trackRef}
-              className={`flex gap-6 overflow-x-auto scrollbar-hide py-2 px-1 ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
-              role="region"
-              aria-label={t.mochiCounter.carouselLabel}
-              tabIndex={0}
-              onKeyDown={handleKeyDown}
-              onMouseDown={onMouseDown}
-              onMouseMove={onMouseMove}
-              onMouseUp={onMouseUp}
-              onMouseLeave={onMouseLeave}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {carouselItems.map((product, index) => (
-                <MochiProductCard key={index} product={product} seasonalBadge={t.mochiCounter.seasonalBadge} />
-              ))}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );
