@@ -501,7 +501,7 @@ html {
 
 /* Crossfade incoming layer — sits above base, fades from 0 → 1 */
 .hero-season-image--incoming {
-  z-index: 1;
+  z-index: 2;
   opacity: 0;
 }
 

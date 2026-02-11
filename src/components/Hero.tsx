@@ -29,6 +29,8 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
 const ALL_SEASONS: Season[] = ["spring", "summer", "autumn", "winter"];
 
 const FADE_DURATION_MS = 400;
+// Small buffer after CSS transition to ensure it fully completes before layer swap
+const TRANSITION_BUFFER_MS = 50;
 
 // Tiny 4x4 pink/cream blur placeholder matching the fallback gradient
 const BLUR_PLACEHOLDER =
@@ -117,7 +119,11 @@ export default function Hero() {
     if (incomingSeason === null && baseSeason !== activeSeason) {
       setBaseSeason(activeSeason);
       setImageError(false);
-      setImageLoaded(false);
+      // Only reset imageLoaded if the new season images aren't preloaded yet
+      const { desktop, mobile } = SEASON_IMAGES[activeSeason];
+      if (!preloadedRef.current.has(desktop) && !preloadedRef.current.has(mobile)) {
+        setImageLoaded(false);
+      }
     }
   }, [activeSeason, baseSeason, incomingSeason]);
 
@@ -174,9 +180,18 @@ export default function Hero() {
             setIncomingSeason(null);
             setIncomingVisible(false);
             setImageError(false);
-            setImageLoaded(false);
+            setImageLoaded(true);
           });
         return;
+      }
+
+      // If a transition is already in progress, immediately promote the
+      // current incoming layer to base so there's no gap
+      if (incomingSeason !== null) {
+        setBaseSeason(incomingSeason);
+        setIncomingSeason(null);
+        setIncomingVisible(false);
+        setImageLoaded(true);
       }
 
       // Track the latest request so rapid clicks converge
@@ -202,7 +217,7 @@ export default function Hero() {
             });
           });
 
-          // After the CSS transition completes, promote incoming to base
+          // After the CSS transition fully completes, promote incoming to base
           setTimeout(() => {
             if (transitionIdRef.current !== id) return;
 
@@ -210,12 +225,13 @@ export default function Hero() {
             setIncomingSeason(null);
             setIncomingVisible(false);
             setImageError(false);
-            setImageLoaded(false);
+            // Keep imageLoaded true — image is already rendered by the incoming layer
+            setImageLoaded(true);
             pendingSeasonRef.current = null;
-          }, FADE_DURATION_MS);
+          }, FADE_DURATION_MS + TRANSITION_BUFFER_MS);
         });
     },
-    [activeSeason, setSeason, reducedMotion]
+    [activeSeason, setSeason, reducedMotion, incomingSeason]
   );
 
   const baseImages = SEASON_IMAGES[baseSeason];
