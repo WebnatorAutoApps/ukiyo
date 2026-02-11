@@ -34,6 +34,12 @@ const mochiProducts = [
     image: "/images/mochi-lemon-pie.jpg",
     emoji: "🍋",
   },
+  {
+    name: "Mochi de Choco Coco",
+    description: "Intenso chocolate con coco rallado en un mochi suave y esponjoso",
+    image: "/images/mochi-choco-coco.jpg",
+    emoji: "🥥",
+  },
 ];
 
 // Duplicate for seamless infinite scroll
