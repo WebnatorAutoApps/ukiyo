@@ -1,21 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export type Season = "spring" | "summer" | "autumn" | "winter";
 
-interface SeasonConfig {
-  id: Season;
-  label: string;
-  tooltip: string;
-}
-
-const SEASONS: SeasonConfig[] = [
-  { id: "spring", label: "Spring", tooltip: "Sakura Season" },
-  { id: "summer", label: "Summer", tooltip: "Bubble Tea Time" },
-  { id: "autumn", label: "Autumn", tooltip: "Cozy Vibes" },
-  { id: "winter", label: "Winter", tooltip: "Warm Coffee" },
-];
+const SEASON_IDS: Season[] = ["spring", "summer", "autumn", "winter"];
 
 function SeasonIcon({ season }: { season: Season }) {
   switch (season) {
@@ -90,9 +80,10 @@ export default function SeasonalSlider({
   onSeasonChange,
   currentSeason,
 }: SeasonalSliderProps) {
+  const { t } = useLanguage();
   const [tooltipSeason, setTooltipSeason] = useState<Season | null>(null);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const currentIndex = SEASONS.findIndex((s) => s.id === currentSeason);
+  const currentIndex = SEASON_IDS.indexOf(currentSeason);
 
   const clearHideTimeout = useCallback(() => {
     if (hideTimeoutRef.current) {
@@ -134,7 +125,7 @@ export default function SeasonalSlider({
     <div
       className="seasonal-slider"
       role="radiogroup"
-      aria-label="Select season"
+      aria-label={t.seasons.selectSeason}
     >
       {/* Track */}
       <div className="seasonal-slider__track">
@@ -142,49 +133,53 @@ export default function SeasonalSlider({
         <div
           className="seasonal-slider__thumb"
           style={{
-            left: `${currentIndex * (100 / (SEASONS.length - 1))}%`,
+            left: `${currentIndex * (100 / (SEASON_IDS.length - 1))}%`,
           }}
           aria-hidden="true"
         />
 
         {/* Season stop badges */}
-        {SEASONS.map((season, index) => (
-          <button
-            key={season.id}
-            className={`seasonal-slider__stop ${
-              currentSeason === season.id ? "seasonal-slider__stop--active" : ""
-            }`}
-            style={{
-              left: `${index * (100 / (SEASONS.length - 1))}%`,
-            }}
-            onClick={() => handleSeasonSelect(season.id)}
-            onMouseDown={() => showTooltip(season.id)}
-            onMouseUp={hideTooltip}
-            onTouchStart={() => showTooltip(season.id)}
-            onTouchEnd={hideTooltip}
-            role="radio"
-            aria-checked={currentSeason === season.id}
-            aria-label={`${season.label} — ${season.tooltip}`}
-            title={season.tooltip}
-          >
-            <span className="seasonal-slider__badge">
-              <SeasonIcon season={season.id} />
-            </span>
-
-            {/* Tooltip — appears on interaction, auto-hides after 1s */}
-            {tooltipSeason === season.id && (
-              <span
-                className="seasonal-slider__tooltip"
-                role="tooltip"
-              >
-                {season.tooltip}
+        {SEASON_IDS.map((seasonId, index) => {
+          const label = t.seasons[seasonId];
+          const tooltip = t.seasons[`${seasonId}Tooltip` as keyof typeof t.seasons];
+          return (
+            <button
+              key={seasonId}
+              className={`seasonal-slider__stop ${
+                currentSeason === seasonId ? "seasonal-slider__stop--active" : ""
+              }`}
+              style={{
+                left: `${index * (100 / (SEASON_IDS.length - 1))}%`,
+              }}
+              onClick={() => handleSeasonSelect(seasonId)}
+              onMouseDown={() => showTooltip(seasonId)}
+              onMouseUp={hideTooltip}
+              onTouchStart={() => showTooltip(seasonId)}
+              onTouchEnd={hideTooltip}
+              role="radio"
+              aria-checked={currentSeason === seasonId}
+              aria-label={`${label} — ${tooltip}`}
+              title={tooltip}
+            >
+              <span className="seasonal-slider__badge">
+                <SeasonIcon season={seasonId} />
               </span>
-            )}
-          </button>
-        ))}
+
+              {/* Tooltip — appears on interaction, auto-hides after 1s */}
+              {tooltipSeason === seasonId && (
+                <span
+                  className="seasonal-slider__tooltip"
+                  role="tooltip"
+                >
+                  {tooltip}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-export { SEASONS, getCurrentSeason };
+export { SEASON_IDS, getCurrentSeason };

@@ -455,6 +455,19 @@ export const translations: Record<Locale, Translations> = {
       close: "Cerrar reproductor",
     },
 
+    // Seasons (SeasonalSlider radio group)
+    seasons: {
+      selectSeason: "Seleccionar estación",
+      spring: "Primavera",
+      summer: "Verano",
+      autumn: "Otoño",
+      winter: "Invierno",
+      springTooltip: "Temporada de Sakura",
+      summerTooltip: "Hora de Bubble Tea",
+      autumnTooltip: "Ambiente Acogedor",
+      winterTooltip: "Café Caliente",
+    },
+
     // WhatsApp
     whatsapp: {
       ariaLabel: "Contactar por WhatsApp",
@@ -915,6 +928,19 @@ export const translations: Record<Locale, Translations> = {
       close: "プレイヤーを閉じる",
     },
 
+    // Seasons (SeasonalSlider radio group)
+    seasons: {
+      selectSeason: "季節を選択",
+      spring: "春",
+      summer: "夏",
+      autumn: "秋",
+      winter: "冬",
+      springTooltip: "桜の季節",
+      summerTooltip: "バブルティータイム",
+      autumnTooltip: "居心地の良い雰囲気",
+      winterTooltip: "温かいコーヒー",
+    },
+
     // WhatsApp
     whatsapp: {
       ariaLabel: "WhatsAppでお問い合わせ",
@@ -1118,6 +1144,17 @@ export interface Translations {
     pause: string;
     open: string;
     close: string;
+  };
+  seasons: {
+    selectSeason: string;
+    spring: string;
+    summer: string;
+    autumn: string;
+    winter: string;
+    springTooltip: string;
+    summerTooltip: string;
+    autumnTooltip: string;
+    winterTooltip: string;
   };
   whatsapp: {
     ariaLabel: string;
