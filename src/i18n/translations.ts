@@ -489,6 +489,38 @@ export const translations: Record<Locale, Translations> = {
       logoutButton: "Cerrar Sesión",
       dashboardTitle: "Panel de Administración",
       dashboardWelcome: "Has iniciado sesión correctamente.",
+      mochisTitle: "Gestionar Mochis",
+      addMochi: "Añadir Mochi",
+      editMochi: "Editar Mochi",
+      deleteMochi: "Eliminar",
+      confirmDelete: "¿Estás seguro de que quieres eliminar este mochi?",
+      cancel: "Cancelar",
+      save: "Guardar",
+      saving: "Guardando...",
+      titleEs: "Título (Español)",
+      titleJa: "Título (Japonés)",
+      descriptionEs: "Descripción (Español)",
+      descriptionJa: "Descripción (Japonés)",
+      price: "Precio",
+      emoji: "Emoji",
+      displayOrder: "Orden",
+      image: "Imagen",
+      uploadImage: "Subir imagen",
+      changeImage: "Cambiar imagen",
+      tags: "Etiquetas",
+      tagNuevo: "Nuevo",
+      tagPopular: "Popular",
+      tagSeasonal: "De temporada",
+      season: "Temporada",
+      seasonSpring: "Primavera",
+      seasonSummer: "Verano",
+      seasonFall: "Otoño",
+      seasonWinter: "Invierno",
+      noMochis: "No hay mochis. Añade el primero.",
+      imageRequired: "Se requiere una imagen",
+      maxFileSize: "Tamaño máximo: 5MB",
+      allowedFormats: "Formatos: JPG, PNG, WebP",
+      back: "Volver",
     },
 
     // Logo alt
@@ -980,6 +1012,38 @@ export const translations: Record<Locale, Translations> = {
       logoutButton: "ログアウト",
       dashboardTitle: "管理パネル",
       dashboardWelcome: "正常にログインしました。",
+      mochisTitle: "餅を管理",
+      addMochi: "餅を追加",
+      editMochi: "餅を編集",
+      deleteMochi: "削除",
+      confirmDelete: "この餅を削除してもよろしいですか？",
+      cancel: "キャンセル",
+      save: "保存",
+      saving: "保存中...",
+      titleEs: "タイトル（スペイン語）",
+      titleJa: "タイトル（日本語）",
+      descriptionEs: "説明（スペイン語）",
+      descriptionJa: "説明（日本語）",
+      price: "価格",
+      emoji: "絵文字",
+      displayOrder: "表示順",
+      image: "画像",
+      uploadImage: "画像をアップロード",
+      changeImage: "画像を変更",
+      tags: "タグ",
+      tagNuevo: "新商品",
+      tagPopular: "人気",
+      tagSeasonal: "季節限定",
+      season: "季節",
+      seasonSpring: "春",
+      seasonSummer: "夏",
+      seasonFall: "秋",
+      seasonWinter: "冬",
+      noMochis: "餅がありません。最初の餅を追加してください。",
+      imageRequired: "画像が必要です",
+      maxFileSize: "最大サイズ: 5MB",
+      allowedFormats: "形式: JPG, PNG, WebP",
+      back: "戻る",
     },
 
     // Logo alt
@@ -1210,6 +1274,38 @@ export interface Translations {
     logoutButton: string;
     dashboardTitle: string;
     dashboardWelcome: string;
+    mochisTitle: string;
+    addMochi: string;
+    editMochi: string;
+    deleteMochi: string;
+    confirmDelete: string;
+    cancel: string;
+    save: string;
+    saving: string;
+    titleEs: string;
+    titleJa: string;
+    descriptionEs: string;
+    descriptionJa: string;
+    price: string;
+    emoji: string;
+    displayOrder: string;
+    image: string;
+    uploadImage: string;
+    changeImage: string;
+    tags: string;
+    tagNuevo: string;
+    tagPopular: string;
+    tagSeasonal: string;
+    season: string;
+    seasonSpring: string;
+    seasonSummer: string;
+    seasonFall: string;
+    seasonWinter: string;
+    noMochis: string;
+    imageRequired: string;
+    maxFileSize: string;
+    allowedFormats: string;
+    back: string;
   };
   logoAlt: string;
 }
