@@ -17,6 +17,12 @@ const mochiProducts = [
     emoji: "🍫",
   },
   {
+    name: "Mochi de Anko",
+    description: "Tradicional pasta de judía roja azuki en mochi artesanal japonés",
+    image: "/images/mochi-anko.jpg",
+    emoji: "🫘",
+  },
+  {
     name: "Mochi de Matcha",
     description: "Auténtico matcha japonés en un mochi cremoso y delicado",
     image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=400&fit=crop&q=80",
