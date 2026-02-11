@@ -52,6 +52,12 @@ const mochiProducts = [
     image: "/images/mochi-maracuya.jpg",
     emoji: "🍈",
   },
+  {
+    name: "Mochi Tarta de Queso con Fresa",
+    description: "Cremosa tarta de queso con fresa natural en mochi artesanal",
+    image: "/images/mochi-tarta-queso-fresa.jpg",
+    emoji: "🍓",
+  },
 ];
 
 // Duplicate for seamless infinite scroll
