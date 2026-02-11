@@ -16,8 +16,8 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
     mobile: "/images/hero-summer-mobile.jpg",
   },
   autumn: {
-    desktop: "/images/hero-autumn.svg",
-    mobile: "/images/hero-autumn-mobile.svg",
+    desktop: "/images/hero-autumn.jpg",
+    mobile: "/images/hero-autumn-mobile.jpg",
   },
   winter: {
     desktop: "/images/hero-winter.jpg",
