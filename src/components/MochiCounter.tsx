@@ -19,7 +19,7 @@ const mochiProducts = [
   {
     name: "Mochi de Mango",
     description: "Explosión tropical de mango maduro en mochi esponjoso",
-    image: "https://images.unsplash.com/photo-1582716401356-b0e6ee11e8f5?w=400&h=400&fit=crop&q=80",
+    image: "/images/mochi-mango.jpg",
     emoji: "🥭",
   },
 ];
