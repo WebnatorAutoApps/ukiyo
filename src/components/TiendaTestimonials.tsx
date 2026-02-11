@@ -8,9 +8,12 @@ const avatars = [
   "/images/testimonial-sofia.jpg",
   "/images/testimonial-carlos.jpg",
   "/images/testimonial-maria.jpg",
+  "/images/testimonial-elena.jpg",
+  "/images/testimonial-javier.jpg",
+  "/images/testimonial-lucia.jpg",
 ];
 
-const ratings = [5, 5, 5];
+const ratings = [5, 5, 5, 5, 5, 5];
 
 function StarRating({ rating }: { rating: number }) {
   return (
