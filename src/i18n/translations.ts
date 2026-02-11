@@ -453,6 +453,7 @@ export const translations: Record<Locale, Translations> = {
       pause: "Pausar música",
       open: "Abrir reproductor lo-fi",
       close: "Cerrar reproductor",
+      volume: "Volumen",
     },
 
     // Seasons (SeasonalSlider radio group)
@@ -926,6 +927,7 @@ export const translations: Record<Locale, Translations> = {
       pause: "音楽を一時停止",
       open: "Lo-Fiプレイヤーを開く",
       close: "プレイヤーを閉じる",
+      volume: "音量",
     },
 
     // Seasons (SeasonalSlider radio group)
@@ -1144,6 +1146,7 @@ export interface Translations {
     pause: string;
     open: string;
     close: string;
+    volume: string;
   };
   seasons: {
     selectSeason: string;
