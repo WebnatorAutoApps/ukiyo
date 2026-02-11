@@ -1,26 +1,46 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useHeroInView } from "@/hooks/useHeroLazyLoad";
 
 export default function TiendaHero() {
   const { t } = useLanguage();
+  const { ref: heroRef, isInView } = useHeroInView("200px");
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <section className="w-full">
+    <section className="w-full" ref={heroRef as React.RefObject<HTMLElement>}>
       <div
         className="relative w-full overflow-hidden"
         style={{ aspectRatio: "1920/600" }}
       >
-        <Image
-          src="/images/tienda-hero.png"
-          alt={t.tiendaHero.imageAlt}
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
+        {/* Fallback background while image loads */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, #5D5068 0%, #4A3F55 50%, #3D2E2E 100%)",
+          }}
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-ukiyo-navy/40 px-4 text-center">
+
+        {isInView && (
+          <div
+            className={`hero-season-image ${imageLoaded ? "hero-season-image--loaded" : "hero-season-image--loading"}`}
+          >
+            <Image
+              src="/images/tienda-hero.png"
+              alt={t.tiendaHero.imageAlt}
+              fill
+              className="object-cover"
+              priority={isInView}
+              sizes="100vw"
+              onLoad={() => setImageLoaded(true)}
+            />
+          </div>
+        )}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-ukiyo-navy/40 px-4 text-center z-[2]">
           <span className="mb-3 text-sm text-sakura-pink font-heading tracking-widest uppercase">
             {t.tiendaHero.tagline}
           </span>

@@ -467,6 +467,15 @@ html {
   opacity: 0;
 }
 
+/* Lazy-load fade-in: starts transparent, fades to full opacity once loaded */
+.hero-season-image--loading {
+  opacity: 0;
+}
+
+.hero-season-image--loaded {
+  opacity: 1;
+}
+
 /* ───── Seasonal slider ───── */
 .seasonal-slider {
   width: 260px;

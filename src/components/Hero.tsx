@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useSeason } from "@/context/SeasonContext";
+import { useHeroInView } from "@/hooks/useHeroLazyLoad";
 import SeasonalSlider, { type Season } from "./SeasonalSlider";
 
 const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
@@ -25,36 +26,99 @@ const SEASON_IMAGES: Record<Season, { desktop: string; mobile: string }> = {
   },
 };
 
+const ALL_SEASONS: Season[] = ["spring", "summer", "autumn", "winter"];
+
+/** Preload an image and return a promise */
+function preloadImage(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = () => resolve();
+    img.onerror = () => reject();
+    img.src = src;
+  });
+}
+
 export default function Hero() {
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { t } = useLanguage();
   const { season: activeSeason, setSeason } = useSeason();
   const [displayedSeason, setDisplayedSeason] = useState<Season>(activeSeason);
   const [isFading, setIsFading] = useState(false);
+  const { ref: heroRef, isInView } = useHeroInView("200px");
+  const preloadedRef = useRef<Set<string>>(new Set());
+
+  // Preload inactive season images once hero is in view
+  useEffect(() => {
+    if (!isInView) return;
+
+    const inactiveSeasons = ALL_SEASONS.filter((s) => s !== activeSeason);
+    const toPreload: string[] = [];
+
+    for (const s of inactiveSeasons) {
+      const { desktop, mobile } = SEASON_IMAGES[s];
+      if (!preloadedRef.current.has(desktop)) toPreload.push(desktop);
+      if (!preloadedRef.current.has(mobile)) toPreload.push(mobile);
+    }
+
+    // Preload with a small stagger to avoid bandwidth contention
+    toPreload.forEach((src, i) => {
+      setTimeout(() => {
+        preloadImage(src)
+          .then(() => preloadedRef.current.add(src))
+          .catch(() => {/* image failed — will show fallback if selected */});
+      }, i * 100);
+    });
+  }, [isInView, activeSeason]);
 
   const handleSeasonChange = useCallback(
     (newSeason: Season) => {
       if (newSeason === activeSeason) return;
+
+      const { desktop, mobile } = SEASON_IMAGES[newSeason];
+      const imagesToLoad: Promise<void>[] = [];
+
+      // Preload new season images if not yet cached
+      if (!preloadedRef.current.has(desktop)) {
+        imagesToLoad.push(
+          preloadImage(desktop).then(() => { preloadedRef.current.add(desktop); })
+        );
+      }
+      if (!preloadedRef.current.has(mobile)) {
+        imagesToLoad.push(
+          preloadImage(mobile).then(() => { preloadedRef.current.add(mobile); })
+        );
+      }
+
       // Start fade out
       setIsFading(true);
       setSeason(newSeason);
 
-      // After fade out completes, swap image and fade in
-      const timer = setTimeout(() => {
-        setDisplayedSeason(newSeason);
-        setImageError(false);
-        setIsFading(false);
-      }, 400);
-
-      return () => clearTimeout(timer);
+      // Wait for both fade-out AND image preload before swapping
+      const fadePromise = new Promise((r) => setTimeout(r, 400));
+      Promise.all([fadePromise, ...imagesToLoad])
+        .catch(() => {/* proceed even if preload fails */})
+        .then(() => {
+          setDisplayedSeason(newSeason);
+          setImageError(false);
+          setImageLoaded(false);
+          setIsFading(false);
+        });
     },
     [activeSeason, setSeason]
   );
 
   const images = SEASON_IMAGES[displayedSeason];
 
+  // Only mark as priority for the first render (above the fold, LCP)
+  const shouldPrioritize = isInView;
+
   return (
-    <section id="hero" className="relative w-full overflow-hidden">
+    <section
+      id="hero"
+      className="relative w-full overflow-hidden"
+      ref={heroRef as React.RefObject<HTMLElement>}
+    >
       {/* Fallback background — soft pink gradient matching the storefront illustration */}
       <div
         className="absolute inset-0"
@@ -65,9 +129,9 @@ export default function Hero() {
       />
 
       <div className="relative w-full min-h-[100vh]">
-        {!imageError && (
+        {!imageError && isInView && (
           <div
-            className={`hero-season-image ${isFading ? "hero-season-image--fading" : ""}`}
+            className={`hero-season-image ${isFading ? "hero-season-image--fading" : ""} ${!imageLoaded ? "hero-season-image--loading" : "hero-season-image--loaded"}`}
           >
             {/* Mobile hero — portrait illustration optimised for small screens */}
             <Image
@@ -75,8 +139,9 @@ export default function Hero() {
               alt={t.hero.imageAlt}
               fill
               className="object-cover object-center md:hidden"
-              priority
+              priority={shouldPrioritize}
               sizes="(max-width: 767px) 100vw, 0px"
+              onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
             {/* Desktop hero — wide storefront image for larger screens */}
@@ -85,8 +150,9 @@ export default function Hero() {
               alt={t.hero.imageAlt}
               fill
               className="object-cover object-center hidden md:block"
-              priority
+              priority={shouldPrioritize}
               sizes="(min-width: 768px) 100vw, 0px"
+              onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
           </div>
