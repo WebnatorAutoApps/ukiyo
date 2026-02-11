@@ -127,6 +127,12 @@ export default function MochiCounter() {
   const [isPaused, setIsPaused] = useState(false);
   const { season } = useSeason();
 
+  // Drag-to-scroll state
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragScrollStartRef = useRef(0);
+  const [isDragging, setIsDragging] = useState(false);
+
   const mochiProducts: MochiProduct[] = useMemo(
     () =>
       mochiImages.map((item, i) => ({
@@ -169,6 +175,70 @@ export default function MochiCounter() {
       trackRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   }, []);
+
+  // Drag-to-scroll handlers
+  const handleDragStart = useCallback((clientX: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    dragStartXRef.current = clientX;
+    dragScrollStartRef.current = track.scrollLeft;
+    isPausedRef.current = true;
+    setIsPaused(true);
+  }, []);
+
+  const handleDragMove = useCallback((clientX: number) => {
+    if (!isDraggingRef.current || !trackRef.current) return;
+    const dx = clientX - dragStartXRef.current;
+    trackRef.current.scrollLeft = dragScrollStartRef.current - dx;
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    // Sync auto-scroll position with current manual scroll position
+    if (trackRef.current) {
+      scrollPosRef.current = trackRef.current.scrollLeft;
+    }
+  }, []);
+
+  // Mouse event handlers
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    handleDragStart(e.clientX);
+  }, [handleDragStart]);
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    handleDragMove(e.clientX);
+  }, [handleDragMove]);
+
+  const onMouseUp = useCallback(() => {
+    handleDragEnd();
+  }, [handleDragEnd]);
+
+  const onMouseLeave = useCallback(() => {
+    if (isDraggingRef.current) {
+      handleDragEnd();
+    }
+  }, [handleDragEnd]);
+
+  // Touch event handlers
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    handleDragStart(e.touches[0].clientX);
+  }, [handleDragStart]);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    handleDragMove(e.touches[0].clientX);
+  }, [handleDragMove]);
+
+  const onTouchEnd = useCallback(() => {
+    handleDragEnd();
+    // On touch devices there's no hover state, so resume auto-scroll
+    isPausedRef.current = false;
+    setIsPaused(false);
+  }, [handleDragEnd]);
 
   // Auto-scroll logic — uses refs to avoid re-creating the animation loop on pause/unpause
   useEffect(() => {
@@ -219,7 +289,7 @@ export default function MochiCounter() {
         <div
           className="relative"
           onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          onMouseLeave={() => { handleDragEnd(); setIsPaused(false); }}
           onFocus={() => setIsPaused(true)}
           onBlur={() => setIsPaused(false)}
         >
@@ -229,11 +299,18 @@ export default function MochiCounter() {
 
           <div
             ref={trackRef}
-            className="flex gap-6 overflow-x-auto scrollbar-hide py-2 px-1"
+            className={`flex gap-6 overflow-x-auto scrollbar-hide py-2 px-1 ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
             role="region"
             aria-label={t.mochiCounter.carouselLabel}
             tabIndex={0}
             onKeyDown={handleKeyDown}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseLeave}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {carouselItems.map((product, index) => (
