@@ -1,9 +1,6 @@
 -- Migration: Rename mochis→products, mochi_tags→product_tags, add type/hot/price_modifier columns,
 -- create menu_categories table, seed static items from translations.ts
 
--- Ensure uuid-ossp extension is available
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 -- 1. Rename tables
 ALTER TABLE public.mochis RENAME TO products;
 ALTER TABLE public.mochi_tags RENAME TO product_tags;
@@ -60,7 +57,7 @@ CREATE POLICY "Authenticated can delete product_tags" ON public.product_tags
 
 -- 8. Create menu_categories table
 CREATE TABLE public.menu_categories (
-  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   name_es text NOT NULL,
   name_ja text NOT NULL DEFAULT '',
   emoji text NOT NULL DEFAULT '',
