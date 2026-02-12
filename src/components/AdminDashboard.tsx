@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
-import { fetchMochis, createMochi, updateMochi, deleteMochi, deleteMochiImage } from "@/lib/mochis";
+import { fetchMochis, createMochi, updateMochi, deleteMochi, deleteMochiImage, toggleMochiEnabled } from "@/lib/mochis";
 import type { MochiWithTags, TagName, SeasonValue } from "@/lib/database.types";
 import AdminMochiList from "./AdminMochiList";
 import AdminMochiForm from "./AdminMochiForm";
@@ -26,7 +26,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
   useEffect(() => {
     if (!supabaseConfigured) return;
     let cancelled = false;
-    fetchMochis().then((data) => {
+    fetchMochis(true).then((data) => {
       if (!cancelled) {
         setMochis(data);
         setLoading(false);
@@ -64,6 +64,13 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     }
   };
 
+  const handleToggleEnabled = async (id: string, enabled: boolean) => {
+    const success = await toggleMochiEnabled(id, enabled);
+    if (success) {
+      setMochis((prev) => prev.map((m) => (m.id === id ? { ...m, enabled } : m)));
+    }
+  };
+
   const handleSave = async (data: {
     title_es: string;
     title_ja: string;
@@ -73,6 +80,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     image_url: string;
     emoji: string;
     display_order: number;
+    enabled: boolean;
     tags: { tag_name: TagName; season?: SeasonValue | null }[];
   }) => {
     if (view === "edit" && editingMochi) {
@@ -142,6 +150,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
             onEdit={handleEdit}
             onDelete={handleDelete}
             onAdd={handleAdd}
+            onToggleEnabled={handleToggleEnabled}
           />
         ) : (
           <div>

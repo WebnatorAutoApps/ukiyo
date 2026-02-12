@@ -17,6 +17,7 @@ interface AdminMochiFormProps {
     image_url: string;
     emoji: string;
     display_order: number;
+    enabled: boolean;
     tags: { tag_name: TagName; season?: SeasonValue | null }[];
   }) => Promise<void>;
   onCancel: () => void;
@@ -37,6 +38,7 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
   const [emoji, setEmoji] = useState(mochi?.emoji ?? "🍡");
   const [displayOrder, setDisplayOrder] = useState(mochi?.display_order ?? 0);
   const [imageUrl, setImageUrl] = useState(mochi?.image_url ?? "");
+  const [enabled, setEnabled] = useState(mochi?.enabled ?? true);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -109,6 +111,7 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
         image_url: imageUrl,
         emoji: emoji.trim(),
         display_order: displayOrder,
+        enabled,
         tags,
       });
     } catch {
@@ -324,6 +327,21 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
             </select>
           </div>
         )}
+      </div>
+
+      {/* Enabled toggle */}
+      <div>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={enabled}
+            onChange={(e) => setEnabled(e.target.checked)}
+            className="w-4 h-4 rounded accent-ukiyo-navy"
+          />
+          <span className="text-sm font-semibold text-foreground font-heading">
+            {enabled ? t.admin.enabled : t.admin.disabled}
+          </span>
+        </label>
       </div>
 
       {/* Error */}

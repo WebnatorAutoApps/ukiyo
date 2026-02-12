@@ -11,6 +11,7 @@ export interface MochiRow {
   image_url: string;
   emoji: string;
   display_order: number;
+  enabled: boolean;
   created_at: string;
   updated_at: string;
 }

@@ -1,20 +1,27 @@
 import { supabase, supabaseConfigured } from "./supabase";
 import type { MochiWithTags, TagName, SeasonValue } from "./database.types";
 
-export async function fetchMochis(): Promise<MochiWithTags[]> {
+export async function fetchMochis(includeDisabled = false): Promise<MochiWithTags[]> {
   if (!supabaseConfigured) return [];
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("mochis")
     .select("*, mochi_tags(*)")
     .order("display_order", { ascending: true });
+
+  if (!includeDisabled) {
+    query = query.eq("enabled", true);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching mochis:", error);
     return [];
   }
 
-  return (data as MochiWithTags[]) ?? [];
+  // Default enabled to true for rows where the column doesn't exist yet
+  return (data?.map((m) => ({ ...m, enabled: m.enabled ?? true })) as MochiWithTags[]) ?? [];
 }
 
 export async function fetchMochiById(id: string): Promise<MochiWithTags | null> {
@@ -31,8 +38,9 @@ export async function fetchMochiById(id: string): Promise<MochiWithTags | null> 
     return null;
   }
 
-  return data as MochiWithTags;
+  return { ...data, enabled: data.enabled ?? true } as MochiWithTags;
 }
+
 
 export async function createMochi(mochi: {
   title_es: string;
@@ -43,6 +51,7 @@ export async function createMochi(mochi: {
   image_url: string;
   emoji: string;
   display_order: number;
+  enabled: boolean;
   tags: { tag_name: TagName; season?: SeasonValue | null }[];
 }): Promise<MochiWithTags | null> {
   if (!supabaseConfigured) return null;
@@ -87,6 +96,7 @@ export async function updateMochi(
     image_url: string;
     emoji: string;
     display_order: number;
+    enabled: boolean;
     tags: { tag_name: TagName; season?: SeasonValue | null }[];
   }
 ): Promise<MochiWithTags | null> {
@@ -128,6 +138,22 @@ export async function updateMochi(
   }
 
   return fetchMochiById(id);
+}
+
+export async function toggleMochiEnabled(id: string, enabled: boolean): Promise<boolean> {
+  if (!supabaseConfigured) return false;
+
+  const { error } = await supabase
+    .from("mochis")
+    .update({ enabled, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error toggling mochi enabled:", error.message, error.code);
+    return false;
+  }
+
+  return true;
 }
 
 export async function deleteMochi(id: string): Promise<boolean> {

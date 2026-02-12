@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useSeason } from "@/context/SeasonContext";
 import { useMochis } from "@/hooks/useMochis";
 import type { MochiWithTags } from "@/lib/database.types";
 
@@ -217,23 +218,36 @@ function mochiToMenuItem(mochi: MochiWithTags, locale: string): {
   return { name, price: mochi.price, description, tag };
 }
 
+// Map DB season values ("fall") to SeasonContext values ("autumn")
+const DB_SEASON_MAP: Record<string, string> = { spring: "spring", summer: "summer", fall: "autumn", winter: "winter" };
+
+function isVisibleInSeason(mochi: MochiWithTags, currentSeason: string): boolean {
+  const seasonalTag = mochi.mochi_tags.find((t) => t.tag_name === "seasonal");
+  if (!seasonalTag) return true;
+  return DB_SEASON_MAP[seasonalTag.season ?? ""] === currentSeason;
+}
+
 export default function NuestroMenu() {
   const { t, locale } = useLanguage();
+  const { season } = useSeason();
   const [activeCategory, setActiveCategory] = useState(0);
   const { mochis: dbMochis, loading: mochisLoading } = useMochis();
 
   // Build categories with Supabase mochis as source of truth for mochis category
+  // Filter out seasonal mochis that don't belong to the current season
   const categories = useMemo(() => {
     const translationCategories = t.menu.categories;
 
     return translationCategories.map((cat) => {
       if (cat.id === "mochis") {
-        const mochiItems = dbMochis.map((m) => mochiToMenuItem(m, locale));
+        const mochiItems = dbMochis
+          .filter((m) => isVisibleInSeason(m, season))
+          .map((m) => mochiToMenuItem(m, locale));
         return { ...cat, items: mochiItems };
       }
       return cat;
     });
-  }, [t.menu.categories, dbMochis, locale]);
+  }, [t.menu.categories, dbMochis, locale, season]);
 
   const currentCategory = categories[activeCategory];
 

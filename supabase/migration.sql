@@ -15,6 +15,7 @@ create table if not exists public.mochis (
   image_url text not null default '',
   emoji text not null default '🍡',
   display_order integer not null default 0,
+  enabled boolean not null default true,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );

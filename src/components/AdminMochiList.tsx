@@ -10,6 +10,7 @@ interface AdminMochiListProps {
   onEdit: (mochi: MochiWithTags) => void;
   onDelete: (id: string) => Promise<void>;
   onAdd: () => void;
+  onToggleEnabled: (id: string, enabled: boolean) => Promise<void>;
 }
 
 function TagBadges({ mochi }: { mochi: MochiWithTags }) {
@@ -45,10 +46,17 @@ function TagBadges({ mochi }: { mochi: MochiWithTags }) {
   );
 }
 
-export default function AdminMochiList({ mochis, onEdit, onDelete, onAdd }: AdminMochiListProps) {
+export default function AdminMochiList({ mochis, onEdit, onDelete, onAdd, onToggleEnabled }: AdminMochiListProps) {
   const { t, locale } = useLanguage();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+
+  const handleToggle = async (mochi: MochiWithTags) => {
+    setTogglingId(mochi.id);
+    await onToggleEnabled(mochi.id, !mochi.enabled);
+    setTogglingId(null);
+  };
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
@@ -81,7 +89,7 @@ export default function AdminMochiList({ mochis, onEdit, onDelete, onAdd }: Admi
           {mochis.map((mochi) => (
             <div
               key={mochi.id}
-              className="rounded-xl bg-wood-light/60 border border-soft-wood/30 p-4 shadow-cozy flex items-center gap-4"
+              className={`rounded-xl border p-4 shadow-cozy flex items-center gap-4 ${mochi.enabled ? "bg-wood-light/60 border-soft-wood/30" : "bg-wood-light/30 border-soft-wood/20 opacity-60"}`}
             >
               {/* Image */}
               <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 border border-border-color">
@@ -108,6 +116,11 @@ export default function AdminMochiList({ mochis, onEdit, onDelete, onAdd }: Admi
                     {locale === "ja" ? mochi.title_ja : mochi.title_es}
                   </h3>
                   <TagBadges mochi={mochi} />
+                  {!mochi.enabled && (
+                    <span className="inline-flex items-center rounded-full bg-gray-400/80 px-2 py-0.5 text-[10px] font-bold text-white">
+                      {t.admin.disabled}
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5 truncate">
                   {locale === "ja" ? mochi.description_ja : mochi.description_es}
@@ -126,6 +139,13 @@ export default function AdminMochiList({ mochis, onEdit, onDelete, onAdd }: Admi
 
               {/* Actions */}
               <div className="flex gap-2 flex-shrink-0">
+                <button
+                  onClick={() => handleToggle(mochi)}
+                  disabled={togglingId === mochi.id}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors font-heading disabled:opacity-50 ${mochi.enabled ? "bg-gray-400/10 text-gray-600 hover:bg-gray-400/20" : "bg-green-500/10 text-green-700 hover:bg-green-500/20"}`}
+                >
+                  {togglingId === mochi.id ? "..." : mochi.enabled ? t.admin.disableMochi : t.admin.enableMochi}
+                </button>
                 <button
                   onClick={() => onEdit(mochi)}
                   className="rounded-lg bg-ukiyo-navy/10 px-3 py-1.5 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading"

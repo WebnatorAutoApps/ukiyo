@@ -516,6 +516,10 @@ export const translations: Record<Locale, Translations> = {
       seasonSummer: "Verano",
       seasonFall: "Otoño",
       seasonWinter: "Invierno",
+      enabled: "Activado",
+      disabled: "Desactivado",
+      enableMochi: "Activar",
+      disableMochi: "Desactivar",
       noMochis: "No hay mochis. Añade el primero.",
       imageRequired: "Se requiere una imagen",
       maxFileSize: "Tamaño máximo: 5MB",
@@ -1039,6 +1043,10 @@ export const translations: Record<Locale, Translations> = {
       seasonSummer: "夏",
       seasonFall: "秋",
       seasonWinter: "冬",
+      enabled: "有効",
+      disabled: "無効",
+      enableMochi: "有効にする",
+      disableMochi: "無効にする",
       noMochis: "餅がありません。最初の餅を追加してください。",
       imageRequired: "画像が必要です",
       maxFileSize: "最大サイズ: 5MB",
@@ -1301,6 +1309,10 @@ export interface Translations {
     seasonSummer: string;
     seasonFall: string;
     seasonWinter: string;
+    enabled: string;
+    disabled: string;
+    enableMochi: string;
+    disableMochi: string;
     noMochis: string;
     imageRequired: string;
     maxFileSize: string;
