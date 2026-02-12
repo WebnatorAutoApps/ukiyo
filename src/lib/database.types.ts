@@ -43,6 +43,20 @@ export interface MenuCategoryRow {
   updated_at: string;
 }
 
+export type HighlightSection = "menuSlider" | "specialtyDrinks" | "menuHighlights";
+
+export interface HighlightItemRow {
+  id: string;
+  section: HighlightSection;
+  product_id: string;
+  display_order: number;
+  created_at: string;
+}
+
+export interface HighlightItemWithProduct extends HighlightItemRow {
+  products: ProductRow & { product_tags: ProductTagRow[] };
+}
+
 // Legacy aliases for gradual transition
 export type MochiRow = ProductRow;
 export type MochiTagRow = ProductTagRow;

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import {
   fetchProducts,
@@ -17,24 +16,31 @@ import {
   deleteCategory,
   toggleCategoryEnabled,
 } from "@/lib/products";
-import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue } from "@/lib/database.types";
+import {
+  fetchAllHighlightItems,
+  addHighlightItem,
+  removeHighlightItem,
+  replaceHighlightItems,
+} from "@/lib/highlights";
+import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection } from "@/lib/database.types";
 import AdminProductList from "./AdminProductList";
 import AdminProductForm from "./AdminProductForm";
 import AdminCategoryList from "./AdminCategoryList";
 import AdminCategoryForm from "./AdminCategoryForm";
+import AdminHighlightManager from "./AdminHighlightManager";
 
 interface AdminDashboardProps {
   email: string;
   onLogout: () => void;
 }
 
-type Section = "products" | "categories";
+type Section = "products" | "categories" | "highlights";
 type View = "list" | "add" | "edit";
 
 export default function AdminDashboard({ email, onLogout }: AdminDashboardProps) {
-  const { t } = useLanguage();
   const [products, setProducts] = useState<ProductWithTags[]>([]);
   const [categories, setCategories] = useState<MenuCategoryRow[]>([]);
+  const [highlightItems, setHighlightItems] = useState<HighlightItemRow[]>([]);
   const [loading, setLoading] = useState(supabaseConfigured);
   const [section, setSection] = useState<Section>("products");
   const [view, setView] = useState<View>("list");
@@ -44,15 +50,18 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
   useEffect(() => {
     if (!supabaseConfigured) return;
     let cancelled = false;
-    Promise.all([fetchProducts({ includeDisabled: true }), fetchCategories(true)]).then(
-      ([prodData, catData]) => {
-        if (!cancelled) {
-          setProducts(prodData);
-          setCategories(catData);
-          setLoading(false);
-        }
+    Promise.all([
+      fetchProducts({ includeDisabled: true }),
+      fetchCategories(true),
+      fetchAllHighlightItems(),
+    ]).then(([prodData, catData, hlData]) => {
+      if (!cancelled) {
+        setProducts(prodData);
+        setCategories(catData);
+        setHighlightItems(hlData);
+        setLoading(false);
       }
-    );
+    });
     return () => { cancelled = true; };
   }, []);
 
@@ -178,6 +187,34 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     setEditingCategory(null);
   };
 
+  // ─── Highlight handlers ─────────────────────────
+
+  const handleAddHighlight = async (section: HighlightSection, productId: string, order: number) => {
+    const item = await addHighlightItem(section, productId, order);
+    if (item) {
+      setHighlightItems((prev) => [...prev, item]);
+    }
+  };
+
+  const handleRemoveHighlight = async (id: string) => {
+    const success = await removeHighlightItem(id);
+    if (success) {
+      setHighlightItems((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
+  const handleReorderHighlights = async (
+    section: HighlightSection,
+    items: { product_id: string; display_order: number }[]
+  ) => {
+    const success = await replaceHighlightItems(section, items);
+    if (success) {
+      // Refetch to get the new IDs
+      const fresh = await fetchAllHighlightItems();
+      setHighlightItems(fresh);
+    }
+  };
+
   const handleCancel = () => {
     setView("list");
     setEditingProduct(null);
@@ -199,13 +236,13 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
           <div className="flex items-center gap-4">
             <Image
               src="/images/logo-ukiyo.png"
-              alt={t.logoAlt}
+              alt="Ukiyo Mochis & Coffee"
               width={120}
               height={40}
               className="h-8 w-auto"
               priority
             />
-            <span className="text-sm text-text-secondary hidden sm:inline">{t.admin.dashboardTitle}</span>
+            <span className="text-sm text-text-secondary hidden sm:inline">Panel de Administración</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-text-secondary hidden sm:inline">{email}</span>
@@ -213,7 +250,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
               onClick={handleLogout}
               className="rounded-xl bg-ukiyo-navy px-4 py-2 text-xs font-semibold text-white hover:bg-primary-hover transition-colors font-heading"
             >
-              {t.admin.logoutButton}
+              Cerrar Sesión
             </button>
           </div>
         </div>
@@ -222,19 +259,36 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
       {/* Section Tabs */}
       <div className="border-b border-border-color bg-wood-light/50">
         <div className="mx-auto max-w-5xl px-4 flex gap-1">
-          {(["products", "categories"] as Section[]).map((s) => (
-            <button
-              key={s}
-              onClick={() => switchSection(s)}
-              className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
-                section === s
-                  ? "border-ukiyo-navy text-foreground"
-                  : "border-transparent text-text-secondary hover:text-foreground"
-              }`}
-            >
-              {s === "products" ? t.admin.tabProducts : t.admin.tabCategories}
-            </button>
-          ))}
+          <button
+            onClick={() => switchSection("products")}
+            className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
+              section === "products"
+                ? "border-ukiyo-navy text-foreground"
+                : "border-transparent text-text-secondary hover:text-foreground"
+            }`}
+          >
+            Productos
+          </button>
+          <button
+            onClick={() => switchSection("categories")}
+            className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
+              section === "categories"
+                ? "border-ukiyo-navy text-foreground"
+                : "border-transparent text-text-secondary hover:text-foreground"
+            }`}
+          >
+            Categorías
+          </button>
+          <button
+            onClick={() => switchSection("highlights")}
+            className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
+              section === "highlights"
+                ? "border-ukiyo-navy text-foreground"
+                : "border-transparent text-text-secondary hover:text-foreground"
+            }`}
+          >
+            Destacados
+          </button>
         </div>
       </div>
 
@@ -244,6 +298,14 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
           <div className="flex justify-center py-16">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ukiyo-navy border-t-transparent" />
           </div>
+        ) : section === "highlights" ? (
+          <AdminHighlightManager
+            products={products}
+            highlightItems={highlightItems}
+            onAdd={handleAddHighlight}
+            onRemove={handleRemoveHighlight}
+            onReorder={handleReorderHighlights}
+          />
         ) : view === "list" ? (
           section === "products" ? (
             <AdminProductList
@@ -268,7 +330,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
               onClick={handleCancel}
               className="mb-4 text-sm text-ukiyo-navy hover:text-primary-hover font-heading font-semibold"
             >
-              ← {t.admin.back}
+              ← Volver
             </button>
             <div className="rounded-2xl bg-wood-light p-6 shadow-cozy">
               {section === "products" ? (

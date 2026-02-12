@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useCallback, memo } from "react";
+import { useState, useRef, useCallback, memo, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useHighlights } from "@/hooks/useHighlights";
 
 const SliderCard = memo(function SliderCard({
   product,
@@ -84,10 +85,23 @@ const SliderCard = memo(function SliderCard({
 });
 
 export default function MenuProductSlider() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const { products, loading } = useHighlights("menuSlider");
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const sliderProducts = useMemo(
+    () =>
+      products.map((p) => ({
+        name: locale === "ja" && p.title_ja ? p.title_ja : p.title_es,
+        description: locale === "ja" && p.description_ja ? p.description_ja : p.description_es,
+        image: p.image_url || "",
+        emoji: p.emoji,
+        imageAlt: locale === "ja" && p.title_ja ? p.title_ja : p.title_es,
+      })),
+    [products, locale]
+  );
 
   const updateScrollButtons = useCallback(() => {
     const track = trackRef.current;
@@ -177,9 +191,22 @@ export default function MenuProductSlider() {
             onScroll={updateScrollButtons}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {t.menuSlider.products.map((product, index) => (
-              <SliderCard key={index} product={product} />
-            ))}
+            {loading
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex-shrink-0 w-[240px] sm:w-[270px] md:w-[300px] rounded-2xl overflow-hidden shadow-cozy animate-pulse"
+                  >
+                    <div className="w-full bg-soft-wood/30" style={{ aspectRatio: "3/4" }} />
+                    <div className="p-4 bg-wood-light/60">
+                      <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
+                      <div className="h-3 bg-soft-wood/20 rounded w-full" />
+                    </div>
+                  </div>
+                ))
+              : sliderProducts.map((product, index) => (
+                  <SliderCard key={index} product={product} />
+                ))}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useSeason } from "@/context/SeasonContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { useHighlights } from "@/hooks/useHighlights";
 import type { ProductWithTags } from "@/lib/database.types";
 
 function CherryBlossom({ index }: { index: number }) {
@@ -243,18 +244,46 @@ export default function NuestroMenu() {
   const [activeCategory, setActiveCategory] = useState(0);
   const { products: dbProducts, loading: productsLoading } = useProducts();
   const { categories: dbCategories, loading: categoriesLoading } = useCategories();
+  const { products: highlightProducts, loading: highlightsLoading } = useHighlights("menuHighlights");
 
   const isLoading = productsLoading || categoriesLoading;
 
-  // Build category tabs from DB
+  const highlightCards = useMemo(() => {
+    return highlightProducts.map((p) => {
+      const name = locale === "ja" && p.title_ja ? p.title_ja : p.title_es;
+      const description = locale === "ja" && p.description_ja ? p.description_ja : p.description_es;
+      let tag: string | undefined;
+      for (const t of p.product_tags) {
+        if (["nuevo", "bestSeller", "popular", "seasonal"].includes(t.tag_name)) {
+          tag = t.tag_name;
+          break;
+        }
+      }
+      return {
+        name,
+        description,
+        price: p.price,
+        tag: tag ?? "",
+        image: p.image_url || "",
+        imageAlt: name,
+      };
+    });
+  }, [highlightProducts, locale]);
+
+  // Build category tabs from DB, excluding categories with no visible products
   const categoryTabs = useMemo(() => {
-    return dbCategories.map((cat) => ({
-      id: cat.id,
-      name: locale === "ja" && cat.name_ja ? cat.name_ja : cat.name_es,
-      emoji: cat.emoji,
-      productTypes: cat.product_types,
-    }));
-  }, [dbCategories, locale]);
+    return dbCategories
+      .map((cat) => ({
+        id: cat.id,
+        name: locale === "ja" && cat.name_ja ? cat.name_ja : cat.name_es,
+        emoji: cat.emoji,
+        productTypes: cat.product_types,
+      }))
+      .filter((cat) => {
+        const types = new Set(cat.productTypes);
+        return dbProducts.some((p) => types.has(p.type) && isVisibleInSeason(p, season));
+      });
+  }, [dbCategories, dbProducts, locale, season]);
 
   // For each category, get filtered products
   const currentCategory = categoryTabs[activeCategory];
@@ -300,9 +329,19 @@ export default function NuestroMenu() {
             {t.menu.featuredTitle}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {t.menu.highlights.map((highlight, index) => (
-              <FeaturedCard key={index} highlight={highlight} t={t} />
-            ))}
+            {highlightsLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="rounded-2xl overflow-hidden bg-wood-texture shadow-cozy animate-pulse">
+                    <div className="w-full bg-soft-wood/30" style={{ aspectRatio: "3/2" }} />
+                    <div className="p-4 bg-wood-light/80">
+                      <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
+                      <div className="h-3 bg-soft-wood/20 rounded w-full" />
+                    </div>
+                  </div>
+                ))
+              : highlightCards.map((highlight, index) => (
+                  <FeaturedCard key={index} highlight={highlight} t={t} />
+                ))}
           </div>
         </div>
 

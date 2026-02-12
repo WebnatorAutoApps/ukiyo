@@ -1,19 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
-
-const prices = {
-  hot: ["3.50", "4.00", "4.00", "4.50"],
-  cold: ["5.00", "5.50", "5.50", "5.00"],
-};
+import { useHighlights } from "@/hooks/useHighlights";
 
 export default function SpecialtyDrinks() {
   const [isHot, setIsHot] = useState(true);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const { products, loading } = useHighlights("specialtyDrinks");
 
-  const drinkTranslations = isHot ? t.drinks.hotDrinks : t.drinks.coldDrinks;
-  const drinkPrices = isHot ? prices.hot : prices.cold;
+  const { hotDrinks, coldDrinks } = useMemo(() => {
+    const hot: { name: string; description: string; price: string }[] = [];
+    const cold: { name: string; description: string; price: string }[] = [];
+    for (const p of products) {
+      const item = {
+        name: locale === "ja" && p.title_ja ? p.title_ja : p.title_es,
+        description: locale === "ja" && p.description_ja ? p.description_ja : p.description_es,
+        price: p.price,
+      };
+      if (p.hot) {
+        hot.push(item);
+      } else {
+        cold.push(item);
+      }
+    }
+    return { hotDrinks: hot, coldDrinks: cold };
+  }, [products, locale]);
+
+  const drinks = isHot ? hotDrinks : coldDrinks;
 
   return (
     <section className="w-full py-16 px-5 bg-warm-cream">
@@ -69,22 +83,37 @@ export default function SpecialtyDrinks() {
 
         {/* Drinks Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {drinkTranslations.map((drink, index) => (
-            <div
-              key={`${isHot ? "hot" : "cold"}-${index}`}
-              className="rounded-2xl bg-wood-light/60 border border-soft-wood/30 p-5 shadow-cozy hover:shadow-cozy-lg transition-all duration-300"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-base font-bold text-foreground font-heading">{drink.name}</h3>
-                  <p className="mt-1 text-sm text-text-secondary leading-relaxed">{drink.description}</p>
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl bg-wood-light/60 border border-soft-wood/30 p-5 shadow-cozy animate-pulse"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
+                      <div className="h-3 bg-soft-wood/20 rounded w-full" />
+                    </div>
+                    <div className="h-5 bg-soft-wood/30 rounded w-12" />
+                  </div>
                 </div>
-                <span className="text-lg font-bold text-ukiyo-navy whitespace-nowrap font-heading">
-                  {drinkPrices[index]}€
-                </span>
-              </div>
-            </div>
-          ))}
+              ))
+            : drinks.map((drink, index) => (
+                <div
+                  key={`${isHot ? "hot" : "cold"}-${index}`}
+                  className="rounded-2xl bg-wood-light/60 border border-soft-wood/30 p-5 shadow-cozy hover:shadow-cozy-lg transition-all duration-300"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-base font-bold text-foreground font-heading">{drink.name}</h3>
+                      <p className="mt-1 text-sm text-text-secondary leading-relaxed">{drink.description}</p>
+                    </div>
+                    <span className="text-lg font-bold text-ukiyo-navy whitespace-nowrap font-heading">
+                      {drink.price}
+                    </span>
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
     </section>

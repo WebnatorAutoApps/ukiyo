@@ -56,45 +56,6 @@ export const translations: Record<Locale, Translations> = {
       cold: "Frío / Bubble Tea",
       switchToCold: "Cambiar a bebidas frías",
       switchToHot: "Cambiar a bebidas calientes",
-      hotDrinks: [
-        {
-          name: "Café Latte Ukiyo",
-          description:
-            "Espresso suave con leche cremosa y un toque de vainilla",
-        },
-        {
-          name: "Matcha Latte",
-          description: "Té matcha ceremonial japonés con leche espumosa",
-        },
-        {
-          name: "Hojicha Latte",
-          description: "Té tostado japonés con notas ahumadas y dulces",
-        },
-        {
-          name: "Chocolate Caliente Mochi",
-          description: "Chocolate belga con malvaviscos mochi caseros",
-        },
-      ],
-      coldDrinks: [
-        {
-          name: "Bubble Tea Clásico",
-          description:
-            "Té negro con leche, perlas de tapioca y azúcar morena",
-        },
-        {
-          name: "Taro Bubble Tea",
-          description:
-            "Crema de taro con perlas de tapioca y leche de coco",
-        },
-        {
-          name: "Matcha Bubble Tea",
-          description: "Matcha frío con leche de avena y perlas de mango",
-        },
-        {
-          name: "Fresa Bubble Tea",
-          description: "Fresa natural con leche y boba de fresa",
-        },
-      ],
     },
 
     // About
@@ -275,32 +236,6 @@ export const translations: Record<Locale, Translations> = {
       seasonal: "❄️ De temporada",
       seasonalHot: "☀️ Caliente",
       seasonalCold: "❄️ Frío",
-      highlights: [
-        {
-          name: "Ukiyo Combo",
-          description: "2 mochis + bubble tea a elegir",
-          price: "9,90€",
-          tag: "bestSeller",
-          image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=400&fit=crop&q=80",
-          imageAlt: "Ukiyo Combo - 2 mochis artesanales y bubble tea",
-        },
-        {
-          name: "Mochis Artesanales",
-          description: "Elaborados a mano cada día con ingredientes premium",
-          price: "3,50€",
-          tag: "bestSeller",
-          image: "https://images.unsplash.com/photo-1631206616829-3e5e6e61db9e?w=600&h=400&fit=crop&q=80",
-          imageAlt: "Mochis artesanales japoneses hechos a mano",
-        },
-        {
-          name: "Bocadillo de Pernil",
-          description: "Jamón asado artesanal en pan crujiente recién horneado",
-          price: "7,50€",
-          tag: "nuevo",
-          image: "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&h=400&fit=crop&q=80",
-          imageAlt: "Bocadillo de pernil artesanal",
-        },
-      ],
       noProducts: "No hay productos en esta categoría",
       loadingProducts: "Cargando productos...",
     },
@@ -310,50 +245,6 @@ export const translations: Record<Locale, Translations> = {
       sectionTitle: "Descubre Nuestras Delicias",
       subtitle: "Explora lo mejor de Ukiyo — mochis, bubble tea y mucho más",
       carouselLabel: "Carrusel de productos destacados",
-      products: [
-        {
-          name: "Mochis Artesanales",
-          description: "Suaves por fuera, cremosos por dentro. Hechos a mano cada día con ingredientes premium.",
-          image: "/images/mochi-product-1.jpg",
-          emoji: "🍡",
-          imageAlt: "Mochis artesanales japoneses hechos a mano en Madrid Norte",
-        },
-        {
-          name: "Matcha Latte",
-          description: "Té matcha ceremonial japonés con leche espumosa. Un clásico que enamora.",
-          image: "https://jbpckrdwxzouwfiuggpw.supabase.co/storage/v1/object/public/images/mochis/mochi-matcha.jpg",
-          emoji: "🍵",
-          imageAlt: "Matcha latte con té ceremonial japonés",
-        },
-        {
-          name: "Bubble Tea",
-          description: "Refrescante y divertido, con perlas de tapioca y sabores auténticos.",
-          image: "/images/bubble-tea.jpg",
-          emoji: "🧋",
-          imageAlt: "Bubble tea artesanal con perlas de tapioca",
-        },
-        {
-          name: "Ramen Ukiyo",
-          description: "Caldo reconfortante con fideos artesanales y toppings tradicionales japoneses.",
-          image: "/images/staff-product.jpg",
-          emoji: "🍜",
-          imageAlt: "Ramen japonés con caldo reconfortante y fideos artesanales",
-        },
-        {
-          name: "Pancakes Japoneses",
-          description: "Esponjosos y ligeros como una nube, con sirope de arce y frutas frescas.",
-          image: "/images/mochi-lifestyle.jpg",
-          emoji: "🥞",
-          imageAlt: "Pancakes japoneses esponjosos estilo soufflé",
-        },
-        {
-          name: "Bocadillo de Pernil",
-          description: "Jamón asado artesanal en pan crujiente recién horneado. Nuevo y delicioso.",
-          image: "/images/about-photo.jpg",
-          emoji: "🥖",
-          imageAlt: "Bocadillo de pernil artesanal con pan crujiente",
-        },
-      ],
     },
 
     // Mochi Counter
@@ -416,89 +307,6 @@ export const translations: Record<Locale, Translations> = {
       ariaLabel: "Contactar por WhatsApp",
     },
 
-    // Admin
-    admin: {
-      title: "Panel de Administración",
-      subtitle: "Inicia sesión para continuar",
-      emailLabel: "Correo electrónico",
-      emailPlaceholder: "Ingresa tu correo electrónico",
-      passwordLabel: "Contraseña",
-      passwordPlaceholder: "Ingresa tu contraseña",
-      submitButton: "Iniciar Sesión",
-      loadingButton: "Iniciando sesión...",
-      emptyFieldsError: "Por favor, completa todos los campos",
-      loginError: "Credenciales incorrectas. Por favor, intenta de nuevo.",
-      logoutButton: "Cerrar Sesión",
-      dashboardTitle: "Panel de Administración",
-      dashboardWelcome: "Has iniciado sesión correctamente.",
-      mochisTitle: "Gestionar Mochis",
-      addMochi: "Añadir Mochi",
-      editMochi: "Editar Mochi",
-      deleteMochi: "Eliminar",
-      confirmDelete: "¿Estás seguro de que quieres eliminar este mochi?",
-      // Product management
-      tabProducts: "Productos",
-      tabCategories: "Categorías",
-      productsTitle: "Gestionar Productos",
-      addProduct: "Añadir Producto",
-      editProduct: "Editar Producto",
-      deleteProduct: "Eliminar",
-      noProducts: "No hay productos. Añade el primero.",
-      productType: "Tipo de producto",
-      hotDrink: "Bebida caliente",
-      priceModifier: "Modificador de precio",
-      tagBestSeller: "Best Seller",
-      typeMochis: "Mochis",
-      typeBebidas: "Bebidas",
-      typePostres: "Postres",
-      typeRaciones: "Raciones",
-      typeSalados: "Salados",
-      typeCombos: "Combos",
-      typeOtros: "Otros",
-      allTypes: "Todos los tipos",
-      enableProduct: "Activar",
-      disableProduct: "Desactivar",
-      // Category management
-      categoriesTitle: "Gestionar Categorías",
-      addCategory: "Añadir Categoría",
-      editCategory: "Editar Categoría",
-      deleteCategory: "Eliminar",
-      noCategories: "No hay categorías. Añade la primera.",
-      categoryNameEs: "Nombre (Español)",
-      categoryNameJa: "Nombre (Japonés)",
-      categoryTypes: "Tipos de producto",
-      cancel: "Cancelar",
-      save: "Guardar",
-      saving: "Guardando...",
-      titleEs: "Título (Español)",
-      titleJa: "Título (Japonés)",
-      descriptionEs: "Descripción (Español)",
-      descriptionJa: "Descripción (Japonés)",
-      price: "Precio",
-      emoji: "Emoji",
-      displayOrder: "Orden",
-      image: "Imagen",
-      uploadImage: "Subir imagen",
-      changeImage: "Cambiar imagen",
-      tags: "Etiquetas",
-      tagNuevo: "Nuevo",
-      tagPopular: "Popular",
-      tagSeasonal: "De temporada",
-      season: "Temporada",
-      seasonSpring: "Primavera",
-      seasonSummer: "Verano",
-      seasonFall: "Otoño",
-      seasonWinter: "Invierno",
-      enabled: "Activado",
-      disabled: "Desactivado",
-      enableMochi: "Activar",
-      disableMochi: "Desactivar",
-      noMochis: "No hay mochis. Añade el primero.",
-      imageRequired: "Se requiere una imagen",
-      maxFileSize: "Tamaño máximo: 5MB",
-      allowedFormats: "Formatos: JPG, PNG, WebP",
-      back: "Volver",
-    },
 
     // Logo alt
     logoAlt:
@@ -560,42 +368,6 @@ export const translations: Record<Locale, Translations> = {
       cold: "コールド / バブルティー",
       switchToCold: "コールドドリンクに切り替え",
       switchToHot: "ホットドリンクに切り替え",
-      hotDrinks: [
-        {
-          name: "Ukiyo カフェラテ",
-          description: "なめらかなエスプレッソにクリーミーなミルクとバニラの香り",
-        },
-        {
-          name: "抹茶ラテ",
-          description: "日本の茶道用抹茶とふわふわのミルク",
-        },
-        {
-          name: "ほうじ茶ラテ",
-          description: "焙煎された日本茶のスモーキーで甘い風味",
-        },
-        {
-          name: "餅ホットチョコレート",
-          description: "ベルギーチョコレートと自家製餅マシュマロ",
-        },
-      ],
-      coldDrinks: [
-        {
-          name: "クラシックバブルティー",
-          description: "紅茶とミルク、タピオカパール、黒糖",
-        },
-        {
-          name: "タロバブルティー",
-          description: "タロクリームとタピオカパール、ココナッツミルク",
-        },
-        {
-          name: "抹茶バブルティー",
-          description: "アイス抹茶とオーツミルク、マンゴーパール",
-        },
-        {
-          name: "いちごバブルティー",
-          description: "フレッシュいちごとミルク、いちごボバ",
-        },
-      ],
     },
 
     // About
@@ -775,32 +547,6 @@ export const translations: Record<Locale, Translations> = {
       seasonal: "❄️ 季節限定",
       seasonalHot: "☀️ ホット",
       seasonalCold: "❄️ コールド",
-      highlights: [
-        {
-          name: "Ukiyo コンボ",
-          description: "餅2個 + お好みのバブルティー",
-          price: "9,90€",
-          tag: "bestSeller",
-          image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=400&fit=crop&q=80",
-          imageAlt: "Ukiyo コンボ - 手作り餅2個とバブルティー",
-        },
-        {
-          name: "手作り餅",
-          description: "毎日手作り、厳選素材を使用",
-          price: "3,50€",
-          tag: "bestSeller",
-          image: "https://images.unsplash.com/photo-1631206616829-3e5e6e61db9e?w=600&h=400&fit=crop&q=80",
-          imageAlt: "手作り和風餅",
-        },
-        {
-          name: "ペルニルサンド",
-          description: "焼き上げハムの手作りサンドイッチ",
-          price: "7,50€",
-          tag: "nuevo",
-          image: "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&h=400&fit=crop&q=80",
-          imageAlt: "手作りペルニルサンドイッチ",
-        },
-      ],
       noProducts: "このカテゴリに商品がありません",
       loadingProducts: "商品を読み込み中...",
     },
@@ -810,50 +556,6 @@ export const translations: Record<Locale, Translations> = {
       sectionTitle: "こだわりの逸品をご覧ください",
       subtitle: "Ukiyoの人気メニュー — 餅、バブルティーなど",
       carouselLabel: "おすすめ商品カルーセル",
-      products: [
-        {
-          name: "手作り餅",
-          description: "外はもちもち、中はクリーミー。毎日厳選素材で一つ一つ手作り。",
-          image: "/images/mochi-product-1.jpg",
-          emoji: "🍡",
-          imageAlt: "マドリード北部の手作り和風餅",
-        },
-        {
-          name: "抹茶ラテ",
-          description: "日本の茶道用抹茶とふわふわのミルク。定番の一杯。",
-          image: "https://jbpckrdwxzouwfiuggpw.supabase.co/storage/v1/object/public/images/mochis/mochi-matcha.jpg",
-          emoji: "🍵",
-          imageAlt: "茶道用抹茶ラテ",
-        },
-        {
-          name: "バブルティー",
-          description: "爽やかで楽しい、タピオカパールと本格フレーバー。",
-          image: "/images/bubble-tea.jpg",
-          emoji: "🧋",
-          imageAlt: "タピオカパール入り手作りバブルティー",
-        },
-        {
-          name: "Ukiyo ラーメン",
-          description: "心温まるスープに手作り麺と伝統的な日本のトッピング。",
-          image: "/images/staff-product.jpg",
-          emoji: "🍜",
-          imageAlt: "心温まるスープの日本のラーメン",
-        },
-        {
-          name: "ふわふわパンケーキ",
-          description: "雲のように軽くてふわふわ、メープルシロップとフレッシュフルーツ添え。",
-          image: "/images/mochi-lifestyle.jpg",
-          emoji: "🥞",
-          imageAlt: "スフレスタイルのふわふわ日本式パンケーキ",
-        },
-        {
-          name: "ペルニルサンド",
-          description: "焼き上げハムを焼きたてのカリカリパンで。新メニュー。",
-          image: "/images/about-photo.jpg",
-          emoji: "🥖",
-          imageAlt: "カリカリパンの手作りペルニルサンドイッチ",
-        },
-      ],
     },
 
     // Mochi Counter
@@ -916,117 +618,11 @@ export const translations: Record<Locale, Translations> = {
       ariaLabel: "WhatsAppでお問い合わせ",
     },
 
-    // Admin
-    admin: {
-      title: "管理パネル",
-      subtitle: "ログインしてください",
-      emailLabel: "メールアドレス",
-      emailPlaceholder: "メールアドレスを入力",
-      passwordLabel: "パスワード",
-      passwordPlaceholder: "パスワードを入力",
-      submitButton: "ログイン",
-      loadingButton: "ログイン中...",
-      emptyFieldsError: "すべてのフィールドを入力してください",
-      loginError: "認証情報が正しくありません。もう一度お試しください。",
-      logoutButton: "ログアウト",
-      dashboardTitle: "管理パネル",
-      dashboardWelcome: "正常にログインしました。",
-      mochisTitle: "餅を管理",
-      addMochi: "餅を追加",
-      editMochi: "餅を編集",
-      deleteMochi: "削除",
-      confirmDelete: "この餅を削除してもよろしいですか？",
-      // Product management
-      tabProducts: "商品",
-      tabCategories: "カテゴリ",
-      productsTitle: "商品を管理",
-      addProduct: "商品を追加",
-      editProduct: "商品を編集",
-      deleteProduct: "削除",
-      noProducts: "商品がありません。最初の商品を追加してください。",
-      productType: "商品タイプ",
-      hotDrink: "ホットドリンク",
-      priceModifier: "価格修正",
-      tagBestSeller: "ベストセラー",
-      typeMochis: "餅",
-      typeBebidas: "ドリンク",
-      typePostres: "デザート",
-      typeRaciones: "タパス",
-      typeSalados: "食事",
-      typeCombos: "コンボ",
-      typeOtros: "その他",
-      allTypes: "すべてのタイプ",
-      enableProduct: "有効にする",
-      disableProduct: "無効にする",
-      // Category management
-      categoriesTitle: "カテゴリを管理",
-      addCategory: "カテゴリを追加",
-      editCategory: "カテゴリを編集",
-      deleteCategory: "削除",
-      noCategories: "カテゴリがありません。最初のカテゴリを追加してください。",
-      categoryNameEs: "名前（スペイン語）",
-      categoryNameJa: "名前（日本語）",
-      categoryTypes: "商品タイプ",
-      cancel: "キャンセル",
-      save: "保存",
-      saving: "保存中...",
-      titleEs: "タイトル（スペイン語）",
-      titleJa: "タイトル（日本語）",
-      descriptionEs: "説明（スペイン語）",
-      descriptionJa: "説明（日本語）",
-      price: "価格",
-      emoji: "絵文字",
-      displayOrder: "表示順",
-      image: "画像",
-      uploadImage: "画像をアップロード",
-      changeImage: "画像を変更",
-      tags: "タグ",
-      tagNuevo: "新商品",
-      tagPopular: "人気",
-      tagSeasonal: "季節限定",
-      season: "季節",
-      seasonSpring: "春",
-      seasonSummer: "夏",
-      seasonFall: "秋",
-      seasonWinter: "冬",
-      enabled: "有効",
-      disabled: "無効",
-      enableMochi: "有効にする",
-      disableMochi: "無効にする",
-      noMochis: "餅がありません。最初の餅を追加してください。",
-      imageRequired: "画像が必要です",
-      maxFileSize: "最大サイズ: 5MB",
-      allowedFormats: "形式: JPG, PNG, WebP",
-      back: "戻る",
-    },
-
     // Logo alt
     logoAlt:
       "Ukiyo Mochis & Coffee - マドリード北部の手作り餅とコーヒー",
   },
 };
-
-interface MenuSliderProduct {
-  name: string;
-  description: string;
-  image: string;
-  emoji: string;
-  imageAlt: string;
-}
-
-interface MenuHighlight {
-  name: string;
-  description: string;
-  price: string;
-  tag: string;
-  image: string;
-  imageAlt: string;
-}
-
-interface DrinkItem {
-  name: string;
-  description: string;
-}
 
 interface FaqItem {
   question: string;
@@ -1084,8 +680,6 @@ export interface Translations {
     cold: string;
     switchToCold: string;
     switchToHot: string;
-    hotDrinks: DrinkItem[];
-    coldDrinks: DrinkItem[];
   };
   about: {
     heading: string;
@@ -1123,7 +717,6 @@ export interface Translations {
     seasonal: string;
     seasonalHot: string;
     seasonalCold: string;
-    highlights: MenuHighlight[];
     noProducts: string;
     loadingProducts: string;
   };
@@ -1159,7 +752,6 @@ export interface Translations {
     sectionTitle: string;
     subtitle: string;
     carouselLabel: string;
-    products: MenuSliderProduct[];
   };
   mochiCounter: {
     sectionTitle: string;
@@ -1198,86 +790,6 @@ export interface Translations {
   };
   whatsapp: {
     ariaLabel: string;
-  };
-  admin: {
-    title: string;
-    subtitle: string;
-    emailLabel: string;
-    emailPlaceholder: string;
-    passwordLabel: string;
-    passwordPlaceholder: string;
-    submitButton: string;
-    loadingButton: string;
-    emptyFieldsError: string;
-    loginError: string;
-    logoutButton: string;
-    dashboardTitle: string;
-    dashboardWelcome: string;
-    mochisTitle: string;
-    addMochi: string;
-    editMochi: string;
-    deleteMochi: string;
-    confirmDelete: string;
-    tabProducts: string;
-    tabCategories: string;
-    productsTitle: string;
-    addProduct: string;
-    editProduct: string;
-    deleteProduct: string;
-    noProducts: string;
-    productType: string;
-    hotDrink: string;
-    priceModifier: string;
-    tagBestSeller: string;
-    typeMochis: string;
-    typeBebidas: string;
-    typePostres: string;
-    typeRaciones: string;
-    typeSalados: string;
-    typeCombos: string;
-    typeOtros: string;
-    allTypes: string;
-    enableProduct: string;
-    disableProduct: string;
-    categoriesTitle: string;
-    addCategory: string;
-    editCategory: string;
-    deleteCategory: string;
-    noCategories: string;
-    categoryNameEs: string;
-    categoryNameJa: string;
-    categoryTypes: string;
-    cancel: string;
-    save: string;
-    saving: string;
-    titleEs: string;
-    titleJa: string;
-    descriptionEs: string;
-    descriptionJa: string;
-    price: string;
-    emoji: string;
-    displayOrder: string;
-    image: string;
-    uploadImage: string;
-    changeImage: string;
-    tags: string;
-    tagNuevo: string;
-    tagPopular: string;
-    tagSeasonal: string;
-    season: string;
-    seasonSpring: string;
-    seasonSummer: string;
-    seasonFall: string;
-    seasonWinter: string;
-    enabled: string;
-    disabled: string;
-    enableMochi: string;
-    disableMochi: string;
-    noMochis: string;
-    imageRequired: string;
-    maxFileSize: string;
-    allowedFormats: string;
-    back: string;
   };
   logoAlt: string;
 }
