@@ -40,7 +40,7 @@ INSERT INTO public.products (type, title_es, title_ja, description_es, descripti
 VALUES ('mochis', 'Mochis Artesanales', '手作り餅', 'Suaves por fuera, cremosos por dentro. Hechos a mano cada día con ingredientes premium.', '外はもちもち、中はクリーミー。毎日厳選素材で一つ一つ手作り。', '3,50€', '/images/mochi-product-1.jpg', '🍡', 100);
 
 -- Bubble Tea (generic promo)
-INSERT INTO public.products (type, title_es, title_ja, description_es, description_ja, price, image_url, emoji, display_order)
+INSERT INTO public.products (type, title_es, title_ja, description_es, description_ja, price, image_url, emoji, display_order, hot)
 VALUES ('bebidas', 'Bubble Tea', 'バブルティー', 'Refrescante y divertido, con perlas de tapioca y sabores auténticos.', '爽やかで楽しい、タピオカパールと本格フレーバー。', '5,00€', '/images/bubble-tea.jpg', '🧋', 11, false);
 
 -- Ramen Ukiyo

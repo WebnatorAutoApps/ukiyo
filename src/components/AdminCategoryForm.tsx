@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLanguage } from "@/i18n/LanguageContext";
+import { translateToJapanese } from "@/lib/translate";
 import type { MenuCategoryRow, ProductType } from "@/lib/database.types";
 
 interface AdminCategoryFormProps {
@@ -18,10 +18,17 @@ interface AdminCategoryFormProps {
 }
 
 const ALL_PRODUCT_TYPES: ProductType[] = ["mochis", "bebidas", "postres", "raciones", "salados", "combos", "otros"];
+const TYPE_LABELS: Record<ProductType, string> = {
+  mochis: "Mochis",
+  bebidas: "Bebidas",
+  postres: "Postres",
+  raciones: "Raciones",
+  salados: "Salados",
+  combos: "Combos",
+  otros: "Otros",
+};
 
 export default function AdminCategoryForm({ category, onSave, onCancel }: AdminCategoryFormProps) {
-  const { t } = useLanguage();
-
   const [nameEs, setNameEs] = useState(category?.name_es ?? "");
   const [nameJa, setNameJa] = useState(category?.name_ja ?? "");
   const [emoji, setEmoji] = useState(category?.emoji ?? "");
@@ -32,16 +39,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
-  const typeLabels: Record<ProductType, string> = {
-    mochis: t.admin.typeMochis,
-    bebidas: t.admin.typeBebidas,
-    postres: t.admin.typePostres,
-    raciones: t.admin.typeRaciones,
-    salados: t.admin.typeSalados,
-    combos: t.admin.typeCombos,
-    otros: t.admin.typeOtros,
-  };
+  const [translating, setTranslating] = useState(false);
 
   const toggleType = (pt: ProductType) => {
     setProductTypes((prev) =>
@@ -49,12 +47,24 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
     );
   };
 
+  const handleTranslate = async () => {
+    if (!nameEs.trim()) return;
+    setTranslating(true);
+    const result = await translateToJapanese(nameEs);
+    setTranslating(false);
+    if (result) {
+      setNameJa(result);
+    } else {
+      setError("No se pudo traducir. Inténtalo de nuevo o traduce manualmente.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!nameEs.trim()) {
-      setError("Name (ES) is required");
+      setError("El nombre (ES) es obligatorio");
       return;
     }
 
@@ -69,7 +79,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
         product_types: productTypes,
       });
     } catch {
-      setError("Error saving category");
+      setError("Error al guardar categoría");
     } finally {
       setSaving(false);
     }
@@ -78,14 +88,14 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <h2 className="text-xl font-bold text-foreground font-heading">
-        {category ? t.admin.editCategory : t.admin.addCategory}
+        {category ? "Editar Categoría" : "Añadir Categoría"}
       </h2>
 
       {/* Name fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="nameEs" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.categoryNameEs}
+            Nombre (Español)
           </label>
           <input
             id="nameEs"
@@ -97,9 +107,19 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="nameJa" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.categoryNameJa}
-          </label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="nameJa" className="text-sm font-semibold text-foreground font-heading">
+              Nombre (Japonés)
+            </label>
+            <button
+              type="button"
+              onClick={handleTranslate}
+              disabled={translating || !nameEs.trim()}
+              className="text-xs font-semibold text-ukiyo-navy hover:text-primary-hover disabled:opacity-40 disabled:cursor-not-allowed font-heading transition-colors"
+            >
+              {translating ? "Traduciendo..." : "Auto-traducir"}
+            </button>
+          </div>
           <input
             id="nameJa"
             type="text"
@@ -115,7 +135,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="emoji" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.emoji}
+            Emoji
           </label>
           <input
             id="emoji"
@@ -127,7 +147,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="displayOrder" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.displayOrder}
+            Orden
           </label>
           <input
             id="displayOrder"
@@ -142,7 +162,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
       {/* Product Types */}
       <div>
         <label className="block text-sm font-semibold text-foreground font-heading mb-3">
-          {t.admin.categoryTypes}
+          Tipos de producto
         </label>
         <div className="flex flex-wrap gap-3">
           {ALL_PRODUCT_TYPES.map((pt) => (
@@ -153,7 +173,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
                 onChange={() => toggleType(pt)}
                 className="w-4 h-4 rounded accent-ukiyo-navy"
               />
-              <span className="text-sm text-foreground">{typeLabels[pt]}</span>
+              <span className="text-sm text-foreground">{TYPE_LABELS[pt]}</span>
             </label>
           ))}
         </div>
@@ -169,7 +189,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
             className="w-4 h-4 rounded accent-ukiyo-navy"
           />
           <span className="text-sm font-semibold text-foreground font-heading">
-            {enabled ? t.admin.enabled : t.admin.disabled}
+            {enabled ? "Activado" : "Desactivado"}
           </span>
         </label>
       </div>
@@ -186,7 +206,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
           disabled={saving}
           className="rounded-xl bg-ukiyo-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading disabled:opacity-50"
         >
-          {saving ? t.admin.saving : t.admin.save}
+          {saving ? "Guardando..." : "Guardar"}
         </button>
         <button
           type="button"
@@ -194,7 +214,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
           disabled={saving}
           className="rounded-xl border border-border-color bg-background px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-wood-light transition-colors font-heading"
         >
-          {t.admin.cancel}
+          Cancelar
         </button>
       </div>
     </form>

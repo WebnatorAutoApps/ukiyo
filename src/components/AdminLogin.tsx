@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 
 interface AdminLoginProps {
@@ -14,19 +13,18 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!email.trim() || !password.trim()) {
-      setError(t.admin.emptyFieldsError);
+      setError("Por favor, completa todos los campos");
       return;
     }
 
     if (!supabaseConfigured) {
-      setError(t.admin.loginError);
+      setError("Credenciales incorrectas. Por favor, intenta de nuevo.");
       return;
     }
 
@@ -40,7 +38,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
     setLoading(false);
 
     if (authError) {
-      setError(t.admin.loginError);
+      setError("Credenciales incorrectas. Por favor, intenta de nuevo.");
       return;
     }
 
@@ -53,7 +51,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
         <div className="flex justify-center mb-8">
           <Image
             src="/images/logo-ukiyo.png"
-            alt={t.logoAlt}
+            alt="Ukiyo Mochis & Coffee"
             width={160}
             height={53}
             className="h-12 w-auto"
@@ -63,10 +61,10 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
 
         <div className="rounded-2xl bg-wood-light p-8 shadow-cozy">
           <h1 className="text-2xl font-bold text-center text-foreground mb-1 font-heading">
-            {t.admin.title}
+            Panel de Administración
           </h1>
           <p className="text-sm text-text-secondary text-center mb-6">
-            {t.admin.subtitle}
+            Inicia sesión para continuar
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -75,14 +73,14 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
                 htmlFor="email"
                 className="text-sm font-semibold text-foreground font-heading"
               >
-                {t.admin.emailLabel}
+                Correo electrónico
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={t.admin.emailPlaceholder}
+                placeholder="Ingresa tu correo electrónico"
                 className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground placeholder-text-secondary/50 outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
                 autoComplete="email"
               />
@@ -93,14 +91,14 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
                 htmlFor="password"
                 className="text-sm font-semibold text-foreground font-heading"
               >
-                {t.admin.passwordLabel}
+                Contraseña
               </label>
               <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={t.admin.passwordPlaceholder}
+                placeholder="Ingresa tu contraseña"
                 className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground placeholder-text-secondary/50 outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
                 autoComplete="current-password"
               />
@@ -117,7 +115,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
               disabled={loading}
               className="mt-2 rounded-xl bg-ukiyo-navy px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading disabled:opacity-50"
             >
-              {loading ? t.admin.loadingButton : t.admin.submitButton}
+              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
             </button>
           </form>
         </div>

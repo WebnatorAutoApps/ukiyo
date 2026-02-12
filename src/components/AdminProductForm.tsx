@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { useLanguage } from "@/i18n/LanguageContext";
 import { uploadProductImage } from "@/lib/products";
+import { translateToJapanese } from "@/lib/translate";
 import type { ProductWithTags, ProductType, TagName, SeasonValue } from "@/lib/database.types";
 
 interface AdminProductFormProps {
@@ -27,11 +27,19 @@ interface AdminProductFormProps {
 }
 
 const PRODUCT_TYPES: ProductType[] = ["mochis", "bebidas", "postres", "raciones", "salados", "combos", "otros"];
+const TYPE_LABELS: Record<ProductType, string> = {
+  mochis: "Mochis",
+  bebidas: "Bebidas",
+  postres: "Postres",
+  raciones: "Raciones",
+  salados: "Salados",
+  combos: "Combos",
+  otros: "Otros",
+};
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export default function AdminProductForm({ product, onSave, onCancel }: AdminProductFormProps) {
-  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [type, setType] = useState<ProductType>(product?.type ?? "mochis");
@@ -50,6 +58,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [translating, setTranslating] = useState(false);
 
   // Tags
   const existingTags = product?.product_tags ?? [];
@@ -60,27 +69,17 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
   const seasonalTag = existingTags.find((t) => t.tag_name === "seasonal");
   const [season, setSeason] = useState<SeasonValue>(seasonalTag?.season ?? "spring");
 
-  const typeLabels: Record<ProductType, string> = {
-    mochis: t.admin.typeMochis,
-    bebidas: t.admin.typeBebidas,
-    postres: t.admin.typePostres,
-    raciones: t.admin.typeRaciones,
-    salados: t.admin.typeSalados,
-    combos: t.admin.typeCombos,
-    otros: t.admin.typeOtros,
-  };
-
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError(t.admin.allowedFormats);
+      setError("Formatos: JPG, PNG, WebP");
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      setError(t.admin.maxFileSize);
+      setError("Tamaño máximo: 5MB");
       return;
     }
 
@@ -94,7 +93,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
     if (url) {
       setImageUrl(url);
     } else {
-      setError("Error uploading image");
+      setError("Error al subir imagen");
       setImagePreview(null);
     }
   };
@@ -104,7 +103,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
     setError("");
 
     if (!titleEs.trim()) {
-      setError("Title (ES) is required");
+      setError("El título (ES) es obligatorio");
       return;
     }
 
@@ -132,9 +131,31 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         tags,
       });
     } catch {
-      setError("Error saving product");
+      setError("Error al guardar producto");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleTranslate = async () => {
+    if (!titleEs.trim() && !descEs.trim()) return;
+
+    setTranslating(true);
+    setError("");
+
+    const [titleResult, descResult] = await Promise.all([
+      titleEs.trim() ? translateToJapanese(titleEs) : Promise.resolve(null),
+      descEs.trim() ? translateToJapanese(descEs) : Promise.resolve(null),
+    ]);
+
+    setTranslating(false);
+
+    if (titleResult) setTitleJa(titleResult);
+    if (descResult) setDescJa(descResult);
+
+    const attempted = [titleEs.trim() && !titleResult, descEs.trim() && !descResult].filter(Boolean);
+    if (attempted.length > 0) {
+      setError("No se pudo traducir. Inténtalo de nuevo o traduce manualmente.");
     }
   };
 
@@ -143,13 +164,13 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <h2 className="text-xl font-bold text-foreground font-heading">
-        {product ? t.admin.editProduct : t.admin.addProduct}
+        {product ? "Editar Producto" : "Añadir Producto"}
       </h2>
 
       {/* Product Type */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="productType" className="text-sm font-semibold text-foreground font-heading">
-          {t.admin.productType}
+          Tipo de producto
         </label>
         <select
           id="productType"
@@ -158,7 +179,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
           className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow max-w-xs"
         >
           {PRODUCT_TYPES.map((pt) => (
-            <option key={pt} value={pt}>{typeLabels[pt]}</option>
+            <option key={pt} value={pt}>{TYPE_LABELS[pt]}</option>
           ))}
         </select>
       </div>
@@ -166,7 +187,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
       {/* Image upload */}
       <div>
         <label className="block text-sm font-semibold text-foreground font-heading mb-2">
-          {t.admin.image}
+          Imagen
         </label>
         <div className="flex items-start gap-4">
           {displayImage && (
@@ -187,7 +208,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
               disabled={uploading}
               className="rounded-xl bg-ukiyo-navy px-4 py-2 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading disabled:opacity-50"
             >
-              {uploading ? "..." : displayImage ? t.admin.changeImage : t.admin.uploadImage}
+              {uploading ? "..." : displayImage ? "Cambiar imagen" : "Subir imagen"}
             </button>
             <input
               ref={fileInputRef}
@@ -197,7 +218,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
               onChange={handleImageChange}
             />
             <p className="text-xs text-text-secondary">
-              {t.admin.maxFileSize} · {t.admin.allowedFormats}
+              Tamaño máximo: 5MB · Formatos: JPG, PNG, WebP
             </p>
           </div>
         </div>
@@ -207,7 +228,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="titleEs" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.titleEs}
+            Título (Español)
           </label>
           <input
             id="titleEs"
@@ -220,7 +241,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="titleJa" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.titleJa}
+            Título (Japonés)
           </label>
           <input
             id="titleJa"
@@ -233,11 +254,21 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
       </div>
 
+      {/* Auto-translate button */}
+      <button
+        type="button"
+        onClick={handleTranslate}
+        disabled={translating || (!titleEs.trim() && !descEs.trim())}
+        className="text-xs font-semibold text-ukiyo-navy hover:text-primary-hover disabled:opacity-40 disabled:cursor-not-allowed font-heading transition-colors"
+      >
+        {translating ? "Traduciendo..." : "Auto-traducir al japonés"}
+      </button>
+
       {/* Description fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="descEs" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.descriptionEs}
+            Descripción (Español)
           </label>
           <textarea
             id="descEs"
@@ -249,7 +280,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="descJa" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.descriptionJa}
+            Descripción (Japonés)
           </label>
           <textarea
             id="descJa"
@@ -265,7 +296,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="price" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.price}
+            Precio
           </label>
           <input
             id="price"
@@ -277,7 +308,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="emoji" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.emoji}
+            Emoji
           </label>
           <input
             id="emoji"
@@ -289,7 +320,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="displayOrder" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.displayOrder}
+            Orden
           </label>
           <input
             id="displayOrder"
@@ -301,7 +332,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="priceModifier" className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.priceModifier}
+            Modificador de precio
           </label>
           <input
             id="priceModifier"
@@ -314,70 +345,60 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         </div>
       </div>
 
-      {/* Hot drink toggle */}
-      <div>
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={hot}
-            onChange={(e) => setHot(e.target.checked)}
-            className="w-4 h-4 rounded accent-ukiyo-navy"
-          />
-          <span className="text-sm font-semibold text-foreground font-heading">
-            {t.admin.hotDrink}
-          </span>
-        </label>
-      </div>
+      {/* Hot/Cold toggle — only for bebidas */}
+      {type === "bebidas" && (
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-semibold text-foreground font-heading">
+            Temperatura
+          </label>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setHot(false)}
+              className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold font-heading transition-colors border-2 ${
+                !hot
+                  ? "bg-blue-500/10 border-blue-500 text-blue-700"
+                  : "bg-background border-border-color text-text-secondary hover:border-blue-500/50"
+              }`}
+            >
+              ❄️ Fría
+            </button>
+            <button
+              type="button"
+              onClick={() => setHot(true)}
+              className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold font-heading transition-colors border-2 ${
+                hot
+                  ? "bg-orange-500/10 border-orange-500 text-orange-700"
+                  : "bg-background border-border-color text-text-secondary hover:border-orange-500/50"
+              }`}
+            >
+              ☕ Caliente
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Tags */}
       <div>
         <label className="block text-sm font-semibold text-foreground font-heading mb-3">
-          {t.admin.tags}
+          Etiquetas
         </label>
         <div className="flex flex-wrap gap-3">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={hasNuevo}
-              onChange={(e) => setHasNuevo(e.target.checked)}
-              className="w-4 h-4 rounded accent-ukiyo-navy"
-            />
-            <span className="inline-flex items-center rounded-full bg-red-500/90 px-2.5 py-0.5 text-[11px] font-bold text-white tracking-wide">
-              {t.admin.tagNuevo}
-            </span>
+            <input type="checkbox" checked={hasNuevo} onChange={(e) => setHasNuevo(e.target.checked)} className="w-4 h-4 rounded accent-ukiyo-navy" />
+            <span className="inline-flex items-center rounded-full bg-red-500/90 px-2.5 py-0.5 text-[11px] font-bold text-white tracking-wide">Nuevo</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={hasPopular}
-              onChange={(e) => setHasPopular(e.target.checked)}
-              className="w-4 h-4 rounded accent-ukiyo-navy"
-            />
-            <span className="inline-flex items-center rounded-full bg-sakura-pink px-2.5 py-0.5 text-[11px] font-bold text-foreground tracking-wide">
-              {t.admin.tagPopular}
-            </span>
+            <input type="checkbox" checked={hasPopular} onChange={(e) => setHasPopular(e.target.checked)} className="w-4 h-4 rounded accent-ukiyo-navy" />
+            <span className="inline-flex items-center rounded-full bg-sakura-pink px-2.5 py-0.5 text-[11px] font-bold text-foreground tracking-wide">Popular</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={hasBestSeller}
-              onChange={(e) => setHasBestSeller(e.target.checked)}
-              className="w-4 h-4 rounded accent-ukiyo-navy"
-            />
-            <span className="inline-flex items-center rounded-full bg-ukiyo-navy/90 px-2.5 py-0.5 text-[11px] font-bold text-white tracking-wide">
-              {t.admin.tagBestSeller}
-            </span>
+            <input type="checkbox" checked={hasBestSeller} onChange={(e) => setHasBestSeller(e.target.checked)} className="w-4 h-4 rounded accent-ukiyo-navy" />
+            <span className="inline-flex items-center rounded-full bg-ukiyo-navy/90 px-2.5 py-0.5 text-[11px] font-bold text-white tracking-wide">Best Seller</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={hasSeasonal}
-              onChange={(e) => setHasSeasonal(e.target.checked)}
-              className="w-4 h-4 rounded accent-ukiyo-navy"
-            />
-            <span className="seasonal-badge text-[11px]">
-              {t.admin.tagSeasonal}
-            </span>
+            <input type="checkbox" checked={hasSeasonal} onChange={(e) => setHasSeasonal(e.target.checked)} className="w-4 h-4 rounded accent-ukiyo-navy" />
+            <span className="seasonal-badge text-[11px]">De temporada</span>
           </label>
         </div>
 
@@ -385,7 +406,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
         {hasSeasonal && (
           <div className="mt-3 flex flex-col gap-1.5">
             <label htmlFor="season" className="text-sm font-semibold text-foreground font-heading">
-              {t.admin.season}
+              Temporada
             </label>
             <select
               id="season"
@@ -393,10 +414,10 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
               onChange={(e) => setSeason(e.target.value as SeasonValue)}
               className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow max-w-xs"
             >
-              <option value="spring">{t.admin.seasonSpring}</option>
-              <option value="summer">{t.admin.seasonSummer}</option>
-              <option value="fall">{t.admin.seasonFall}</option>
-              <option value="winter">{t.admin.seasonWinter}</option>
+              <option value="spring">Primavera</option>
+              <option value="summer">Verano</option>
+              <option value="fall">Otoño</option>
+              <option value="winter">Invierno</option>
             </select>
           </div>
         )}
@@ -405,14 +426,9 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
       {/* Enabled toggle */}
       <div>
         <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={enabled}
-            onChange={(e) => setEnabled(e.target.checked)}
-            className="w-4 h-4 rounded accent-ukiyo-navy"
-          />
+          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="w-4 h-4 rounded accent-ukiyo-navy" />
           <span className="text-sm font-semibold text-foreground font-heading">
-            {enabled ? t.admin.enabled : t.admin.disabled}
+            {enabled ? "Activado" : "Desactivado"}
           </span>
         </label>
       </div>
@@ -429,7 +445,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
           disabled={saving || uploading}
           className="rounded-xl bg-ukiyo-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading disabled:opacity-50"
         >
-          {saving ? t.admin.saving : t.admin.save}
+          {saving ? "Guardando..." : "Guardar"}
         </button>
         <button
           type="button"
@@ -437,7 +453,7 @@ export default function AdminProductForm({ product, onSave, onCancel }: AdminPro
           disabled={saving}
           className="rounded-xl border border-border-color bg-background px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-wood-light transition-colors font-heading"
         >
-          {t.admin.cancel}
+          Cancelar
         </button>
       </div>
     </form>

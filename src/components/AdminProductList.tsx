@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { useLanguage } from "@/i18n/LanguageContext";
 import type { ProductWithTags, ProductType } from "@/lib/database.types";
 
 interface AdminProductListProps {
@@ -23,35 +22,45 @@ const TYPE_COLORS: Record<ProductType, string> = {
   otros: "bg-gray-400/20 text-gray-700",
 };
 
-function TagBadges({ product, t }: { product: ProductWithTags; t: ReturnType<typeof useLanguage>["t"] }) {
+const TYPE_LABELS: Record<ProductType, string> = {
+  mochis: "Mochis",
+  bebidas: "Bebidas",
+  postres: "Postres",
+  raciones: "Raciones",
+  salados: "Salados",
+  combos: "Combos",
+  otros: "Otros",
+};
+
+function TagBadges({ product }: { product: ProductWithTags }) {
   return (
     <div className="flex flex-wrap gap-1">
       {product.product_tags.map((tag) => {
         if (tag.tag_name === "nuevo") {
           return (
             <span key={tag.id} className="inline-flex items-center rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-bold text-white">
-              {t.admin.tagNuevo}
+              Nuevo
             </span>
           );
         }
         if (tag.tag_name === "popular") {
           return (
             <span key={tag.id} className="inline-flex items-center rounded-full bg-sakura-pink px-2 py-0.5 text-[10px] font-bold text-foreground">
-              {t.admin.tagPopular}
+              Popular
             </span>
           );
         }
         if (tag.tag_name === "bestSeller") {
           return (
             <span key={tag.id} className="inline-flex items-center rounded-full bg-ukiyo-navy/90 px-2 py-0.5 text-[10px] font-bold text-white">
-              {t.admin.tagBestSeller}
+              Best Seller
             </span>
           );
         }
         if (tag.tag_name === "seasonal") {
           return (
             <span key={tag.id} className="seasonal-badge text-[10px]">
-              {t.admin.tagSeasonal}
+              De temporada
               {tag.season && ` (${tag.season})`}
             </span>
           );
@@ -63,7 +72,6 @@ function TagBadges({ product, t }: { product: ProductWithTags; t: ReturnType<typ
 }
 
 export default function AdminProductList({ products, onEdit, onDelete, onAdd, onToggleEnabled }: AdminProductListProps) {
-  const { t, locale } = useLanguage();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
@@ -86,27 +94,17 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
     setConfirmId(null);
   };
 
-  const typeLabels: Record<ProductType, string> = {
-    mochis: t.admin.typeMochis,
-    bebidas: t.admin.typeBebidas,
-    postres: t.admin.typePostres,
-    raciones: t.admin.typeRaciones,
-    salados: t.admin.typeSalados,
-    combos: t.admin.typeCombos,
-    otros: t.admin.typeOtros,
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-foreground font-heading">
-          {t.admin.productsTitle}
+          Gestionar Productos
         </h2>
         <button
           onClick={onAdd}
           className="rounded-xl bg-ukiyo-navy px-4 py-2 text-sm font-semibold text-white hover:bg-primary-hover transition-colors font-heading"
         >
-          + {t.admin.addProduct}
+          + Añadir Producto
         </button>
       </div>
 
@@ -117,9 +115,9 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
           onChange={(e) => setTypeFilter(e.target.value as ProductType | "all")}
           className="rounded-xl border border-border-color bg-background px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
         >
-          <option value="all">{t.admin.allTypes}</option>
-          {(Object.keys(typeLabels) as ProductType[]).map((type) => (
-            <option key={type} value={type}>{typeLabels[type]}</option>
+          <option value="all">Todos los tipos</option>
+          {(Object.keys(TYPE_LABELS) as ProductType[]).map((type) => (
+            <option key={type} value={type}>{TYPE_LABELS[type]}</option>
           ))}
         </select>
       </div>
@@ -127,7 +125,7 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12 text-text-secondary">
           <p className="text-4xl mb-3">📦</p>
-          <p>{t.admin.noProducts}</p>
+          <p>No hay productos. Añade el primero.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -141,7 +139,7 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
                 {product.image_url ? (
                   <Image
                     src={product.image_url}
-                    alt={locale === "ja" && product.title_ja ? product.title_ja : product.title_es}
+                    alt={product.title_es}
                     fill
                     className="object-cover"
                     sizes="56px"
@@ -158,20 +156,20 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm">{product.emoji}</span>
                   <h3 className="text-sm font-bold text-foreground font-heading truncate">
-                    {locale === "ja" && product.title_ja ? product.title_ja : product.title_es}
+                    {product.title_es}
                   </h3>
                   <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${TYPE_COLORS[product.type]}`}>
-                    {typeLabels[product.type]}
+                    {TYPE_LABELS[product.type]}
                   </span>
-                  <TagBadges product={product} t={t} />
+                  <TagBadges product={product} />
                   {!product.enabled && (
                     <span className="inline-flex items-center rounded-full bg-gray-400/80 px-2 py-0.5 text-[10px] font-bold text-white">
-                      {t.admin.disabled}
+                      Desactivado
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-text-secondary mt-0.5 truncate">
-                  {locale === "ja" && product.description_ja ? product.description_ja : product.description_es}
+                  {product.description_es}
                 </p>
               </div>
 
@@ -192,13 +190,13 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
                   disabled={togglingId === product.id}
                   className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors font-heading disabled:opacity-50 ${product.enabled ? "bg-gray-400/10 text-gray-600 hover:bg-gray-400/20" : "bg-green-500/10 text-green-700 hover:bg-green-500/20"}`}
                 >
-                  {togglingId === product.id ? "..." : product.enabled ? t.admin.disableProduct : t.admin.enableProduct}
+                  {togglingId === product.id ? "..." : product.enabled ? "Desactivar" : "Activar"}
                 </button>
                 <button
                   onClick={() => onEdit(product)}
                   className="rounded-lg bg-ukiyo-navy/10 px-3 py-1.5 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading"
                 >
-                  {t.admin.editProduct}
+                  Editar
                 </button>
                 {confirmId === product.id ? (
                   <div className="flex gap-1">
@@ -207,13 +205,13 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
                       disabled={deletingId === product.id}
                       className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 transition-colors font-heading disabled:opacity-50"
                     >
-                      {deletingId === product.id ? "..." : t.admin.deleteProduct}
+                      {deletingId === product.id ? "..." : "Eliminar"}
                     </button>
                     <button
                       onClick={() => setConfirmId(null)}
                       className="rounded-lg bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-wood-light transition-colors font-heading border border-border-color"
                     >
-                      {t.admin.cancel}
+                      Cancelar
                     </button>
                   </div>
                 ) : (
@@ -221,7 +219,7 @@ export default function AdminProductList({ products, onEdit, onDelete, onAdd, on
                     onClick={() => setConfirmId(product.id)}
                     className="rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-500/20 transition-colors font-heading"
                   >
-                    {t.admin.deleteProduct}
+                    Eliminar
                   </button>
                 )}
               </div>
