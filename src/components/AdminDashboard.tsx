@@ -4,34 +4,55 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
-import { fetchMochis, createMochi, updateMochi, deleteMochi, deleteMochiImage, toggleMochiEnabled } from "@/lib/mochis";
-import type { MochiWithTags, TagName, SeasonValue } from "@/lib/database.types";
-import AdminMochiList from "./AdminMochiList";
-import AdminMochiForm from "./AdminMochiForm";
+import {
+  fetchProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  deleteProductImage,
+  toggleProductEnabled,
+  fetchCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  toggleCategoryEnabled,
+} from "@/lib/products";
+import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue } from "@/lib/database.types";
+import AdminProductList from "./AdminProductList";
+import AdminProductForm from "./AdminProductForm";
+import AdminCategoryList from "./AdminCategoryList";
+import AdminCategoryForm from "./AdminCategoryForm";
 
 interface AdminDashboardProps {
   email: string;
   onLogout: () => void;
 }
 
+type Section = "products" | "categories";
 type View = "list" | "add" | "edit";
 
 export default function AdminDashboard({ email, onLogout }: AdminDashboardProps) {
   const { t } = useLanguage();
-  const [mochis, setMochis] = useState<MochiWithTags[]>([]);
+  const [products, setProducts] = useState<ProductWithTags[]>([]);
+  const [categories, setCategories] = useState<MenuCategoryRow[]>([]);
   const [loading, setLoading] = useState(supabaseConfigured);
+  const [section, setSection] = useState<Section>("products");
   const [view, setView] = useState<View>("list");
-  const [editingMochi, setEditingMochi] = useState<MochiWithTags | null>(null);
+  const [editingProduct, setEditingProduct] = useState<ProductWithTags | null>(null);
+  const [editingCategory, setEditingCategory] = useState<MenuCategoryRow | null>(null);
 
   useEffect(() => {
     if (!supabaseConfigured) return;
     let cancelled = false;
-    fetchMochis(true).then((data) => {
-      if (!cancelled) {
-        setMochis(data);
-        setLoading(false);
+    Promise.all([fetchProducts({ includeDisabled: true }), fetchCategories(true)]).then(
+      ([prodData, catData]) => {
+        if (!cancelled) {
+          setProducts(prodData);
+          setCategories(catData);
+          setLoading(false);
+        }
       }
-    });
+    );
     return () => { cancelled = true; };
   }, []);
 
@@ -40,38 +61,40 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     onLogout();
   };
 
-  const handleAdd = () => {
-    setEditingMochi(null);
+  // ─── Product handlers ────────────────────────────
+
+  const handleAddProduct = () => {
+    setEditingProduct(null);
     setView("add");
   };
 
-  const handleEdit = (mochi: MochiWithTags) => {
-    setEditingMochi(mochi);
+  const handleEditProduct = (product: ProductWithTags) => {
+    setEditingProduct(product);
     setView("edit");
   };
 
-  const handleDelete = async (id: string) => {
-    const mochi = mochis.find((m) => m.id === id);
-    if (!mochi) return;
+  const handleDeleteProduct = async (id: string) => {
+    const product = products.find((p) => p.id === id);
+    if (!product) return;
 
-    const success = await deleteMochi(id);
+    const success = await deleteProduct(id);
     if (success) {
-      // Clean up image from storage if it's a Supabase URL
-      if (mochi.image_url.includes("supabase.co")) {
-        await deleteMochiImage(mochi.image_url);
+      if (product.image_url.includes("supabase.co")) {
+        await deleteProductImage(product.image_url);
       }
-      setMochis((prev) => prev.filter((m) => m.id !== id));
+      setProducts((prev) => prev.filter((p) => p.id !== id));
     }
   };
 
-  const handleToggleEnabled = async (id: string, enabled: boolean) => {
-    const success = await toggleMochiEnabled(id, enabled);
+  const handleToggleProduct = async (id: string, enabled: boolean) => {
+    const success = await toggleProductEnabled(id, enabled);
     if (success) {
-      setMochis((prev) => prev.map((m) => (m.id === id ? { ...m, enabled } : m)));
+      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, enabled } : p)));
     }
   };
 
-  const handleSave = async (data: {
+  const handleSaveProduct = async (data: {
+    type: ProductType;
     title_es: string;
     title_ja: string;
     description_es: string;
@@ -81,33 +104,91 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     emoji: string;
     display_order: number;
     enabled: boolean;
+    hot: boolean;
+    price_modifier: string | null;
     tags: { tag_name: TagName; season?: SeasonValue | null }[];
   }) => {
-    if (view === "edit" && editingMochi) {
-      // If image changed and old was from Supabase, clean up
+    if (view === "edit" && editingProduct) {
       if (
-        editingMochi.image_url !== data.image_url &&
-        editingMochi.image_url.includes("supabase.co")
+        editingProduct.image_url !== data.image_url &&
+        editingProduct.image_url.includes("supabase.co")
       ) {
-        await deleteMochiImage(editingMochi.image_url);
+        await deleteProductImage(editingProduct.image_url);
       }
-      const updated = await updateMochi(editingMochi.id, data);
+      const updated = await updateProduct(editingProduct.id, data);
       if (updated) {
-        setMochis((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
+        setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
       }
     } else {
-      const created = await createMochi(data);
+      const created = await createProduct(data);
       if (created) {
-        setMochis((prev) => [...prev, created].sort((a, b) => a.display_order - b.display_order));
+        setProducts((prev) => [...prev, created].sort((a, b) => a.display_order - b.display_order));
       }
     }
     setView("list");
-    setEditingMochi(null);
+    setEditingProduct(null);
+  };
+
+  // ─── Category handlers ───────────────────────────
+
+  const handleAddCategory = () => {
+    setEditingCategory(null);
+    setView("add");
+  };
+
+  const handleEditCategory = (cat: MenuCategoryRow) => {
+    setEditingCategory(cat);
+    setView("edit");
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    const success = await deleteCategory(id);
+    if (success) {
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+    }
+  };
+
+  const handleToggleCategory = async (id: string, enabled: boolean) => {
+    const success = await toggleCategoryEnabled(id, enabled);
+    if (success) {
+      setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, enabled } : c)));
+    }
+  };
+
+  const handleSaveCategory = async (data: {
+    name_es: string;
+    name_ja: string;
+    emoji: string;
+    display_order: number;
+    enabled: boolean;
+    product_types: ProductType[];
+  }) => {
+    if (view === "edit" && editingCategory) {
+      const updated = await updateCategory(editingCategory.id, data);
+      if (updated) {
+        setCategories((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+      }
+    } else {
+      const created = await createCategory(data);
+      if (created) {
+        setCategories((prev) => [...prev, created].sort((a, b) => a.display_order - b.display_order));
+      }
+    }
+    setView("list");
+    setEditingCategory(null);
   };
 
   const handleCancel = () => {
     setView("list");
-    setEditingMochi(null);
+    setEditingProduct(null);
+    setEditingCategory(null);
+  };
+
+  const switchSection = (s: Section) => {
+    setSection(s);
+    setView("list");
+    setEditingProduct(null);
+    setEditingCategory(null);
   };
 
   return (
@@ -138,6 +219,25 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
         </div>
       </div>
 
+      {/* Section Tabs */}
+      <div className="border-b border-border-color bg-wood-light/50">
+        <div className="mx-auto max-w-5xl px-4 flex gap-1">
+          {(["products", "categories"] as Section[]).map((s) => (
+            <button
+              key={s}
+              onClick={() => switchSection(s)}
+              className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
+                section === s
+                  ? "border-ukiyo-navy text-foreground"
+                  : "border-transparent text-text-secondary hover:text-foreground"
+              }`}
+            >
+              {s === "products" ? t.admin.tabProducts : t.admin.tabCategories}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Content */}
       <div className="mx-auto max-w-5xl px-4 py-8">
         {loading ? (
@@ -145,13 +245,23 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ukiyo-navy border-t-transparent" />
           </div>
         ) : view === "list" ? (
-          <AdminMochiList
-            mochis={mochis}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onAdd={handleAdd}
-            onToggleEnabled={handleToggleEnabled}
-          />
+          section === "products" ? (
+            <AdminProductList
+              products={products}
+              onEdit={handleEditProduct}
+              onDelete={handleDeleteProduct}
+              onAdd={handleAddProduct}
+              onToggleEnabled={handleToggleProduct}
+            />
+          ) : (
+            <AdminCategoryList
+              categories={categories}
+              onEdit={handleEditCategory}
+              onDelete={handleDeleteCategory}
+              onAdd={handleAddCategory}
+              onToggleEnabled={handleToggleCategory}
+            />
+          )
         ) : (
           <div>
             <button
@@ -161,11 +271,19 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
               ← {t.admin.back}
             </button>
             <div className="rounded-2xl bg-wood-light p-6 shadow-cozy">
-              <AdminMochiForm
-                mochi={view === "edit" ? editingMochi : null}
-                onSave={handleSave}
-                onCancel={handleCancel}
-              />
+              {section === "products" ? (
+                <AdminProductForm
+                  product={view === "edit" ? editingProduct : null}
+                  onSave={handleSaveProduct}
+                  onCancel={handleCancel}
+                />
+              ) : (
+                <AdminCategoryForm
+                  category={view === "edit" ? editingCategory : null}
+                  onSave={handleSaveCategory}
+                  onCancel={handleCancel}
+                />
+              )}
             </div>
           </div>
         )}

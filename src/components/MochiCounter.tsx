@@ -23,18 +23,20 @@ interface MochiProduct {
   season?: Season;
 }
 
+const STORAGE_BASE = "https://jbpckrdwxzouwfiuggpw.supabase.co/storage/v1/object/public/images/mochis";
+
 const fallbackMochiImages: MochiImageData[] = [
-  { image: "/images/mochi-oreo.jpg", emoji: "🍪" },
-  { image: "/images/mochi-nutella.jpg", emoji: "🍫" },
-  { image: "/images/mochi-anko.jpg", emoji: "🫘" },
-  { image: "/images/mochi-matcha.jpg", emoji: "🍵" },
-  { image: "/images/mochi-mango.jpg", emoji: "🥭" },
-  { image: "/images/mochi-lemon-pie.jpg", emoji: "🍋" },
-  { image: "/images/mochi-choco-coco.jpg", emoji: "🥥" },
-  { image: "/images/mochi-maracuya.jpg", emoji: "🍈" },
-  { image: "/images/mochi-tarta-queso-fresa.jpg", emoji: "🍓" },
-  { image: "/images/mochi-pumpkin.jpg", emoji: "🎃", seasonal: true, season: "autumn" },
-  { image: "/images/mochi-raspberry.jpg", emoji: "🫐", seasonal: true, season: "winter" },
+  { image: `${STORAGE_BASE}/mochi-oreo.jpg`, emoji: "🍪" },
+  { image: `${STORAGE_BASE}/mochi-nutella.jpg`, emoji: "🍫" },
+  { image: `${STORAGE_BASE}/mochi-anko.jpg`, emoji: "🫘" },
+  { image: `${STORAGE_BASE}/mochi-matcha.jpg`, emoji: "🍵" },
+  { image: `${STORAGE_BASE}/mochi-mango.jpg`, emoji: "🥭" },
+  { image: `${STORAGE_BASE}/mochi-lemon-pie.jpg`, emoji: "🍋" },
+  { image: `${STORAGE_BASE}/mochi-choco-coco.jpg`, emoji: "🥥" },
+  { image: `${STORAGE_BASE}/mochi-maracuya.jpg`, emoji: "🍈" },
+  { image: `${STORAGE_BASE}/mochi-tarta-queso-fresa.jpg`, emoji: "🍓" },
+  { image: `${STORAGE_BASE}/mochi-pumpkin.jpg`, emoji: "🎃", seasonal: true, season: "autumn" },
+  { image: `${STORAGE_BASE}/mochi-raspberry.jpg`, emoji: "🫐", seasonal: true, season: "winter" },
 ];
 
 // Map database season values to component season values
@@ -146,11 +148,11 @@ export default function MochiCounter() {
   const mochiProducts: MochiProduct[] = useMemo(() => {
     if (hasData) {
       return dbMochis.map((m) => {
-        const seasonalTag = m.mochi_tags.find((tag) => tag.tag_name === "seasonal");
+        const seasonalTag = m.product_tags.find((tag) => tag.tag_name === "seasonal");
         const isSeasonal = !!seasonalTag;
         return {
-          name: locale === "ja" ? m.title_ja : m.title_es,
-          description: locale === "ja" ? m.description_ja : m.description_es,
+          name: locale === "ja" && m.title_ja ? m.title_ja : m.title_es,
+          description: locale === "ja" && m.description_ja ? m.description_ja : m.description_es,
           image: m.image_url,
           emoji: m.emoji,
           seasonal: isSeasonal,

@@ -301,66 +301,8 @@ export const translations: Record<Locale, Translations> = {
           imageAlt: "Bocadillo de pernil artesanal",
         },
       ],
-      categories: [
-        {
-          id: "mochis",
-          name: "Mochis & Sweet",
-          emoji: "🌸",
-          items: [
-            { name: "Mochi de Oreo", price: "3,50€", description: "Crujiente galleta Oreo envuelta en suave mochi artesanal", tag: "bestSeller" },
-            { name: "Mochi de Nutella", price: "3,50€", description: "Nutella cremosa en un mochi suave y esponjoso", tag: "bestSeller" },
-            { name: "Mochi de Matcha", price: "3,50€", description: "Auténtico matcha japonés en un mochi cremoso", tag: "popular" },
-            { name: "Mochi de Maracuyá", price: "3,50€", description: "Explosión tropical de maracuyá fresco" },
-            { name: "Mochi de Fresa", price: "3,50€", description: "Fresa natural en mochi artesanal" },
-            { name: "Mochi de Chocolate", price: "3,50€", description: "Chocolate belga intenso en mochi suave" },
-            { name: "Mochi de Mango", price: "3,50€", description: "Mango maduro en mochi esponjoso" },
-            { name: "Mochi de Lotus Biscoff", price: "4,00€", description: "Crema de galleta Lotus en mochi crujiente", priceModifier: "+0,50€", tag: "nuevo" },
-            { name: "Mochi de Frambuesa", price: "3,50€", description: "Frambuesas frescas en un mochi artesanal suave y cremoso", tag: "seasonal" },
-          ],
-        },
-        {
-          id: "drinks",
-          name: "Bubble Tea & Drinks",
-          emoji: "🧋",
-          items: [
-            { name: "Bubble Tea Clásico", price: "5,00€", description: "Té negro con leche, perlas de tapioca y azúcar morena", tag: "bestSeller" },
-            { name: "Taro Bubble Tea", price: "5,50€", description: "Crema de taro con perlas de tapioca y leche de coco" },
-            { name: "Matcha Bubble Tea", price: "5,50€", description: "Matcha frío con leche de avena y perlas de mango" },
-            { name: "Fresa Bubble Tea", price: "5,00€", description: "Fresa natural con leche y boba de fresa" },
-            { name: "Café Latte Ukiyo", price: "3,50€", description: "Espresso suave con leche cremosa y un toque de vainilla", hot: true },
-            { name: "Matcha Latte", price: "4,00€", description: "Té matcha ceremonial japonés con leche espumosa", hot: true },
-            { name: "Espresso / Americano", price: "2,50€", description: "Café de especialidad de tueste medio, intenso y aromático", hot: true },
-            { name: "Cappuccino", price: "3,00€", description: "Espresso con leche espumosa y un toque de cacao", hot: true },
-            { name: "Chai Latte", price: "4,00€", description: "Té chai especiado con leche cremosa y canela", hot: true, tag: "popular" },
-          ],
-        },
-        {
-          id: "savory",
-          name: "Brunch & Salado",
-          emoji: "🥯",
-          items: [
-            { name: "Bocadillo de Pernil", price: "7,50€", description: "Jamón asado artesanal en pan crujiente recién horneado", tag: "nuevo" },
-            { name: "Tostada de Aguacate", price: "6,50€", description: "Aguacate fresco sobre pan artesanal con semillas" },
-            { name: "Croissant de Jamón y Queso", price: "4,50€", description: "Croissant mantequilla con jamón y queso fundido" },
-            { name: "Bagel de Salmón", price: "7,00€", description: "Salmón ahumado con queso crema y alcaparras", tag: "nuevo" },
-            { name: "Trío de Baos", price: "7,50€", description: "Tres baos al vapor rellenos de cerdo, pollo y vegetales con salsa hoisin", tag: "popular" },
-            { name: "Tosta de Salmón", price: "7,00€", description: "Salmón ahumado sobre tosta crujiente con queso crema y eneldo", tag: "nuevo" },
-            { name: "Gyozas Variadas", price: "6,50€", description: "Mix de gyozas de pollo, gambas y verduras a la plancha" },
-            { name: "Tequeños", price: "5,50€", description: "Palitos crujientes de masa rellenos de queso fundido con salsa de guayaba", tag: "nuevo" },
-          ],
-        },
-        {
-          id: "tapas",
-          name: "Tapas",
-          emoji: "🥟",
-          items: [
-            { name: "Gyozas de Pollo", price: "6,50€", description: "Empanadillas japonesas de pollo a la plancha", tag: "popular" },
-            { name: "Edamame con Sal", price: "4,00€", description: "Vainas de soja al vapor con sal marina" },
-            { name: "Takoyaki", price: "6,00€", description: "Bolitas crujientes de pulpo estilo Osaka", tag: "nuevo" },
-            { name: "Dim Sum Variado", price: "7,50€", description: "Selección de dim sum al vapor y frito" },
-          ],
-        },
-      ],
+      noProducts: "No hay productos en esta categoría",
+      loadingProducts: "Cargando productos...",
     },
 
     // Menu Slider
@@ -379,7 +321,7 @@ export const translations: Record<Locale, Translations> = {
         {
           name: "Matcha Latte",
           description: "Té matcha ceremonial japonés con leche espumosa. Un clásico que enamora.",
-          image: "/images/mochi-matcha.jpg",
+          image: "https://jbpckrdwxzouwfiuggpw.supabase.co/storage/v1/object/public/images/mochis/mochi-matcha.jpg",
           emoji: "🍵",
           imageAlt: "Matcha latte con té ceremonial japonés",
         },
@@ -494,6 +436,37 @@ export const translations: Record<Locale, Translations> = {
       editMochi: "Editar Mochi",
       deleteMochi: "Eliminar",
       confirmDelete: "¿Estás seguro de que quieres eliminar este mochi?",
+      // Product management
+      tabProducts: "Productos",
+      tabCategories: "Categorías",
+      productsTitle: "Gestionar Productos",
+      addProduct: "Añadir Producto",
+      editProduct: "Editar Producto",
+      deleteProduct: "Eliminar",
+      noProducts: "No hay productos. Añade el primero.",
+      productType: "Tipo de producto",
+      hotDrink: "Bebida caliente",
+      priceModifier: "Modificador de precio",
+      tagBestSeller: "Best Seller",
+      typeMochis: "Mochis",
+      typeBebidas: "Bebidas",
+      typePostres: "Postres",
+      typeRaciones: "Raciones",
+      typeSalados: "Salados",
+      typeCombos: "Combos",
+      typeOtros: "Otros",
+      allTypes: "Todos los tipos",
+      enableProduct: "Activar",
+      disableProduct: "Desactivar",
+      // Category management
+      categoriesTitle: "Gestionar Categorías",
+      addCategory: "Añadir Categoría",
+      editCategory: "Editar Categoría",
+      deleteCategory: "Eliminar",
+      noCategories: "No hay categorías. Añade la primera.",
+      categoryNameEs: "Nombre (Español)",
+      categoryNameJa: "Nombre (Japonés)",
+      categoryTypes: "Tipos de producto",
       cancel: "Cancelar",
       save: "Guardar",
       saving: "Guardando...",
@@ -828,66 +801,8 @@ export const translations: Record<Locale, Translations> = {
           imageAlt: "手作りペルニルサンドイッチ",
         },
       ],
-      categories: [
-        {
-          id: "mochis",
-          name: "餅 & スイーツ",
-          emoji: "🌸",
-          items: [
-            { name: "オレオ餅", price: "3,50€", description: "サクサクのオレオクッキーを柔らかい手作り餅で包みました", tag: "bestSeller" },
-            { name: "ヌテラ餅", price: "3,50€", description: "クリーミーなヌテラを柔らかいもちもち餅で", tag: "bestSeller" },
-            { name: "抹茶餅", price: "3,50€", description: "本格的な日本の抹茶をクリーミーな餅で", tag: "popular" },
-            { name: "パッションフルーツ餅", price: "3,50€", description: "フレッシュなパッションフルーツの爽やかな味わい" },
-            { name: "いちご餅", price: "3,50€", description: "天然いちごの手作り餅" },
-            { name: "チョコレート餅", price: "3,50€", description: "濃厚なベルギーチョコレートの柔らか餅" },
-            { name: "マンゴー餅", price: "3,50€", description: "完熟マンゴーのふわふわ餅" },
-            { name: "ロータスビスコフ餅", price: "4,00€", description: "ロータスクッキークリームのサクサク餅", priceModifier: "+0,50€", tag: "nuevo" },
-            { name: "ラズベリー餅", price: "3,50€", description: "フレッシュラズベリーの柔らかくクリーミーな手作り餅", tag: "seasonal" },
-          ],
-        },
-        {
-          id: "drinks",
-          name: "バブルティー & ドリンク",
-          emoji: "🧋",
-          items: [
-            { name: "クラシックバブルティー", price: "5,00€", description: "紅茶とミルク、タピオカパール、黒糖", tag: "bestSeller" },
-            { name: "タロバブルティー", price: "5,50€", description: "タロクリームとタピオカパール、ココナッツミルク" },
-            { name: "抹茶バブルティー", price: "5,50€", description: "アイス抹茶とオーツミルク、マンゴーパール" },
-            { name: "いちごバブルティー", price: "5,00€", description: "フレッシュいちごとミルク、いちごボバ" },
-            { name: "Ukiyo カフェラテ", price: "3,50€", description: "なめらかなエスプレッソにクリーミーなミルクとバニラの香り", hot: true },
-            { name: "抹茶ラテ", price: "4,00€", description: "日本の茶道用抹茶とふわふわのミルク", hot: true },
-            { name: "エスプレッソ / アメリカーノ", price: "2,50€", description: "ミディアムローストのスペシャルティコーヒー、力強い香り", hot: true },
-            { name: "カプチーノ", price: "3,00€", description: "エスプレッソにふわふわミルクとカカオの香り", hot: true },
-            { name: "チャイラテ", price: "4,00€", description: "スパイスの効いたチャイティーにクリーミーなミルクとシナモン", hot: true, tag: "popular" },
-          ],
-        },
-        {
-          id: "savory",
-          name: "ブランチ & 食事",
-          emoji: "🥯",
-          items: [
-            { name: "ペルニルサンド", price: "7,50€", description: "焼き上げハムの手作りサンドイッチ", tag: "nuevo" },
-            { name: "アボカドトースト", price: "6,50€", description: "新鮮なアボカドと種子のアルチザンパン" },
-            { name: "ハムチーズクロワッサン", price: "4,50€", description: "バタークロワッサンにハムと溶けるチーズ" },
-            { name: "サーモンベーグル", price: "7,00€", description: "スモークサーモンとクリームチーズ、ケッパー", tag: "nuevo" },
-            { name: "バオ三種盛り", price: "7,50€", description: "豚肉、鶏肉、野菜の3種類の蒸しバオにホイシンソース添え", tag: "popular" },
-            { name: "サーモントースト", price: "7,00€", description: "スモークサーモンのカリカリトーストにクリームチーズとディル", tag: "nuevo" },
-            { name: "ミックス餃子", price: "6,50€", description: "チキン、エビ、野菜の鉄板焼き餃子ミックス" },
-            { name: "テケーニョス", price: "5,50€", description: "チーズたっぷりのカリカリ揚げスティック、グアバソース添え", tag: "nuevo" },
-          ],
-        },
-        {
-          id: "tapas",
-          name: "タパス",
-          emoji: "🥟",
-          items: [
-            { name: "チキン餃子", price: "6,50€", description: "鉄板焼きチキン餃子", tag: "popular" },
-            { name: "枝豆塩味", price: "4,00€", description: "蒸し枝豆の海塩添え" },
-            { name: "たこ焼き", price: "6,00€", description: "大阪スタイルのカリカリたこ焼き", tag: "nuevo" },
-            { name: "点心盛り合わせ", price: "7,50€", description: "蒸しと揚げの点心セレクション" },
-          ],
-        },
-      ],
+      noProducts: "このカテゴリに商品がありません",
+      loadingProducts: "商品を読み込み中...",
     },
 
     // Menu Slider
@@ -906,7 +821,7 @@ export const translations: Record<Locale, Translations> = {
         {
           name: "抹茶ラテ",
           description: "日本の茶道用抹茶とふわふわのミルク。定番の一杯。",
-          image: "/images/mochi-matcha.jpg",
+          image: "https://jbpckrdwxzouwfiuggpw.supabase.co/storage/v1/object/public/images/mochis/mochi-matcha.jpg",
           emoji: "🍵",
           imageAlt: "茶道用抹茶ラテ",
         },
@@ -1021,6 +936,37 @@ export const translations: Record<Locale, Translations> = {
       editMochi: "餅を編集",
       deleteMochi: "削除",
       confirmDelete: "この餅を削除してもよろしいですか？",
+      // Product management
+      tabProducts: "商品",
+      tabCategories: "カテゴリ",
+      productsTitle: "商品を管理",
+      addProduct: "商品を追加",
+      editProduct: "商品を編集",
+      deleteProduct: "削除",
+      noProducts: "商品がありません。最初の商品を追加してください。",
+      productType: "商品タイプ",
+      hotDrink: "ホットドリンク",
+      priceModifier: "価格修正",
+      tagBestSeller: "ベストセラー",
+      typeMochis: "餅",
+      typeBebidas: "ドリンク",
+      typePostres: "デザート",
+      typeRaciones: "タパス",
+      typeSalados: "食事",
+      typeCombos: "コンボ",
+      typeOtros: "その他",
+      allTypes: "すべてのタイプ",
+      enableProduct: "有効にする",
+      disableProduct: "無効にする",
+      // Category management
+      categoriesTitle: "カテゴリを管理",
+      addCategory: "カテゴリを追加",
+      editCategory: "カテゴリを編集",
+      deleteCategory: "削除",
+      noCategories: "カテゴリがありません。最初のカテゴリを追加してください。",
+      categoryNameEs: "名前（スペイン語）",
+      categoryNameJa: "名前（日本語）",
+      categoryTypes: "商品タイプ",
       cancel: "キャンセル",
       save: "保存",
       saving: "保存中...",
@@ -1075,22 +1021,6 @@ interface MenuHighlight {
   tag: string;
   image: string;
   imageAlt: string;
-}
-
-interface MenuItem {
-  name: string;
-  price: string;
-  description?: string;
-  tag?: string;
-  priceModifier?: string;
-  hot?: boolean;
-}
-
-interface MenuCategory {
-  id: string;
-  name: string;
-  emoji: string;
-  items: MenuItem[];
 }
 
 interface DrinkItem {
@@ -1194,7 +1124,8 @@ export interface Translations {
     seasonalHot: string;
     seasonalCold: string;
     highlights: MenuHighlight[];
-    categories: MenuCategory[];
+    noProducts: string;
+    loadingProducts: string;
   };
   footer: {
     brandDescription: string;
@@ -1287,6 +1218,35 @@ export interface Translations {
     editMochi: string;
     deleteMochi: string;
     confirmDelete: string;
+    tabProducts: string;
+    tabCategories: string;
+    productsTitle: string;
+    addProduct: string;
+    editProduct: string;
+    deleteProduct: string;
+    noProducts: string;
+    productType: string;
+    hotDrink: string;
+    priceModifier: string;
+    tagBestSeller: string;
+    typeMochis: string;
+    typeBebidas: string;
+    typePostres: string;
+    typeRaciones: string;
+    typeSalados: string;
+    typeCombos: string;
+    typeOtros: string;
+    allTypes: string;
+    enableProduct: string;
+    disableProduct: string;
+    categoriesTitle: string;
+    addCategory: string;
+    editCategory: string;
+    deleteCategory: string;
+    noCategories: string;
+    categoryNameEs: string;
+    categoryNameJa: string;
+    categoryTypes: string;
     cancel: string;
     save: string;
     saving: string;

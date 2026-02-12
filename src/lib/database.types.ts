@@ -1,8 +1,10 @@
-export type TagName = "nuevo" | "popular" | "seasonal";
+export type ProductType = "mochis" | "bebidas" | "postres" | "raciones" | "salados" | "combos" | "otros";
+export type TagName = "nuevo" | "popular" | "seasonal" | "bestSeller";
 export type SeasonValue = "spring" | "summer" | "fall" | "winter";
 
-export interface MochiRow {
+export interface ProductRow {
   id: string;
+  type: ProductType;
   title_es: string;
   title_ja: string;
   description_es: string;
@@ -12,17 +14,36 @@ export interface MochiRow {
   emoji: string;
   display_order: number;
   enabled: boolean;
+  hot: boolean;
+  price_modifier: string | null;
   created_at: string;
   updated_at: string;
 }
 
-export interface MochiTagRow {
+export interface ProductTagRow {
   id: string;
-  mochi_id: string;
+  product_id: string;
   tag_name: TagName;
   season: SeasonValue | null;
 }
 
-export interface MochiWithTags extends MochiRow {
-  mochi_tags: MochiTagRow[];
+export interface ProductWithTags extends ProductRow {
+  product_tags: ProductTagRow[];
 }
+
+export interface MenuCategoryRow {
+  id: string;
+  name_es: string;
+  name_ja: string;
+  emoji: string;
+  display_order: number;
+  enabled: boolean;
+  product_types: ProductType[];
+  created_at: string;
+  updated_at: string;
+}
+
+// Legacy aliases for gradual transition
+export type MochiRow = ProductRow;
+export type MochiTagRow = ProductTagRow;
+export type MochiWithTags = ProductWithTags;

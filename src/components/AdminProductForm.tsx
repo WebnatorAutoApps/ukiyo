@@ -3,12 +3,13 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { uploadMochiImage } from "@/lib/mochis";
-import type { MochiWithTags, TagName, SeasonValue } from "@/lib/database.types";
+import { uploadProductImage } from "@/lib/products";
+import type { ProductWithTags, ProductType, TagName, SeasonValue } from "@/lib/database.types";
 
-interface AdminMochiFormProps {
-  mochi?: MochiWithTags | null;
+interface AdminProductFormProps {
+  product?: ProductWithTags | null;
   onSave: (data: {
+    type: ProductType;
     title_es: string;
     title_ja: string;
     description_es: string;
@@ -18,39 +19,56 @@ interface AdminMochiFormProps {
     emoji: string;
     display_order: number;
     enabled: boolean;
+    hot: boolean;
+    price_modifier: string | null;
     tags: { tag_name: TagName; season?: SeasonValue | null }[];
   }) => Promise<void>;
   onCancel: () => void;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const PRODUCT_TYPES: ProductType[] = ["mochis", "bebidas", "postres", "raciones", "salados", "combos", "otros"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFormProps) {
+export default function AdminProductForm({ product, onSave, onCancel }: AdminProductFormProps) {
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [titleEs, setTitleEs] = useState(mochi?.title_es ?? "");
-  const [titleJa, setTitleJa] = useState(mochi?.title_ja ?? "");
-  const [descEs, setDescEs] = useState(mochi?.description_es ?? "");
-  const [descJa, setDescJa] = useState(mochi?.description_ja ?? "");
-  const [price, setPrice] = useState(mochi?.price ?? "3,50€");
-  const [emoji, setEmoji] = useState(mochi?.emoji ?? "🍡");
-  const [displayOrder, setDisplayOrder] = useState(mochi?.display_order ?? 0);
-  const [imageUrl, setImageUrl] = useState(mochi?.image_url ?? "");
-  const [enabled, setEnabled] = useState(mochi?.enabled ?? true);
+  const [type, setType] = useState<ProductType>(product?.type ?? "mochis");
+  const [titleEs, setTitleEs] = useState(product?.title_es ?? "");
+  const [titleJa, setTitleJa] = useState(product?.title_ja ?? "");
+  const [descEs, setDescEs] = useState(product?.description_es ?? "");
+  const [descJa, setDescJa] = useState(product?.description_ja ?? "");
+  const [price, setPrice] = useState(product?.price ?? "3,50€");
+  const [emoji, setEmoji] = useState(product?.emoji ?? "🍡");
+  const [displayOrder, setDisplayOrder] = useState(product?.display_order ?? 0);
+  const [imageUrl, setImageUrl] = useState(product?.image_url ?? "");
+  const [enabled, setEnabled] = useState(product?.enabled ?? true);
+  const [hot, setHot] = useState(product?.hot ?? false);
+  const [priceModifier, setPriceModifier] = useState(product?.price_modifier ?? "");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   // Tags
-  const existingTags = mochi?.mochi_tags ?? [];
+  const existingTags = product?.product_tags ?? [];
   const [hasNuevo, setHasNuevo] = useState(existingTags.some((t) => t.tag_name === "nuevo"));
   const [hasPopular, setHasPopular] = useState(existingTags.some((t) => t.tag_name === "popular"));
+  const [hasBestSeller, setHasBestSeller] = useState(existingTags.some((t) => t.tag_name === "bestSeller"));
   const [hasSeasonal, setHasSeasonal] = useState(existingTags.some((t) => t.tag_name === "seasonal"));
   const seasonalTag = existingTags.find((t) => t.tag_name === "seasonal");
   const [season, setSeason] = useState<SeasonValue>(seasonalTag?.season ?? "spring");
+
+  const typeLabels: Record<ProductType, string> = {
+    mochis: t.admin.typeMochis,
+    bebidas: t.admin.typeBebidas,
+    postres: t.admin.typePostres,
+    raciones: t.admin.typeRaciones,
+    salados: t.admin.typeSalados,
+    combos: t.admin.typeCombos,
+    otros: t.admin.typeOtros,
+  };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,7 +88,7 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
     setImagePreview(URL.createObjectURL(file));
     setUploading(true);
 
-    const url = await uploadMochiImage(file);
+    const url = await uploadProductImage(file);
     setUploading(false);
 
     if (url) {
@@ -85,24 +103,21 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
     e.preventDefault();
     setError("");
 
-    if (!titleEs.trim() || !titleJa.trim()) {
-      setError("Title is required in both languages");
-      return;
-    }
-
-    if (!imageUrl && !imagePreview) {
-      setError(t.admin.imageRequired);
+    if (!titleEs.trim()) {
+      setError("Title (ES) is required");
       return;
     }
 
     const tags: { tag_name: TagName; season?: SeasonValue | null }[] = [];
     if (hasNuevo) tags.push({ tag_name: "nuevo" });
     if (hasPopular) tags.push({ tag_name: "popular" });
+    if (hasBestSeller) tags.push({ tag_name: "bestSeller" });
     if (hasSeasonal) tags.push({ tag_name: "seasonal", season });
 
     setSaving(true);
     try {
       await onSave({
+        type,
         title_es: titleEs.trim(),
         title_ja: titleJa.trim(),
         description_es: descEs.trim(),
@@ -112,10 +127,12 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
         emoji: emoji.trim(),
         display_order: displayOrder,
         enabled,
+        hot,
+        price_modifier: priceModifier.trim() || null,
         tags,
       });
     } catch {
-      setError("Error saving mochi");
+      setError("Error saving product");
     } finally {
       setSaving(false);
     }
@@ -126,8 +143,25 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <h2 className="text-xl font-bold text-foreground font-heading">
-        {mochi ? t.admin.editMochi : t.admin.addMochi}
+        {product ? t.admin.editProduct : t.admin.addProduct}
       </h2>
+
+      {/* Product Type */}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="productType" className="text-sm font-semibold text-foreground font-heading">
+          {t.admin.productType}
+        </label>
+        <select
+          id="productType"
+          value={type}
+          onChange={(e) => setType(e.target.value as ProductType)}
+          className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow max-w-xs"
+        >
+          {PRODUCT_TYPES.map((pt) => (
+            <option key={pt} value={pt}>{typeLabels[pt]}</option>
+          ))}
+        </select>
+      </div>
 
       {/* Image upload */}
       <div>
@@ -193,8 +227,8 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
             type="text"
             value={titleJa}
             onChange={(e) => setTitleJa(e.target.value)}
+            placeholder={titleEs || undefined}
             className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
-            required
           />
         </div>
       </div>
@@ -227,8 +261,8 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
         </div>
       </div>
 
-      {/* Price, Emoji, Order */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Price, Emoji, Order, Price Modifier */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="price" className="text-sm font-semibold text-foreground font-heading">
             {t.admin.price}
@@ -265,6 +299,34 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
             className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
           />
         </div>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="priceModifier" className="text-sm font-semibold text-foreground font-heading">
+            {t.admin.priceModifier}
+          </label>
+          <input
+            id="priceModifier"
+            type="text"
+            value={priceModifier}
+            onChange={(e) => setPriceModifier(e.target.value)}
+            placeholder="+0,50€"
+            className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow"
+          />
+        </div>
+      </div>
+
+      {/* Hot drink toggle */}
+      <div>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={hot}
+            onChange={(e) => setHot(e.target.checked)}
+            className="w-4 h-4 rounded accent-ukiyo-navy"
+          />
+          <span className="text-sm font-semibold text-foreground font-heading">
+            {t.admin.hotDrink}
+          </span>
+        </label>
       </div>
 
       {/* Tags */}
@@ -293,6 +355,17 @@ export default function AdminMochiForm({ mochi, onSave, onCancel }: AdminMochiFo
             />
             <span className="inline-flex items-center rounded-full bg-sakura-pink px-2.5 py-0.5 text-[11px] font-bold text-foreground tracking-wide">
               {t.admin.tagPopular}
+            </span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={hasBestSeller}
+              onChange={(e) => setHasBestSeller(e.target.checked)}
+              className="w-4 h-4 rounded accent-ukiyo-navy"
+            />
+            <span className="inline-flex items-center rounded-full bg-ukiyo-navy/90 px-2.5 py-0.5 text-[11px] font-bold text-white tracking-wide">
+              {t.admin.tagBestSeller}
             </span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">

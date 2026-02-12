@@ -4,8 +4,9 @@ import Image from "next/image";
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useSeason } from "@/context/SeasonContext";
-import { useMochis } from "@/hooks/useMochis";
-import type { MochiWithTags } from "@/lib/database.types";
+import { useProducts } from "@/hooks/useProducts";
+import { useCategories } from "@/hooks/useCategories";
+import type { ProductWithTags } from "@/lib/database.types";
 
 function CherryBlossom({ index }: { index: number }) {
   const delays = [0, 1.2, 2.4, 0.8, 1.8, 3.0, 0.5, 2.0, 1.5, 3.5, 0.3, 2.8];
@@ -196,33 +197,42 @@ function MenuItemRow({
   );
 }
 
-// Convert database mochi to menu item format
-function mochiToMenuItem(mochi: MochiWithTags, locale: string): {
+// Convert database product to menu item format
+function productToMenuItem(product: ProductWithTags, locale: string): {
   name: string;
   price: string;
   description?: string;
   tag?: string;
   priceModifier?: string;
+  hot?: boolean;
 } {
-  const name = locale === "ja" ? mochi.title_ja : mochi.title_es;
-  const description = locale === "ja" ? mochi.description_ja : mochi.description_es;
+  const name = locale === "ja" && product.title_ja ? product.title_ja : product.title_es;
+  const description = locale === "ja" && product.description_ja ? product.description_ja : product.description_es;
 
   // Map tag: prioritize first tag found
   let tag: string | undefined;
-  for (const t of mochi.mochi_tags) {
+  for (const t of product.product_tags) {
     if (t.tag_name === "nuevo") { tag = "nuevo"; break; }
+    if (t.tag_name === "bestSeller") { tag = "bestSeller"; break; }
     if (t.tag_name === "popular") { tag = "popular"; break; }
     if (t.tag_name === "seasonal") { tag = "seasonal"; break; }
   }
 
-  return { name, price: mochi.price, description, tag };
+  return {
+    name,
+    price: product.price,
+    description,
+    tag,
+    priceModifier: product.price_modifier ?? undefined,
+    hot: product.hot || undefined,
+  };
 }
 
 // Map DB season values ("fall") to SeasonContext values ("autumn")
 const DB_SEASON_MAP: Record<string, string> = { spring: "spring", summer: "summer", fall: "autumn", winter: "winter" };
 
-function isVisibleInSeason(mochi: MochiWithTags, currentSeason: string): boolean {
-  const seasonalTag = mochi.mochi_tags.find((t) => t.tag_name === "seasonal");
+function isVisibleInSeason(product: ProductWithTags, currentSeason: string): boolean {
+  const seasonalTag = product.product_tags.find((t) => t.tag_name === "seasonal");
   if (!seasonalTag) return true;
   return DB_SEASON_MAP[seasonalTag.season ?? ""] === currentSeason;
 }
@@ -231,25 +241,34 @@ export default function NuestroMenu() {
   const { t, locale } = useLanguage();
   const { season } = useSeason();
   const [activeCategory, setActiveCategory] = useState(0);
-  const { mochis: dbMochis, loading: mochisLoading } = useMochis();
+  const { products: dbProducts, loading: productsLoading } = useProducts();
+  const { categories: dbCategories, loading: categoriesLoading } = useCategories();
 
-  // Build categories with Supabase mochis as source of truth for mochis category
-  // Filter out seasonal mochis that don't belong to the current season
-  const categories = useMemo(() => {
-    const translationCategories = t.menu.categories;
+  const isLoading = productsLoading || categoriesLoading;
 
-    return translationCategories.map((cat) => {
-      if (cat.id === "mochis") {
-        const mochiItems = dbMochis
-          .filter((m) => isVisibleInSeason(m, season))
-          .map((m) => mochiToMenuItem(m, locale));
-        return { ...cat, items: mochiItems };
-      }
-      return cat;
-    });
-  }, [t.menu.categories, dbMochis, locale, season]);
+  // Build category tabs from DB
+  const categoryTabs = useMemo(() => {
+    return dbCategories.map((cat) => ({
+      id: cat.id,
+      name: locale === "ja" && cat.name_ja ? cat.name_ja : cat.name_es,
+      emoji: cat.emoji,
+      productTypes: cat.product_types,
+    }));
+  }, [dbCategories, locale]);
 
-  const currentCategory = categories[activeCategory];
+  // For each category, get filtered products
+  const currentCategory = categoryTabs[activeCategory];
+
+  const isMochiCategory = currentCategory?.productTypes?.includes("mochis") ?? false;
+
+  const currentItems = useMemo(() => {
+    if (!currentCategory) return [];
+    const types = new Set(currentCategory.productTypes);
+    return dbProducts
+      .filter((p) => types.has(p.type))
+      .filter((p) => isVisibleInSeason(p, season))
+      .map((p) => productToMenuItem(p, locale));
+  }, [currentCategory, dbProducts, locale, season]);
 
   return (
     <section
@@ -288,25 +307,27 @@ export default function NuestroMenu() {
         </div>
 
         {/* Category Tabs */}
-        <div className="mb-6 max-w-full -mx-3">
-          <div className="flex gap-3 overflow-x-auto px-3 py-3 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-            {categories.map((category, index) => (
-              <CategoryTab
-                key={category.id}
-                category={category}
-                isActive={activeCategory === index}
-                onClick={() => setActiveCategory(index)}
-              />
-            ))}
+        {categoryTabs.length > 0 && (
+          <div className="mb-6 max-w-full -mx-3">
+            <div className="flex gap-3 overflow-x-auto px-3 py-3 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+              {categoryTabs.map((category, index) => (
+                <CategoryTab
+                  key={category.id}
+                  category={category}
+                  isActive={activeCategory === index}
+                  onClick={() => setActiveCategory(index)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Menu Items Grid */}
         <div
           className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-          key={currentCategory.id}
+          key={currentCategory?.id ?? "loading"}
         >
-          {mochisLoading && currentCategory.id === "mochis" ? (
+          {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="rounded-xl bg-wood-light/60 border border-soft-wood/30 p-4 animate-pulse">
                 <div className="flex items-start justify-between gap-3">
@@ -318,17 +339,21 @@ export default function NuestroMenu() {
                 </div>
               </div>
             ))
+          ) : currentItems.length === 0 ? (
+            <div className="col-span-2 text-center py-8 text-text-secondary">
+              <p>{t.menu.noProducts}</p>
+            </div>
           ) : (
-            currentCategory.items.map((item, index) => (
+            currentItems.map((item, index) => (
               <div
-                key={`${currentCategory.id}-${index}`}
+                key={`${currentCategory?.id}-${index}`}
                 className="animate-fadeInUp"
                 style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}
               >
                 <MenuItemRow
                   item={item}
                   t={t}
-                  isMochiCategory={currentCategory.id === "mochis"}
+                  isMochiCategory={isMochiCategory}
                 />
               </div>
             ))
