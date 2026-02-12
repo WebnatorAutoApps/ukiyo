@@ -80,7 +80,7 @@ function FeaturedCard({
   return (
     <div className="group relative rounded-2xl overflow-hidden bg-wood-texture shadow-cozy hover:shadow-cozy-lg transition-all duration-300 flex flex-col">
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3/2" }}>
-        {imgError ? (
+        {imgError || !highlight.image ? (
           <div className="w-full h-full flex items-center justify-center bg-sakura-pink/30">
             <span className="text-5xl">🍡</span>
           </div>

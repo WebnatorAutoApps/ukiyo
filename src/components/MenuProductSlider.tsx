@@ -50,7 +50,7 @@ const SliderCard = memo(function SliderCard({
 
       {/* Image */}
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: "3/4" }}>
-        {imgError ? (
+        {imgError || !product.image ? (
           <div className="w-full h-full flex items-center justify-center bg-sakura-pink/30">
             <span className="text-7xl" role="img" aria-label={product.name}>
               {product.emoji}

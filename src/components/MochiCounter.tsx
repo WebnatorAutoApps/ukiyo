@@ -97,7 +97,7 @@ const MochiProductCard = memo(function MochiProductCard({
 
       {/* Image */}
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: "1/1" }}>
-        {imgError ? (
+        {imgError || !product.image ? (
           <div className="w-full h-full flex items-center justify-center bg-sakura-pink/30">
             <span className="text-6xl" role="img" aria-label={product.name}>
               {product.emoji}
