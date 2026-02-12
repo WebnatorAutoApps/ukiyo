@@ -1,6 +1,9 @@
 -- Migration: Rename mochis→products, mochi_tags→product_tags, add type/hot/price_modifier columns,
 -- create menu_categories table, seed static items from translations.ts
 
+-- Ensure uuid-ossp extension is available
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- 1. Rename tables
 ALTER TABLE public.mochis RENAME TO products;
 ALTER TABLE public.mochi_tags RENAME TO product_tags;
