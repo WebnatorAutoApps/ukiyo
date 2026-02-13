@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ProductWithTags, HighlightItemRow, HighlightSection } from "@/lib/database.types";
+import SearchableProductSelector from "@/components/SearchableProductSelector";
 
 interface SectionConfig {
   key: HighlightSection;
@@ -53,7 +54,6 @@ export default function AdminHighlightManager({
   onReorder,
 }: AdminHighlightManagerProps) {
   const [adding, setAdding] = useState<HighlightSection | null>(null);
-  const [selectedProductId, setSelectedProductId] = useState("");
   const [saving, setSaving] = useState(false);
 
   const getItemsForSection = (section: HighlightSection) =>
@@ -74,16 +74,15 @@ export default function AdminHighlightManager({
     });
   };
 
-  const handleAdd = async (section: HighlightSection) => {
-    if (!selectedProductId) return;
+  const handleAdd = async (section: HighlightSection, productId: string) => {
+    if (!productId) return;
     setSaving(true);
     const sectionItems = getItemsForSection(section);
     const maxOrder = sectionItems.length > 0
       ? Math.max(...sectionItems.map((i) => i.display_order))
       : -1;
-    await onAdd(section, selectedProductId, maxOrder + 1);
+    await onAdd(section, productId, maxOrder + 1);
     setAdding(null);
-    setSelectedProductId("");
     setSaving(false);
   };
 
@@ -203,36 +202,15 @@ export default function AdminHighlightManager({
 
             {/* Add product */}
             {adding === config.key ? (
-              <div className="flex items-center gap-3">
-                <select
-                  value={selectedProductId}
-                  onChange={(e) => setSelectedProductId(e.target.value)}
-                  className="flex-1 rounded-xl border border-border-color bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sakura-pink"
-                >
-                  <option value="">Seleccionar producto...</option>
-                  {available.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.emoji} {p.title_es} — {p.type} — {p.price}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  onClick={() => handleAdd(config.key)}
-                  disabled={!selectedProductId || saving}
-                  className="rounded-xl bg-ukiyo-navy px-4 py-2 text-xs font-semibold text-white hover:bg-primary-hover transition-colors disabled:opacity-50 font-heading"
-                >
-                  {saving ? "..." : "Añadir"}
-                </button>
-                <button
-                  onClick={() => { setAdding(null); setSelectedProductId(""); }}
-                  className="rounded-xl border border-border-color px-4 py-2 text-xs font-semibold text-text-secondary hover:text-foreground transition-colors font-heading"
-                >
-                  Cancelar
-                </button>
-              </div>
+              <SearchableProductSelector
+                products={available}
+                onSelect={(productId) => handleAdd(config.key, productId)}
+                onCancel={() => setAdding(null)}
+                saving={saving}
+              />
             ) : (
               <button
-                onClick={() => { setAdding(config.key); setSelectedProductId(""); }}
+                onClick={() => setAdding(config.key)}
                 className="rounded-xl border-2 border-dashed border-soft-wood/50 px-4 py-2 text-sm text-text-secondary hover:border-ukiyo-navy hover:text-ukiyo-navy transition-colors font-heading font-semibold"
               >
                 + Añadir producto
