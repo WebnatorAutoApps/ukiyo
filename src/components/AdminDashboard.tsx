@@ -22,7 +22,7 @@ import {
   removeHighlightItem,
   replaceHighlightItems,
 } from "@/lib/highlights";
-import { fetchFaqs, createFaq, updateFaq, deleteFaq } from "@/lib/faqs";
+import { fetchFaqs, createFaq, updateFaq, deleteFaq, reorderFaqs } from "@/lib/faqs";
 import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection, FaqRow } from "@/lib/database.types";
 import AdminProductList from "./AdminProductList";
 import AdminProductForm from "./AdminProductForm";
@@ -263,6 +263,27 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     setEditingFaq(null);
   };
 
+  const handleReorderFaqs = async (
+    orderedIds: { id: string; display_order: number }[]
+  ) => {
+    // Optimistic update
+    const reordered = orderedIds
+      .map(({ id, display_order }) => {
+        const faq = faqs.find((f) => f.id === id);
+        return faq ? { ...faq, display_order } : null;
+      })
+      .filter((f): f is FaqRow => f !== null)
+      .sort((a, b) => a.display_order - b.display_order);
+    setFaqs(reordered);
+
+    const success = await reorderFaqs(orderedIds);
+    if (!success) {
+      // Rollback on failure — refetch from DB
+      const fresh = await fetchFaqs();
+      setFaqs(fresh);
+    }
+  };
+
   const handleCancel = () => {
     setView("list");
     setEditingProduct(null);
@@ -389,6 +410,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
               onEdit={handleEditFaq}
               onDelete={handleDeleteFaq}
               onAdd={handleAddFaq}
+              onReorder={handleReorderFaqs}
             />
           )
         ) : (
