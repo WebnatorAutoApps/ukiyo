@@ -4,12 +4,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { translateToJapanese } from "@/lib/translate";
 import { uploadTestimonialAvatar } from "@/lib/testimonials";
-import type { TestimonialRow, TestimonialSection } from "@/lib/database.types";
+import type { TestimonialRow } from "@/lib/database.types";
 
 interface AdminTestimonialFormProps {
   testimonial?: TestimonialRow | null;
   onSave: (data: {
-    section: TestimonialSection;
     name_es: string;
     name_ja: string;
     quote_es: string;
@@ -26,7 +25,6 @@ export default function AdminTestimonialForm({
   onSave,
   onCancel,
 }: AdminTestimonialFormProps) {
-  const [section, setSection] = useState<TestimonialSection>(testimonial?.section ?? "tienda");
   const [nameEs, setNameEs] = useState(testimonial?.name_es ?? "");
   const [nameJa, setNameJa] = useState(testimonial?.name_ja ?? "");
   const [quoteEs, setQuoteEs] = useState(testimonial?.quote_es ?? "");
@@ -96,7 +94,6 @@ export default function AdminTestimonialForm({
     setSaving(true);
     try {
       await onSave({
-        section,
         name_es: nameEs.trim(),
         name_ja: nameJa.trim(),
         quote_es: quoteEs.trim(),
@@ -117,22 +114,6 @@ export default function AdminTestimonialForm({
       <h2 className="text-xl font-bold text-foreground font-heading">
         {testimonial ? "Editar Testimonio" : "Añadir Testimonio"}
       </h2>
-
-      {/* Section selector */}
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="section" className="text-sm font-semibold text-foreground font-heading">
-          Sección
-        </label>
-        <select
-          id="section"
-          value={section}
-          onChange={(e) => setSection(e.target.value as TestimonialSection)}
-          className="rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-sakura-pink transition-shadow max-w-[200px]"
-        >
-          <option value="home">Inicio</option>
-          <option value="tienda">Tienda</option>
-        </select>
-      </div>
 
       {/* Name fields */}
       <div className="space-y-4">

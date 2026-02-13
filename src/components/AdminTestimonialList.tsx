@@ -11,11 +11,6 @@ interface AdminTestimonialListProps {
   onAdd: () => void;
 }
 
-const sectionLabels: Record<string, string> = {
-  home: "Inicio",
-  tienda: "Tienda",
-};
-
 export default function AdminTestimonialList({
   testimonials,
   onEdit,
@@ -82,9 +77,6 @@ export default function AdminTestimonialList({
                     <h3 className="text-sm font-bold text-foreground font-heading">
                       {testimonial.name_es}
                     </h3>
-                    <span className="rounded-full bg-ukiyo-navy/10 px-2 py-0.5 text-[10px] font-semibold text-ukiyo-navy">
-                      {sectionLabels[testimonial.section] ?? testimonial.section}
-                    </span>
                     <span className="text-xs text-text-secondary">
                       #{testimonial.display_order}
                     </span>

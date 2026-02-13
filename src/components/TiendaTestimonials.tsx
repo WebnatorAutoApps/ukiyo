@@ -38,7 +38,7 @@ export default function TiendaTestimonials() {
   const [dbTestimonials, setDbTestimonials] = useState<TestimonialRow[] | null>(null);
 
   useEffect(() => {
-    fetchTestimonials("tienda").then((data) => {
+    fetchTestimonials().then((data) => {
       if (data.length > 0) setDbTestimonials(data);
     });
   }, []);

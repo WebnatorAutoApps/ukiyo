@@ -72,13 +72,6 @@ export const translations: Record<Locale, Translations> = {
         "Elaboración de mochis artesanales en Ukiyo Mochis & Coffee Madrid Norte",
     },
 
-    // Testimonial (home page)
-    testimonial: {
-      quote:
-        "Los mochis de Ukiyo son una delicia, suaves y cremosos, perfectos para disfrutar con café. La mejor tienda de mochis de Madrid Norte.",
-      name: "Lourdes López",
-    },
-
     // Location
     location: {
       heading: "Visítanos en Madrid Norte",
@@ -384,13 +377,6 @@ export const translations: Record<Locale, Translations> = {
         "Ukiyo Mochis & Coffee マドリード北部での手作り餅の製造風景",
     },
 
-    // Testimonial (home page)
-    testimonial: {
-      quote:
-        "Ukiyoの餅は絶品です。柔らかくてクリーミーで、コーヒーと一緒に楽しむのに最適。マドリード北部で一番の餅屋さんです。",
-      name: "ルルデス・ロペス",
-    },
-
     // Location
     location: {
       heading: "マドリード北部の店舗へお越しください",
@@ -688,10 +674,6 @@ export interface Translations {
     paragraph2: string;
     buyButton: string;
     imageAlt: string;
-  };
-  testimonial: {
-    quote: string;
-    name: string;
   };
   location: {
     heading: string;

@@ -30,7 +30,7 @@ import {
   deleteTestimonial,
   deleteTestimonialAvatar,
 } from "@/lib/testimonials";
-import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection, FaqRow, TestimonialRow, TestimonialSection } from "@/lib/database.types";
+import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection, FaqRow, TestimonialRow } from "@/lib/database.types";
 import AdminProductList from "./AdminProductList";
 import AdminProductForm from "./AdminProductForm";
 import AdminCategoryList from "./AdminCategoryList";
@@ -323,7 +323,6 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
   };
 
   const handleSaveTestimonial = async (data: {
-    section: TestimonialSection;
     name_es: string;
     name_ja: string;
     quote_es: string;
