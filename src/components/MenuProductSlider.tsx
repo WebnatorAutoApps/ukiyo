@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useCallback, memo, useMemo } from "react";
+import { useState, useRef, useCallback, useEffect, memo, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useHighlights } from "@/hooks/useHighlights";
 
@@ -88,8 +88,7 @@ export default function MenuProductSlider() {
   const { t, locale } = useLanguage();
   const { products, loading } = useHighlights("menuSlider");
   const trackRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [paused, setPaused] = useState(false);
 
   const sliderProducts = useMemo(
     () =>
@@ -103,33 +102,44 @@ export default function MenuProductSlider() {
     [products, locale]
   );
 
-  const updateScrollButtons = useCallback(() => {
+  // Calculate animation duration based on number of items (more items = longer duration)
+  const animationDuration = useMemo(() => {
+    const itemCount = sliderProducts.length;
+    if (itemCount <= 1) return 0;
+    return itemCount * 5; // 5 seconds per item
+  }, [sliderProducts.length]);
+
+  // Pause on touch for mobile
+  const handleTouchStart = useCallback(() => setPaused(true), []);
+  const handleTouchEnd = useCallback(() => setPaused(false), []);
+
+  // Pause/resume on hover
+  const handleMouseEnter = useCallback(() => setPaused(true), []);
+  const handleMouseLeave = useCallback(() => setPaused(false), []);
+
+  // Keyboard support: left/right to scroll manually
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     const track = trackRef.current;
     if (!track) return;
-    setCanScrollLeft(track.scrollLeft > 10);
-    setCanScrollRight(track.scrollLeft < track.scrollWidth - track.clientWidth - 10);
+    if (e.key === "ArrowLeft") {
+      track.scrollBy({ left: -320, behavior: "smooth" });
+    } else if (e.key === "ArrowRight") {
+      track.scrollBy({ left: 320, behavior: "smooth" });
+    }
   }, []);
 
-  const scroll = useCallback((direction: "left" | "right") => {
-    const track = trackRef.current;
-    if (!track) return;
-    const scrollAmount = 320;
-    track.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
-      behavior: "smooth",
-    });
+  // Respect prefers-reduced-motion
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "ArrowLeft") {
-        scroll("left");
-      } else if (e.key === "ArrowRight") {
-        scroll("right");
-      }
-    },
-    [scroll]
-  );
+  const shouldAnimate = sliderProducts.length > 1 && !reducedMotion;
+  const needsCarousel = sliderProducts.length > 1;
 
   return (
     <section
@@ -148,65 +158,68 @@ export default function MenuProductSlider() {
         </div>
 
         {/* Slider */}
-        <div className="relative">
+        <div
+          className="relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none menu-slider-fade-left" />
-          <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none menu-slider-fade-right" />
-
-          {/* Navigation arrows */}
-          <button
-            onClick={() => scroll("left")}
-            className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-wood-light/90 border-2 border-soft-wood shadow-cozy flex items-center justify-center transition-all duration-300 ${
-              canScrollLeft
-                ? "opacity-100 hover:bg-sakura-pink/40 hover:scale-110"
-                : "opacity-0 pointer-events-none"
-            }`}
-            aria-label="Scroll left"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-foreground">
-              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-wood-light/90 border-2 border-soft-wood shadow-cozy flex items-center justify-center transition-all duration-300 ${
-              canScrollRight
-                ? "opacity-100 hover:bg-sakura-pink/40 hover:scale-110"
-                : "opacity-0 pointer-events-none"
-            }`}
-            aria-label="Scroll right"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-foreground">
-              <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+          {needsCarousel && (
+            <>
+              <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none menu-slider-fade-left" />
+              <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none menu-slider-fade-right" />
+            </>
+          )}
 
           <div
-            ref={trackRef}
-            className="flex gap-6 overflow-x-auto scrollbar-hide py-2 px-1"
+            className="overflow-hidden"
             role="region"
             aria-label={t.menuSlider.carouselLabel}
+            aria-roledescription="carousel"
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            onScroll={updateScrollButtons}
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {loading
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="flex-shrink-0 w-[240px] sm:w-[270px] md:w-[300px] rounded-2xl overflow-hidden shadow-cozy animate-pulse"
-                  >
-                    <div className="w-full bg-soft-wood/30" style={{ aspectRatio: "3/4" }} />
-                    <div className="p-4 bg-wood-light/60">
-                      <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
-                      <div className="h-3 bg-soft-wood/20 rounded w-full" />
+            <div
+              ref={trackRef}
+              className={`flex gap-6 py-2 ${needsCarousel ? "menu-slider-autoscroll" : "justify-center"}`}
+              style={
+                needsCarousel && shouldAnimate
+                  ? {
+                      animationDuration: `${animationDuration}s`,
+                      animationPlayState: paused ? "paused" : "running",
+                    }
+                  : needsCarousel
+                    ? { overflow: "auto", scrollbarWidth: "none" }
+                    : undefined
+              }
+            >
+              {loading
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex-shrink-0 w-[240px] sm:w-[270px] md:w-[300px] rounded-2xl overflow-hidden shadow-cozy animate-pulse"
+                    >
+                      <div className="w-full bg-soft-wood/30" style={{ aspectRatio: "3/4" }} />
+                      <div className="p-4 bg-wood-light/60">
+                        <div className="h-4 bg-soft-wood/30 rounded w-2/3 mb-2" />
+                        <div className="h-3 bg-soft-wood/20 rounded w-full" />
+                      </div>
                     </div>
-                  </div>
-                ))
-              : sliderProducts.map((product, index) => (
-                  <SliderCard key={index} product={product} />
-                ))}
+                  ))
+                : needsCarousel
+                  ? /* Render items twice for seamless infinite loop */
+                    [...sliderProducts, ...sliderProducts].map((product, index) => (
+                      <SliderCard
+                        key={`${index < sliderProducts.length ? "a" : "b"}-${index % sliderProducts.length}`}
+                        product={product}
+                      />
+                    ))
+                  : sliderProducts.map((product, index) => (
+                      <SliderCard key={index} product={product} />
+                    ))}
+            </div>
           </div>
         </div>
       </div>
