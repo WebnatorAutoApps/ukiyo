@@ -68,6 +68,22 @@ export interface FaqRow {
   updated_at: string;
 }
 
+export type TestimonialSection = "home" | "tienda";
+
+export interface TestimonialRow {
+  id: string;
+  section: TestimonialSection;
+  name_es: string;
+  name_ja: string;
+  quote_es: string;
+  quote_ja: string;
+  avatar_url: string;
+  rating: number;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 // Legacy aliases for gradual transition
 export type MochiRow = ProductRow;
 export type MochiTagRow = ProductTagRow;
