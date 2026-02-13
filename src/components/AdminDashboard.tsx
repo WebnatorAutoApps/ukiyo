@@ -23,7 +23,14 @@ import {
   replaceHighlightItems,
 } from "@/lib/highlights";
 import { fetchFaqs, createFaq, updateFaq, deleteFaq, reorderFaqs } from "@/lib/faqs";
-import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection, FaqRow } from "@/lib/database.types";
+import {
+  fetchTestimonials,
+  createTestimonial,
+  updateTestimonial,
+  deleteTestimonial,
+  deleteTestimonialAvatar,
+} from "@/lib/testimonials";
+import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection, FaqRow, TestimonialRow, TestimonialSection } from "@/lib/database.types";
 import AdminProductList from "./AdminProductList";
 import AdminProductForm from "./AdminProductForm";
 import AdminCategoryList from "./AdminCategoryList";
@@ -31,13 +38,15 @@ import AdminCategoryForm from "./AdminCategoryForm";
 import AdminHighlightManager from "./AdminHighlightManager";
 import AdminFaqList from "./AdminFaqList";
 import AdminFaqForm from "./AdminFaqForm";
+import AdminTestimonialList from "./AdminTestimonialList";
+import AdminTestimonialForm from "./AdminTestimonialForm";
 
 interface AdminDashboardProps {
   email: string;
   onLogout: () => void;
 }
 
-type Section = "products" | "categories" | "highlights" | "faqs";
+type Section = "products" | "categories" | "highlights" | "faqs" | "testimonials";
 type View = "list" | "add" | "edit";
 
 export default function AdminDashboard({ email, onLogout }: AdminDashboardProps) {
@@ -45,12 +54,14 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
   const [categories, setCategories] = useState<MenuCategoryRow[]>([]);
   const [highlightItems, setHighlightItems] = useState<HighlightItemRow[]>([]);
   const [faqs, setFaqs] = useState<FaqRow[]>([]);
+  const [testimonials, setTestimonials] = useState<TestimonialRow[]>([]);
   const [loading, setLoading] = useState(supabaseConfigured);
   const [section, setSection] = useState<Section>("products");
   const [view, setView] = useState<View>("list");
   const [editingProduct, setEditingProduct] = useState<ProductWithTags | null>(null);
   const [editingCategory, setEditingCategory] = useState<MenuCategoryRow | null>(null);
   const [editingFaq, setEditingFaq] = useState<FaqRow | null>(null);
+  const [editingTestimonial, setEditingTestimonial] = useState<TestimonialRow | null>(null);
 
   useEffect(() => {
     if (!supabaseConfigured) return;
@@ -60,12 +71,14 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
       fetchCategories(true),
       fetchAllHighlightItems(),
       fetchFaqs(),
-    ]).then(([prodData, catData, hlData, faqData]) => {
+      fetchTestimonials(),
+    ]).then(([prodData, catData, hlData, faqData, testimonialData]) => {
       if (!cancelled) {
         setProducts(prodData);
         setCategories(catData);
         setHighlightItems(hlData);
         setFaqs(faqData);
+        setTestimonials(testimonialData);
         setLoading(false);
       }
     });
@@ -284,11 +297,68 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     }
   };
 
+  // ─── Testimonial handlers ─────────────────────
+
+  const handleAddTestimonial = () => {
+    setEditingTestimonial(null);
+    setView("add");
+  };
+
+  const handleEditTestimonial = (testimonial: TestimonialRow) => {
+    setEditingTestimonial(testimonial);
+    setView("edit");
+  };
+
+  const handleDeleteTestimonial = async (id: string) => {
+    const testimonial = testimonials.find((t) => t.id === id);
+    if (!testimonial) return;
+
+    const success = await deleteTestimonial(id);
+    if (success) {
+      if (testimonial.avatar_url.includes("supabase.co")) {
+        await deleteTestimonialAvatar(testimonial.avatar_url);
+      }
+      setTestimonials((prev) => prev.filter((t) => t.id !== id));
+    }
+  };
+
+  const handleSaveTestimonial = async (data: {
+    section: TestimonialSection;
+    name_es: string;
+    name_ja: string;
+    quote_es: string;
+    quote_ja: string;
+    avatar_url: string;
+    rating: number;
+    display_order: number;
+  }) => {
+    if (view === "edit" && editingTestimonial) {
+      if (
+        editingTestimonial.avatar_url !== data.avatar_url &&
+        editingTestimonial.avatar_url.includes("supabase.co")
+      ) {
+        await deleteTestimonialAvatar(editingTestimonial.avatar_url);
+      }
+      const updated = await updateTestimonial(editingTestimonial.id, data);
+      if (updated) {
+        setTestimonials((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+      }
+    } else {
+      const created = await createTestimonial(data);
+      if (created) {
+        setTestimonials((prev) => [...prev, created].sort((a, b) => a.display_order - b.display_order));
+      }
+    }
+    setView("list");
+    setEditingTestimonial(null);
+  };
+
   const handleCancel = () => {
     setView("list");
     setEditingProduct(null);
     setEditingCategory(null);
     setEditingFaq(null);
+    setEditingTestimonial(null);
   };
 
   const switchSection = (s: Section) => {
@@ -297,6 +367,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     setEditingProduct(null);
     setEditingCategory(null);
     setEditingFaq(null);
+    setEditingTestimonial(null);
   };
 
   return (
@@ -370,6 +441,16 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
           >
             FAQ
           </button>
+          <button
+            onClick={() => switchSection("testimonials")}
+            className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
+              section === "testimonials"
+                ? "border-ukiyo-navy text-foreground"
+                : "border-transparent text-text-secondary hover:text-foreground"
+            }`}
+          >
+            Testimonios
+          </button>
         </div>
       </div>
 
@@ -404,13 +485,20 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
               onAdd={handleAddCategory}
               onToggleEnabled={handleToggleCategory}
             />
-          ) : (
+          ) : section === "faqs" ? (
             <AdminFaqList
               faqs={faqs}
               onEdit={handleEditFaq}
               onDelete={handleDeleteFaq}
               onAdd={handleAddFaq}
               onReorder={handleReorderFaqs}
+            />
+          ) : (
+            <AdminTestimonialList
+              testimonials={testimonials}
+              onEdit={handleEditTestimonial}
+              onDelete={handleDeleteTestimonial}
+              onAdd={handleAddTestimonial}
             />
           )
         ) : (
@@ -434,10 +522,16 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
                   onSave={handleSaveCategory}
                   onCancel={handleCancel}
                 />
-              ) : (
+              ) : section === "faqs" ? (
                 <AdminFaqForm
                   faq={view === "edit" ? editingFaq : null}
                   onSave={handleSaveFaq}
+                  onCancel={handleCancel}
+                />
+              ) : (
+                <AdminTestimonialForm
+                  testimonial={view === "edit" ? editingTestimonial : null}
+                  onSave={handleSaveTestimonial}
                   onCancel={handleCancel}
                 />
               )}

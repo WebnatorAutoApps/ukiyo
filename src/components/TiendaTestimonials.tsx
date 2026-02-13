@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { fetchTestimonials } from "@/lib/testimonials";
+import type { TestimonialRow } from "@/lib/database.types";
 
-const avatars = [
+const fallbackAvatars = [
   "/images/testimonial-sofia.jpg",
   "/images/testimonial-carlos.jpg",
   "/images/testimonial-maria.jpg",
@@ -12,8 +14,6 @@ const avatars = [
   "/images/testimonial-javier.jpg",
   "/images/testimonial-lucia.jpg",
 ];
-
-const ratings = [5, 5, 5, 5, 5, 5];
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -34,9 +34,29 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function TiendaTestimonials() {
   const [current, setCurrent] = useState(0);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const [dbTestimonials, setDbTestimonials] = useState<TestimonialRow[] | null>(null);
 
-  const testimonials = t.tiendaTestimonials.items;
+  useEffect(() => {
+    fetchTestimonials("tienda").then((data) => {
+      if (data.length > 0) setDbTestimonials(data);
+    });
+  }, []);
+
+  const testimonials = dbTestimonials
+    ? dbTestimonials.map((item) => ({
+        name:
+          locale === "ja" && item.name_ja ? item.name_ja : item.name_es,
+        text:
+          locale === "ja" && item.quote_ja ? item.quote_ja : item.quote_es,
+        avatar: item.avatar_url || "/images/testimonial-avatar.jpg",
+        rating: item.rating,
+      }))
+    : t.tiendaTestimonials.items.map((item, index) => ({
+        ...item,
+        avatar: fallbackAvatars[index] ?? "/images/testimonial-avatar.jpg",
+        rating: 5,
+      }));
 
   const goTo = (index: number) => {
     setCurrent(index);
@@ -49,6 +69,8 @@ export default function TiendaTestimonials() {
   const goNext = () => {
     setCurrent((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
   };
+
+  if (testimonials.length === 0) return null;
 
   return (
     <section className="w-full py-16 px-5 bg-sakura-pink/30">
@@ -96,13 +118,13 @@ export default function TiendaTestimonials() {
 
           {/* Testimonial card */}
           <div className="rounded-2xl bg-warm-cream p-8 md:p-12 shadow-cozy text-center border border-soft-wood/20">
-            <StarRating rating={ratings[current]} />
+            <StarRating rating={testimonials[current].rating} />
             <blockquote className="text-lg md:text-xl text-text-body leading-relaxed italic mb-6">
               &ldquo;{testimonials[current].text}&rdquo;
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <Image
-                src={avatars[current]}
+                src={testimonials[current].avatar}
                 alt={testimonials[current].name}
                 width={48}
                 height={48}
