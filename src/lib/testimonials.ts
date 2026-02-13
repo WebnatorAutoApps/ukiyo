@@ -1,19 +1,13 @@
 import { supabase, supabaseConfigured } from "./supabase";
-import type { TestimonialRow, TestimonialSection } from "./database.types";
+import type { TestimonialRow } from "./database.types";
 
-export async function fetchTestimonials(section?: TestimonialSection): Promise<TestimonialRow[]> {
+export async function fetchTestimonials(): Promise<TestimonialRow[]> {
   if (!supabaseConfigured) return [];
 
-  let query = supabase
+  const { data, error } = await supabase
     .from("testimonials")
     .select("*")
     .order("display_order", { ascending: true });
-
-  if (section) {
-    query = query.eq("section", section);
-  }
-
-  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching testimonials:", error);
@@ -24,7 +18,6 @@ export async function fetchTestimonials(section?: TestimonialSection): Promise<T
 }
 
 export async function createTestimonial(testimonial: {
-  section: TestimonialSection;
   name_es: string;
   name_ja: string;
   quote_es: string;
@@ -52,7 +45,6 @@ export async function createTestimonial(testimonial: {
 export async function updateTestimonial(
   id: string,
   testimonial: {
-    section: TestimonialSection;
     name_es: string;
     name_ja: string;
     quote_es: string;

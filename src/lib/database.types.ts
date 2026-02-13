@@ -68,11 +68,8 @@ export interface FaqRow {
   updated_at: string;
 }
 
-export type TestimonialSection = "home" | "tienda";
-
 export interface TestimonialRow {
   id: string;
-  section: TestimonialSection;
   name_es: string;
   name_ja: string;
   quote_es: string;

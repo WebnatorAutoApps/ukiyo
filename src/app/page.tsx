@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import MenuCTA from "@/components/MenuCTA";
 import About from "@/components/About";
-import Testimonial from "@/components/Testimonial";
+import TiendaTestimonials from "@/components/TiendaTestimonials";
 import Location from "@/components/Location";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -28,7 +28,7 @@ export default function Home() {
         <MochiCounter />
         <MenuCTA />
         <About />
-        <Testimonial />
+        <TiendaTestimonials />
         <Location />
         <FAQ />
       </main>
