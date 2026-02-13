@@ -43,7 +43,7 @@ export interface MenuCategoryRow {
   updated_at: string;
 }
 
-export type HighlightSection = "menuSlider" | "specialtyDrinks" | "menuHighlights";
+export type HighlightSection = "menuSlider" | "specialtyDrinks" | "menuHighlights" | "storeHighlights";
 
 export interface HighlightItemRow {
   id: string;

@@ -29,6 +29,12 @@ const SECTIONS: SectionConfig[] = [
     description: "Las tarjetas destacadas debajo del título del menú",
     filterType: null,
   },
+  {
+    key: "storeHighlights",
+    title: "Productos Destacados Tienda",
+    description: "Los productos destacados en la página de la tienda online",
+    filterType: null,
+  },
 ];
 
 interface AdminHighlightManagerProps {
