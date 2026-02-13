@@ -5,21 +5,6 @@ import Image from "next/image";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useHighlights } from "@/hooks/useHighlights";
 
-const FALLBACK_PRODUCTS = [
-  {
-    id: "fallback-1",
-    price: "15.00",
-    image: "/images/product-mochis-pack.jpg",
-    inStock: true,
-  },
-  {
-    id: "fallback-2",
-    price: "10.00",
-    image: "/images/product-mochis-box.jpg",
-    inStock: true,
-  },
-];
-
 interface DisplayProduct {
   id: string;
   name: string;
@@ -34,29 +19,20 @@ export default function TiendaProducts() {
   const { products: highlightProducts, loading } = useHighlights("storeHighlights");
 
   const displayProducts: DisplayProduct[] = useMemo(() => {
-    if (highlightProducts.length > 0) {
-      return highlightProducts.map((p) => ({
-        id: p.id,
-        name: locale === "ja" && p.title_ja ? p.title_ja : p.title_es,
-        description: locale === "ja" && p.description_ja ? p.description_ja : p.description_es,
-        price: p.price,
-        image: p.image_url || "",
-        inStock: p.enabled,
-      }));
-    }
+    return highlightProducts.map((p) => ({
+      id: p.id,
+      name: locale === "ja" && p.title_ja ? p.title_ja : p.title_es,
+      description: locale === "ja" && p.description_ja ? p.description_ja : p.description_es,
+      price: p.price,
+      image: p.image_url || "",
+      inStock: p.enabled,
+    }));
+  }, [highlightProducts, locale]);
 
-    return FALLBACK_PRODUCTS.map((p, index) => {
-      const translation = t.tiendaProducts.products[index];
-      return {
-        id: p.id,
-        name: translation?.name ?? "",
-        description: translation?.description ?? "",
-        price: p.price,
-        image: p.image,
-        inStock: p.inStock,
-      };
-    });
-  }, [highlightProducts, locale, t.tiendaProducts.products]);
+  // Don't render the section if there are no highlights configured
+  if (!loading && displayProducts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full py-16 px-5 bg-warm-cream">
