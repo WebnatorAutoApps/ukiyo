@@ -22,30 +22,35 @@ import {
   removeHighlightItem,
   replaceHighlightItems,
 } from "@/lib/highlights";
-import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection } from "@/lib/database.types";
+import { fetchFaqs, createFaq, updateFaq, deleteFaq } from "@/lib/faqs";
+import type { ProductWithTags, ProductType, MenuCategoryRow, TagName, SeasonValue, HighlightItemRow, HighlightSection, FaqRow } from "@/lib/database.types";
 import AdminProductList from "./AdminProductList";
 import AdminProductForm from "./AdminProductForm";
 import AdminCategoryList from "./AdminCategoryList";
 import AdminCategoryForm from "./AdminCategoryForm";
 import AdminHighlightManager from "./AdminHighlightManager";
+import AdminFaqList from "./AdminFaqList";
+import AdminFaqForm from "./AdminFaqForm";
 
 interface AdminDashboardProps {
   email: string;
   onLogout: () => void;
 }
 
-type Section = "products" | "categories" | "highlights";
+type Section = "products" | "categories" | "highlights" | "faqs";
 type View = "list" | "add" | "edit";
 
 export default function AdminDashboard({ email, onLogout }: AdminDashboardProps) {
   const [products, setProducts] = useState<ProductWithTags[]>([]);
   const [categories, setCategories] = useState<MenuCategoryRow[]>([]);
   const [highlightItems, setHighlightItems] = useState<HighlightItemRow[]>([]);
+  const [faqs, setFaqs] = useState<FaqRow[]>([]);
   const [loading, setLoading] = useState(supabaseConfigured);
   const [section, setSection] = useState<Section>("products");
   const [view, setView] = useState<View>("list");
   const [editingProduct, setEditingProduct] = useState<ProductWithTags | null>(null);
   const [editingCategory, setEditingCategory] = useState<MenuCategoryRow | null>(null);
+  const [editingFaq, setEditingFaq] = useState<FaqRow | null>(null);
 
   useEffect(() => {
     if (!supabaseConfigured) return;
@@ -54,11 +59,13 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
       fetchProducts({ includeDisabled: true }),
       fetchCategories(true),
       fetchAllHighlightItems(),
-    ]).then(([prodData, catData, hlData]) => {
+      fetchFaqs(),
+    ]).then(([prodData, catData, hlData, faqData]) => {
       if (!cancelled) {
         setProducts(prodData);
         setCategories(catData);
         setHighlightItems(hlData);
+        setFaqs(faqData);
         setLoading(false);
       }
     });
@@ -215,10 +222,52 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     }
   };
 
+  // ─── FAQ handlers ──────────────────────────────
+
+  const handleAddFaq = () => {
+    setEditingFaq(null);
+    setView("add");
+  };
+
+  const handleEditFaq = (faq: FaqRow) => {
+    setEditingFaq(faq);
+    setView("edit");
+  };
+
+  const handleDeleteFaq = async (id: string) => {
+    const success = await deleteFaq(id);
+    if (success) {
+      setFaqs((prev) => prev.filter((f) => f.id !== id));
+    }
+  };
+
+  const handleSaveFaq = async (data: {
+    question_es: string;
+    question_ja: string;
+    answer_es: string;
+    answer_ja: string;
+    display_order: number;
+  }) => {
+    if (view === "edit" && editingFaq) {
+      const updated = await updateFaq(editingFaq.id, data);
+      if (updated) {
+        setFaqs((prev) => prev.map((f) => (f.id === updated.id ? updated : f)));
+      }
+    } else {
+      const created = await createFaq(data);
+      if (created) {
+        setFaqs((prev) => [...prev, created].sort((a, b) => a.display_order - b.display_order));
+      }
+    }
+    setView("list");
+    setEditingFaq(null);
+  };
+
   const handleCancel = () => {
     setView("list");
     setEditingProduct(null);
     setEditingCategory(null);
+    setEditingFaq(null);
   };
 
   const switchSection = (s: Section) => {
@@ -226,6 +275,7 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
     setView("list");
     setEditingProduct(null);
     setEditingCategory(null);
+    setEditingFaq(null);
   };
 
   return (
@@ -289,6 +339,16 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
           >
             Destacados
           </button>
+          <button
+            onClick={() => switchSection("faqs")}
+            className={`px-5 py-3 text-sm font-semibold font-heading transition-colors border-b-2 ${
+              section === "faqs"
+                ? "border-ukiyo-navy text-foreground"
+                : "border-transparent text-text-secondary hover:text-foreground"
+            }`}
+          >
+            FAQ
+          </button>
         </div>
       </div>
 
@@ -315,13 +375,20 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
               onAdd={handleAddProduct}
               onToggleEnabled={handleToggleProduct}
             />
-          ) : (
+          ) : section === "categories" ? (
             <AdminCategoryList
               categories={categories}
               onEdit={handleEditCategory}
               onDelete={handleDeleteCategory}
               onAdd={handleAddCategory}
               onToggleEnabled={handleToggleCategory}
+            />
+          ) : (
+            <AdminFaqList
+              faqs={faqs}
+              onEdit={handleEditFaq}
+              onDelete={handleDeleteFaq}
+              onAdd={handleAddFaq}
             />
           )
         ) : (
@@ -339,10 +406,16 @@ export default function AdminDashboard({ email, onLogout }: AdminDashboardProps)
                   onSave={handleSaveProduct}
                   onCancel={handleCancel}
                 />
-              ) : (
+              ) : section === "categories" ? (
                 <AdminCategoryForm
                   category={view === "edit" ? editingCategory : null}
                   onSave={handleSaveCategory}
+                  onCancel={handleCancel}
+                />
+              ) : (
+                <AdminFaqForm
+                  faq={view === "edit" ? editingFaq : null}
+                  onSave={handleSaveFaq}
                   onCancel={handleCancel}
                 />
               )}
