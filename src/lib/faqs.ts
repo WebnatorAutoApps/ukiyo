@@ -79,3 +79,26 @@ export async function deleteFaq(id: string): Promise<boolean> {
 
   return true;
 }
+
+export async function reorderFaqs(
+  orderedIds: { id: string; display_order: number }[]
+): Promise<boolean> {
+  if (!supabaseConfigured) return false;
+
+  const now = new Date().toISOString();
+  const updates = orderedIds.map(({ id, display_order }) =>
+    supabase
+      .from("faqs")
+      .update({ display_order, updated_at: now })
+      .eq("id", id)
+  );
+
+  const results = await Promise.all(updates);
+  const failed = results.find((r) => r.error);
+  if (failed?.error) {
+    console.error("Error reordering faqs:", failed.error);
+    return false;
+  }
+
+  return true;
+}
