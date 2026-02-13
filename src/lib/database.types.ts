@@ -57,6 +57,17 @@ export interface HighlightItemWithProduct extends HighlightItemRow {
   products: ProductRow & { product_tags: ProductTagRow[] };
 }
 
+export interface FaqRow {
+  id: string;
+  question_es: string;
+  question_ja: string;
+  answer_es: string;
+  answer_ja: string;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 // Legacy aliases for gradual transition
 export type MochiRow = ProductRow;
 export type MochiTagRow = ProductTagRow;

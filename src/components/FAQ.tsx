@@ -1,13 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { fetchFaqs } from "@/lib/faqs";
+import type { FaqRow } from "@/lib/database.types";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const [dbFaqs, setDbFaqs] = useState<FaqRow[] | null>(null);
 
-  const faqs = t.faq.items;
+  useEffect(() => {
+    fetchFaqs().then((data) => {
+      if (data.length > 0) setDbFaqs(data);
+    });
+  }, []);
+
+  const faqs = dbFaqs
+    ? dbFaqs.map((f) => ({
+        question: locale === "ja" && f.question_ja ? f.question_ja : f.question_es,
+        answer: locale === "ja" && f.answer_ja ? f.answer_ja : f.answer_es,
+      }))
+    : t.faq.items;
 
   const faqSchema = {
     "@context": "https://schema.org",
