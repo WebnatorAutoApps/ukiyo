@@ -91,9 +91,9 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
     ? `${SITE_URL}/menu?section=${category.product_types.length > 0 ? category.product_types[0] : category.id}`
     : null;
 
-  const [copiedField, setCopiedField] = useState<"id" | "url" | null>(null);
+  const [copiedField, setCopiedField] = useState<"url" | null>(null);
 
-  const copyToClipboard = useCallback(async (text: string, field: "id" | "url") => {
+  const copyToClipboard = useCallback(async (text: string, field: "url") => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedField(field);
@@ -109,29 +109,12 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
         {category ? "Editar Categoría" : "Añadir Categoría"}
       </h2>
 
-      {/* Category ID & Deeplink URL (edit mode only) */}
+      {/* Link Directo URL (edit mode only) */}
       {category && (
-        <div className="rounded-xl border border-border-color bg-wood-light/40 p-4 space-y-3">
+        <div className="rounded-xl border border-border-color bg-wood-light/40 p-4">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-semibold text-text-secondary font-heading uppercase tracking-wider">
-              ID de Categoría
-            </span>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 min-w-0 rounded-lg bg-background/80 border border-border-color px-3 py-2 text-xs text-foreground font-mono select-all truncate">
-                {category.id}
-              </code>
-              <button
-                type="button"
-                onClick={() => copyToClipboard(category.id, "id")}
-                className="flex-shrink-0 rounded-lg bg-ukiyo-navy/10 px-3 py-2 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading"
-              >
-                {copiedField === "id" ? "Copiado" : "Copiar"}
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-text-secondary font-heading uppercase tracking-wider">
-              URL de Deeplink
+              URL de Link Directo
             </span>
             <div className="flex items-center gap-2">
               <code className="flex-1 min-w-0 rounded-lg bg-background/80 border border-border-color px-3 py-2 text-xs text-foreground font-mono select-all truncate">
@@ -147,7 +130,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
             </div>
             {category.product_types.length === 0 && (
               <p className="text-[11px] text-amber-600 mt-1">
-                Sin tipos de producto asignados. El deeplink usa el ID de categoría.
+                Sin tipos de producto asignados. El link directo usa el ID de categoría.
               </p>
             )}
           </div>
