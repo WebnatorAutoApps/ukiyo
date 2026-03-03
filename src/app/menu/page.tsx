@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import NavBar from "@/components/NavBar";
 import NuestroMenu from "@/components/NuestroMenu";
@@ -48,7 +49,9 @@ export default function MenuPage() {
       <main>
         <MenuProductSlider />
         <SpecialtyDrinks />
-        <NuestroMenu />
+        <Suspense>
+          <NuestroMenu />
+        </Suspense>
       </main>
       <Footer />
       <WhatsAppButton />
