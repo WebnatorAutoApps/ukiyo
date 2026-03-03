@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useSeason } from "@/context/SeasonContext";
 import { useProducts } from "@/hooks/useProducts";
@@ -245,6 +246,8 @@ export default function NuestroMenu() {
   const { products: dbProducts, loading: productsLoading } = useProducts();
   const { categories: dbCategories, loading: categoriesLoading } = useCategories();
   const { products: highlightProducts, loading: highlightsLoading } = useHighlights("menuHighlights");
+  const searchParams = useSearchParams();
+  const deepLinkedRef = useRef(false);
 
   const isLoading = productsLoading || categoriesLoading;
 
@@ -284,6 +287,49 @@ export default function NuestroMenu() {
         return dbProducts.some((p) => types.has(p.type) && isVisibleInSeason(p, season));
       });
   }, [dbCategories, dbProducts, locale, season]);
+
+  // Deep link: match ?section= param to a category and scroll to it
+  useEffect(() => {
+    if (deepLinkedRef.current || isLoading || categoryTabs.length === 0) return;
+
+    const section = searchParams.get("section");
+    if (!section) return;
+
+    const sectionLower = section.toLowerCase();
+
+    // Check for standalone page sections first (e.g. bebidas-especiales)
+    const standaloneSectionEl = document.getElementById(sectionLower);
+    if (standaloneSectionEl && sectionLower !== "nuestro-menu") {
+      deepLinkedRef.current = true;
+      requestAnimationFrame(() => {
+        standaloneSectionEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      return;
+    }
+
+    // Match by category id or by product type contained in the category
+    const matchIndex = categoryTabs.findIndex(
+      (cat) =>
+        cat.id.toLowerCase() === sectionLower ||
+        cat.productTypes.some((pt) => pt.toLowerCase() === sectionLower)
+    );
+
+    if (matchIndex !== -1) {
+      deepLinkedRef.current = true;
+
+      // Defer state update and scroll to avoid synchronous setState-in-effect lint warning
+      requestAnimationFrame(() => {
+        setActiveCategory(matchIndex);
+        const el = document.getElementById("nuestro-menu");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    } else {
+      // Invalid section name — mark as handled so we don't retry
+      deepLinkedRef.current = true;
+    }
+  }, [searchParams, isLoading, categoryTabs]);
 
   // For each category, get filtered products
   const currentCategory = categoryTabs[activeCategory];

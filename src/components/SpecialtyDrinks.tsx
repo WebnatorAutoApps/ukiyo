@@ -30,7 +30,7 @@ export default function SpecialtyDrinks() {
   const drinks = isHot ? hotDrinks : coldDrinks;
 
   return (
-    <section className="w-full py-16 px-5 bg-warm-cream">
+    <section id="bebidas-especiales" className="w-full py-16 px-5 bg-warm-cream">
       <div className="mx-auto max-w-4xl">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-3 font-heading">
           {t.drinks.sectionTitle}
