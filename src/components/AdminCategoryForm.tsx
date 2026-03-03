@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { translateToJapanese } from "@/lib/translate";
 import type { MenuCategoryRow, ProductType } from "@/lib/database.types";
+
+const SITE_URL = "https://www.mochisukiyo.com";
 
 interface AdminCategoryFormProps {
   category?: MenuCategoryRow | null;
@@ -85,11 +87,72 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
     }
   };
 
+  const deeplinkUrl = category
+    ? `${SITE_URL}/menu?section=${category.product_types.length > 0 ? category.product_types[0] : category.id}`
+    : null;
+
+  const [copiedField, setCopiedField] = useState<"id" | "url" | null>(null);
+
+  const copyToClipboard = useCallback(async (text: string, field: "id" | "url") => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch {
+      // Fallback: ignore if clipboard not available
+    }
+  }, []);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <h2 className="text-xl font-bold text-foreground font-heading">
         {category ? "Editar Categoría" : "Añadir Categoría"}
       </h2>
+
+      {/* Category ID & Deeplink URL (edit mode only) */}
+      {category && (
+        <div className="rounded-xl border border-border-color bg-wood-light/40 p-4 space-y-3">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-semibold text-text-secondary font-heading uppercase tracking-wider">
+              ID de Categoría
+            </span>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 min-w-0 rounded-lg bg-background/80 border border-border-color px-3 py-2 text-xs text-foreground font-mono select-all truncate">
+                {category.id}
+              </code>
+              <button
+                type="button"
+                onClick={() => copyToClipboard(category.id, "id")}
+                className="flex-shrink-0 rounded-lg bg-ukiyo-navy/10 px-3 py-2 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading"
+              >
+                {copiedField === "id" ? "Copiado" : "Copiar"}
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-semibold text-text-secondary font-heading uppercase tracking-wider">
+              URL de Deeplink
+            </span>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 min-w-0 rounded-lg bg-background/80 border border-border-color px-3 py-2 text-xs text-foreground font-mono select-all truncate">
+                {deeplinkUrl}
+              </code>
+              <button
+                type="button"
+                onClick={() => deeplinkUrl && copyToClipboard(deeplinkUrl, "url")}
+                className="flex-shrink-0 rounded-lg bg-ukiyo-navy/10 px-3 py-2 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading"
+              >
+                {copiedField === "url" ? "Copiado" : "Copiar"}
+              </button>
+            </div>
+            {category.product_types.length === 0 && (
+              <p className="text-[11px] text-amber-600 mt-1">
+                Sin tipos de producto asignados. El deeplink usa el ID de categoría.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Name fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
