@@ -88,7 +88,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
   };
 
   const deeplinkUrl = category
-    ? `${SITE_URL}/menu?section=${category.product_types.length > 0 ? category.product_types[0] : category.id}`
+    ? `${SITE_URL}/menu?section=${encodeURIComponent(category.product_types.length > 0 ? category.product_types[0] : category.id)}`
     : null;
 
   const [copiedField, setCopiedField] = useState<"url" | null>(null);
