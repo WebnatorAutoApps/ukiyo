@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import QRCode from "qrcode";
 import { translateToJapanese } from "@/lib/translate";
+import { SITE_URL } from "@/lib/config";
 import type { MenuCategoryRow, ProductType } from "@/lib/database.types";
-
-const SITE_URL = "https://www.mochisukiyo.com";
 
 interface AdminCategoryFormProps {
   category?: MenuCategoryRow | null;
@@ -92,6 +92,7 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
     : null;
 
   const [copiedField, setCopiedField] = useState<"url" | null>(null);
+  const [generatingQr, setGeneratingQr] = useState(false);
 
   const copyToClipboard = useCallback(async (text: string, field: "url") => {
     try {
@@ -100,6 +101,25 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
       setTimeout(() => setCopiedField(null), 2000);
     } catch {
       // Fallback: ignore if clipboard not available
+    }
+  }, []);
+
+  const downloadQrCode = useCallback(async (url: string, name: string) => {
+    setGeneratingQr(true);
+    try {
+      const dataUrl = await QRCode.toDataURL(url, {
+        width: 512,
+        margin: 2,
+        color: { dark: "#5D5068", light: "#FFFFFF" },
+      });
+      const link = document.createElement("a");
+      link.download = `qr-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch {
+      setError("Error al generar el código QR");
+    } finally {
+      setGeneratingQr(false);
     }
   }, []);
 
@@ -126,6 +146,14 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
                 className="flex-shrink-0 rounded-lg bg-ukiyo-navy/10 px-3 py-2 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading"
               >
                 {copiedField === "url" ? "Copiado" : "Copiar"}
+              </button>
+              <button
+                type="button"
+                disabled={generatingQr}
+                onClick={() => deeplinkUrl && category && downloadQrCode(deeplinkUrl, category.name_es)}
+                className="flex-shrink-0 rounded-lg bg-ukiyo-navy/10 px-3 py-2 text-xs font-semibold text-ukiyo-navy hover:bg-ukiyo-navy/20 transition-colors font-heading disabled:opacity-50"
+              >
+                {generatingQr ? "..." : "QR"}
               </button>
             </div>
             {category.product_types.length === 0 && (
