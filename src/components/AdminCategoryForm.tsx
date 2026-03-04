@@ -112,10 +112,17 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
         margin: 2,
         color: { dark: "#5D5068", light: "#FFFFFF" },
       });
+      // Convert data URL to Blob for reliable cross-browser download
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = `qr-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
-      link.href = dataUrl;
+      link.href = blobUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
     } catch {
       setError("Error al generar el código QR");
     } finally {
