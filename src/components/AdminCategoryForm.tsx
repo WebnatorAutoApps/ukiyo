@@ -107,7 +107,13 @@ export default function AdminCategoryForm({ category, onSave, onCancel }: AdminC
   const downloadQrCode = useCallback(async (url: string, name: string) => {
     setGeneratingQr(true);
     try {
-      const dataUrl = await QRCode.toDataURL(url, {
+      // Uppercase the URL so the QR library encodes it in Alphanumeric mode
+      // instead of Byte mode. Alphanumeric-encoded URLs are more reliably
+      // recognised as clickable links by mobile QR scanners.
+      // URL schemes, domains, and Next.js routes are all case-insensitive,
+      // and NuestroMenu already lower-cases the ?section= value on read.
+      const qrContent = url.toUpperCase();
+      const dataUrl = await QRCode.toDataURL(qrContent, {
         width: 512,
         margin: 2,
         color: { dark: "#5D5068", light: "#FFFFFF" },
